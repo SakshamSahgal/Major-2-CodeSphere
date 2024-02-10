@@ -1,5 +1,5 @@
 
-# To run Backend
+# To run Node Backend
 
 `NOTE` : Make sure you have `Node 20` and `npm` installed
 

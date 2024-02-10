@@ -1,9 +1,11 @@
-
+import PlainNavbar from "../../components/Navbar/PlainNavbar";
+import RightsReservedFooter from "../../components/Footer/RightsReservedFooter";
 function RegisterCollege() {
   return (
-    <div>
-      <h1>Register College</h1>
-    </div>
+    <>
+      <PlainNavbar />
+      <RightsReservedFooter />
+    </>
   );
 }
 

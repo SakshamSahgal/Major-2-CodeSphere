@@ -11,3 +11,6 @@ app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);
   connectDB();
 });
+
+require("./Auth/jwt")(app);
+require("./other/Colleges")(app);

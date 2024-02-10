@@ -1,12 +1,14 @@
 
-import LandingPageNavbar from "../../components/Navbar/LandingPageNavbar";
+import PlainNavbar from "../../components/Navbar/PlainNavbar";
 import LandingPageCard from "../../components/Card/LandingPageCard";
-import LandingPageFooter from "../../components/Footer/LandingPageFooter";
+import RightsReservedFooter from "../../components/Footer/RightsReservedFooter";
+
+
 function LandingPage() {
   return (
     <>
-      <LandingPageNavbar />
-      <div className="container">
+      <PlainNavbar />
+      <div className="container px-3">
         <div className="row my-3 align-items-center">
           <div className="col-6 d-none d-md-block">
             <h1 className="display-3 " style={{ color: '#fff' }}>Welcome to CodeSphere</h1>
@@ -29,8 +31,13 @@ function LandingPage() {
             <LandingPageCard title="Register Your College" content="Join the CodeSphere community today." btntext="Register" btnlink="/registercollege" />
           </div>
         </div>
+        <div className="row">
+          <div className="col">
+            <br /><br /><br />
+          </div>
+        </div>
       </div>
-      <LandingPageFooter />
+      <RightsReservedFooter />
     </>
   );
 }

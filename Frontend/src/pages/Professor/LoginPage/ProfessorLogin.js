@@ -1,9 +1,12 @@
+import PlainNavbar from "../../../components/Navbar/PlainNavbar";
+import RightsReservedFooter from "../../../components/Footer/RightsReservedFooter";
 
 function ProfessorLogin() {
     return (
-        <div>
-            <h1>Professor Login</h1>
-        </div>
+        <>
+            <PlainNavbar />
+            <RightsReservedFooter />
+        </>
     );
 }
 
