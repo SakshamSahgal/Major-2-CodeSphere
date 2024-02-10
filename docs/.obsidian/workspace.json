@@ -6,6 +6,7 @@
       {
         "id": "a5178df9267580b6",
         "type": "tabs",
+        "dimension": 52.645985401459846,
         "children": [
           {
             "id": "73b925fabe288f18",
@@ -13,17 +14,31 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Welcome.md",
+                "file": "index.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "483afd252a747e34",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "index.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       },
       {
         "id": "7bd9ea0ee5ae16b0",
         "type": "tabs",
+        "dimension": 47.35401459854015,
         "children": [
           {
             "id": "db1d29b7922129c3",
@@ -99,7 +114,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Welcome.md",
+                "file": "index.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -116,7 +131,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Welcome.md",
+                "file": "index.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -139,7 +154,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Welcome.md"
+                "file": "index.md"
               }
             }
           }
@@ -160,8 +175,10 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "73b925fabe288f18",
+  "active": "483afd252a747e34",
   "lastOpenFiles": [
-    "Welcome.md"
+    "HowToRun.md",
+    "index.md",
+    "Untitled"
   ]
 }
