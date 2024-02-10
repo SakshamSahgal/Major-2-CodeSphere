@@ -1,7 +1,7 @@
 
 # To run Backend
 
-`NOTE :`Make sure you have Node 20 and npm installed
+`NOTE` : Make sure you have `Node 20` and `npm` installed
 
 1. `cd Backend`
 2. `npm install`
