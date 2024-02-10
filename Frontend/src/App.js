@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import LandingPage from './pages/LandingPage';
-import ProfessorLogin from './pages/ProfessorLogin';
-import StudentLogin from './pages/StudentLogin';
-import RegisterCollege from './pages/RegisterCollege';
-
+import LandingPage from './pages/LandingPage/LandingPage';
+import ProfessorLogin from './pages/Professor/LoginPage/ProfessorLogin';
+import StudentLogin from './pages/Student/LoginPage/StudentLogin';
+import RegisterCollege from './pages/RegisterCollege/RegisterCollege';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
