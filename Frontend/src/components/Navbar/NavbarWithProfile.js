@@ -7,7 +7,6 @@ import ProfileModal from '../Modal/profileModal';
 
 function NavbarWithProfile() {
     const [showModal, setShowModal] = useState(false);
-
     return (
         <>
             <Navbar bg="dark" variant="dark" expand="lg">

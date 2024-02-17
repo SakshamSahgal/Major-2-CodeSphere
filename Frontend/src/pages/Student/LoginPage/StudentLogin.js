@@ -1,42 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PlainNavbar from "../../../components/Navbar/PlainNavbar";
 import RightsReservedFooter from "../../../components/Footer/RightsReservedFooter";
 import axios from 'axios';
-import { useEffect } from 'react';
-// Importing toastify module
 import { toast } from "react-toastify";
-
+import StudentLoginForm from './StudentLoginForm';
 
 function Studentlogin() {
-    // State variables to store form data
+    const [StudentLoggedIn, setStudentLoggedIn] = useState(false); //redirect to assignments page if already logged in
     const [formData, setFormData] = useState({
-        institution: '',
+        Institution: '',
         Username: '',
         Password: '',
-        loginType: 'Students'
+        LoginType: 'Students'
     });
-    const [institutions, setInstitutions] = useState([]);
+    const [Institutions, setInstitutions] = useState([]);
 
-    // Function to handle form submission
+    // Check if Student is already logged in
+    useEffect(() => {
+        if (localStorage.getItem('StudentsLogin')) {
+            setStudentLoggedIn(true);
+        }
+    }, []);
+
+    // Handle Form Submission
     const handleSubmit = async (event) => {
-        event.preventDefault(); // Prevent default form submission behavior
-        try{
-            let response = await axios.post('/login', formData)
-            console.log(response.data);
-            if(!response.data.success)
+        event.preventDefault();
+        try {
+            let response = await axios.post('/login', formData, { withCredentials: true });
+            console.log(response);
+            if (!response.data.success)
                 toast.error(response.data.message);
-            else
-            {
+            else {
                 toast.success(response.data.message);
-                window.location.href = '/student/assignments';
+                localStorage.setItem('StudentsLogin', true);
+                setStudentLoggedIn(true);
             }
         }
-        catch(error){
+        catch (error) {
             toast.error(`Error while Submitting Form: ${error}`);
         }
     };
 
-    // Function to handle form input changes
     const handleInputChange = (event) => {
         const { id, value } = event.target;
         setFormData({
@@ -45,19 +49,23 @@ function Studentlogin() {
         });
     };
 
+    // Fetching Institutions
     useEffect(() => {
         const fetchInstitutions = async () => {
             try {
                 const response = await axios.get('/registeredColleges');
-                console.log("Institutions:", response.data.result)
                 setInstitutions(response.data.result);
             } catch (error) {
-                toast.error(`Error fetching institutions. Please try again later. err : ${error}`);
+                toast.error(`Error fetching Institution. Please try again later. err : ${error}`);
             }
         };
 
         fetchInstitutions();
-    }, []); // Empty dependency array ensures the effect runs only once when the component mounts
+    }, []);
+
+    if (StudentLoggedIn) {
+        window.location.href = '/student/assignments';
+    }
 
     return (
         <>
@@ -66,28 +74,7 @@ function Studentlogin() {
                 <div className="card align-items-center" style={{ backgroundColor: 'black', color: 'white' }}>
                     <div className="card-body">
                         <h5 className="card-title mb-4 text-center" style={{ fontFamily: 'Arial, sans-serif' }}>STUDENT LOGIN</h5>
-                        <form onSubmit={handleSubmit}>
-                            <div className="mb-3">
-                                <label htmlFor="institution" className="form-label">Institution</label>
-                                <select className="form-select" id="institution" onChange={handleInputChange}>
-                                    <option>Select Institution</option>
-                                    {institutions.length && (institutions.map((institution) => (
-                                        <option key={institution._id} value={institution.Name}>{institution.Name}</option>
-                                    )))}
-                                </select>
-                            </div>
-                            <div className="mb-3">
-                                <label htmlFor="Username" className="form-label">Username</label>
-                                <input type="text" className="form-control" id="Username" placeholder="Enter Username" onChange={handleInputChange} autoComplete="Username" />
-                            </div>
-                            <div className="mb-3">
-                                <label htmlFor="Password" className="form-label">Password</label>
-                                <input type="Password" className="form-control" id="Password" placeholder="Enter Password" autoComplete="current-Password" onChange={handleInputChange} />
-                            </div>
-                            <div className="d-grid gap-2">
-                                <button type="submit" className="btn btn-primary">Submit</button>
-                            </div>
-                        </form>
+                        <StudentLoginForm handleSubmit={handleSubmit} handleInputChange={handleInputChange} Institutions={Institutions} />
                     </div>
                 </div>
             </div>
