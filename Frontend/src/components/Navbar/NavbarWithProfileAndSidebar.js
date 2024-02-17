@@ -6,12 +6,28 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import ProfileModal from '../Modal/profileModal';
 import Offcanvas from 'react-bootstrap/Offcanvas';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function NavbarWithProfileAndSidebar({ TabNames, TabLinks }) {
     const [showModal, setShowModal] = useState(false);
+    const [profileData, setProfileData] = useState({});
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const handlesShowProfileModal = async () => {
+        const response = await axios.get('/getProfile', { withCredentials: true });
+        console.log(response.data);
+        if (response.data.success === false) {
+            toast.error(response.data.message);
+            return;
+        }
+        else {
+            setProfileData(response.data.profile);
+        }
+        setShowModal(true);
+    }
 
     return (
         <>
@@ -38,10 +54,10 @@ function NavbarWithProfileAndSidebar({ TabNames, TabLinks }) {
                             </ul>
                         </Offcanvas.Body>
                     </Offcanvas>
-                    <FontAwesomeIcon icon={faUser} onClick={() => setShowModal(true)} style={{ cursor: 'pointer', color: 'white' }} />
+                    <FontAwesomeIcon icon={faUser} onClick={handlesShowProfileModal} style={{ cursor: 'pointer', color: 'white' }} />
                 </Container>
             </Navbar>
-            <ProfileModal show={showModal} onHide={() => setShowModal(false)} />
+            <ProfileModal show={showModal} onHide={() => setShowModal(false)} profileData={profileData}/>
         </>
     );
 }

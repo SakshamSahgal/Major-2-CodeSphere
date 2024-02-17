@@ -4,9 +4,9 @@ dotenv.config();
 
 const { app } = require("./app");
 const { connectDB } = require("./db/mongoOperations");
-const { loginRoute, logoutRoute } = require("./Auth/jwt");
+const { loginRoute, logoutRoute, getProfileRoute } = require("./Auth/jwt");
 const { ValidateToken } = require("./Middlewares/Auth");
-const { registerCollegeRoute,registeredCollegeRoute } = require("./other/Colleges");
+const { registerCollegeRoute, registeredCollegeRoute } = require("./other/Colleges");
 
 const PORT = process.env.PORT || 8080;
 
@@ -21,3 +21,4 @@ app.post("/login", loginRoute);
 app.delete("/logout", ValidateToken, logoutRoute);
 app.get("/registeredColleges", registeredCollegeRoute);
 app.post("/registerCollege", registerCollegeRoute);
+app.get("/getProfile", ValidateToken, getProfileRoute);

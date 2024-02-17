@@ -95,4 +95,35 @@ function logoutRoute(req, res) {
     })
 }
 
-module.exports = { loginRoute, logoutRoute }
+function getProfileRoute(req, res) {
+    console.log("Recieved request to get profile")
+    console.log(req.decoded)
+    if(req.decoded.LoginType == "Professors"){
+        res.json({
+            success: true,
+            message: "Profile fetched successfully",
+            profile: {
+                Name : req.decoded.DB.Name,
+                Username : req.decoded.DB.Username,
+                Institution : req.decoded.Institution,
+            }
+        })
+        return;
+    }
+    else if(req.decoded.LoginType == "Students"){
+        res.json({
+            success: true,
+            message: "Profile fetched successfully",
+            profile: {
+                Batch : req.decoded.DB.Batch,
+                Name : req.decoded.DB.Name,
+                Username : req.decoded.DB.Username,
+                Year : req.decoded.DB.Year,
+                Institution : req.decoded.Institution,
+            }
+        })
+        return;
+    }
+}
+
+module.exports = { loginRoute, logoutRoute, getProfileRoute }
