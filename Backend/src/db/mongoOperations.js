@@ -6,7 +6,7 @@ async function connectDB() {
         const databaseNames = ['Assignments', 'Colleges', 'Professors', 'QuestionBank', 'Students', 'Evaluations', "AssignmentSubmissions", "EvaluationSubmissions"];
 
         for (let i = 0; i < databaseNames.length; i++) {
-            const DBconnectionString = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.lf3bitf.mongodb.net/${databaseNames[i]}?retryWrites=true&w=majority`;
+            const DBconnectionString = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.882kcr0.mongodb.net/${databaseNames[i]}?retryWrites=true&w=majority`;
 
             const connection = await mongoose.createConnection(DBconnectionString);
 

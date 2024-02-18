@@ -20,10 +20,13 @@ function RegisterCollege() {
     try {
       let response = await axios.post('/registerCollege', formData, { withCredentials: true });
       console.log(response.data);
-      if(!response.data.success)
+      if (!response.data.success)
         toast.error(response.data.message);
-      else
+      else {
         toast.success(response.data.message);
+        //clear the form UI
+        
+      }
     }
     catch (error) {
       toast.error(`Error while Submitting Form: ${error}`);

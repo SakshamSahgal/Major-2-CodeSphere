@@ -6,9 +6,15 @@ function Assignments() {
   return (
     <div>
       <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations"]} TabLinks={["/student/assignments", "/student/evaluations"]} />
-      <h1>Assignments</h1>
+
+
       <div className="container">
-      <StudentAssignmentNavtabs activeTab="tab1" handleTabChange={(tab) => console.log(tab)} />
+        <div className="row my-3">
+          <h1 style={{ color: 'white', textAlign: 'center' }}>Assignments</h1>
+        </div>
+        <div className="row">
+          <StudentAssignmentNavtabs activeTab="tab1" handleTabChange={(tab) => console.log(tab)} />
+        </div>
       </div>
       <RightsReservedFooter />
     </div>

@@ -9,7 +9,6 @@ const assignmentSchema = new mongoose.Schema({
     },
     Batches: [{ type: String, required: true }],
     PostedBy: { type: mongoose.Schema.Types.ObjectId, required: true },
-    College: { type: String, required: true },
     AssignmentName: { type: String, required: true, unique: true },
     SubmittedBy: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
     Questions: [{ type: mongoose.Schema.Types.ObjectId, required: true }],

@@ -3,15 +3,15 @@ import { Nav, Tab } from 'react-bootstrap';
 function StudentAssignmentNavtabs({ activeTab, handleTabChange }) {
     return (
         <>
-            <Nav variant="tabs" defaultActiveKey={activeTab} onSelect={handleTabChange}>
+            <Nav variant="tabs" defaultActiveKey={activeTab} onSelect={handleTabChange} fill>
                 <Nav.Item>
-                    <Nav.Link eventKey="tab1">Tab 1</Nav.Link>
+                    <Nav.Link eventKey="tab1">Pending</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link eventKey="tab2">Tab 2</Nav.Link>
+                    <Nav.Link eventKey="tab2">Missed</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link eventKey="tab3">Tab 3</Nav.Link>
+                    <Nav.Link eventKey="tab3">Submitted</Nav.Link>
                 </Nav.Item>
             </Nav>
 
