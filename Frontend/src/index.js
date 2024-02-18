@@ -5,7 +5,7 @@ import axios from 'axios';
 
 if (process.env.NODE_ENV === 'development') {
     console.log("Runnning in Development Mode");
-    axios.defaults.baseURL = process.env.REACT_APP_LOCALHOST;
+    axios.defaults.baseURL = process.env.REACT_APP_BACKEND_LOCALHOST;
 }
 else {
     console.log("Runnning in Production Mode");

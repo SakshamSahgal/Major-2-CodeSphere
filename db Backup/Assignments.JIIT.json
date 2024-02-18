@@ -1,0 +1,99 @@
+[{
+  "_id": {
+    "$oid": "65bef2eea16a74156a3d4fcb"
+  },
+  "DueTimestamp": {
+    "$date": "2024-02-15T07:43:00.000Z"
+  },
+  "Year": "First Year",
+  "Batches": [
+    "B4",
+    "B5",
+    "B7",
+    "B8",
+    "B9",
+    "B10"
+  ],
+  "PostedBy": {
+    "$oid": "65b142dabb80231cd4d21359"
+  },
+  "College": "JIIT",
+  "AssignmentName": "Assignment 1",
+  "SubmittedBy": [
+    {
+      "$oid": "65bccc7b8be314339650fc1b"
+    }
+  ],
+  "Questions": [
+    {
+      "$oid": "65be672ba04cee3d59774ceb"
+    },
+    {
+      "$oid": "65be3f12963f205bb9e9bdfc"
+    },
+    {
+      "$oid": "65bead897153884eaa56c56a"
+    }
+  ],
+  "PostedOn": {
+    "$date": "2024-02-04T02:14:06.845Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65bf10fc5a1af61855e64d91"
+  },
+  "DueTimestamp": {
+    "$date": "2024-02-10T09:52:00.000Z"
+  },
+  "Year": "First Year",
+  "Batches": [
+    "B8"
+  ],
+  "PostedBy": {
+    "$oid": "65b142dabb80231cd4d21359"
+  },
+  "College": "JIIT",
+  "AssignmentName": "test3",
+  "SubmittedBy": [],
+  "Questions": [
+    {
+      "$oid": "65be3f12963f205bb9e9bdfc"
+    }
+  ],
+  "PostedOn": {
+    "$date": "2024-02-04T04:22:20.456Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65bf13585a1af61855e64f88"
+  },
+  "DueTimestamp": {
+    "$date": "2024-02-05T10:01:00.000Z"
+  },
+  "Year": "First Year",
+  "Batches": [
+    "B8"
+  ],
+  "PostedBy": {
+    "$oid": "65b142dabb80231cd4d21359"
+  },
+  "College": "JIIT",
+  "AssignmentName": "Assignment Week 4",
+  "SubmittedBy": [],
+  "Questions": [
+    {
+      "$oid": "65be686ca04cee3d5977517b"
+    },
+    {
+      "$oid": "65bead897153884eaa56c56a"
+    }
+  ],
+  "PostedOn": {
+    "$date": "2024-02-04T04:32:24.555Z"
+  },
+  "__v": 0
+}]
