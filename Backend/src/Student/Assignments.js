@@ -1,5 +1,26 @@
 const { readDB } = require("../db/mongoOperations");
-const { assignmentSchema } = require("../db/schema");
+const { assignmentSchema, professorsSchema } = require("../db/schema");
+
+async function GetProfessor(id, college) {
+    //read the professor from the database
+    // return the professor object from the database Excluding Password
+    if (!id || !college) {
+        return {}
+    }
+    try {
+        const thisProfessor = await readDB("Professors", college, { _id: id }, professorsSchema)
+
+        if (thisProfessor.length > 0) {
+            //return the professor object from the database Excluding Password
+            return { Name: thisProfessor[0].Name }
+        }
+        else
+            return {}
+    }
+    catch (error) {
+        return {}
+    }
+}
 
 // This function is used to get the Pending assignments for the student, which are not submitted yet and are due
 function getStudentPendingAssignmentsRoute(req, res) {
@@ -12,7 +33,16 @@ function getStudentPendingAssignmentsRoute(req, res) {
 
     // Query the Assignments collection based on batch, year, and due date
     readDB("Assignments", req.decoded.Institution, Querry, assignmentSchema)
-        .then((data) => {
+
+        .then(async (data) => {
+
+            //iterate through the assignments and get the professor details for each assignment
+            await Promise.all(data.map(async (assignment) => {
+                let thisProfessor = await GetProfessor(assignment.PostedBy, req.decoded.Institution);
+                console.log(thisProfessor)
+                assignment.PostedBy = thisProfessor;
+            }));
+
             res.status(200).json({
                 success: true,
                 message: "Pending Assignments fetched successfully",
@@ -62,11 +92,20 @@ function getStudentMissedAssignmentsRoute(req, res) {
     }
 
     readDB("Assignments", req.decoded.Institution, Querry, assignmentSchema)
-        .then((data) => {
+        .then(async (data) => {
+            let Assignments = JSON.parse(JSON.stringify(data))
+            //iterate through the assignments and get the professor details for each assignment
+            await Promise.all(Assignments.map(async (assignment, index) => {
+                let thisProfessor = await GetProfessor(assignment.PostedBy, req.decoded.Institution);
+                console.log(thisProfessor);
+
+                // Assuming assignment is mutable and PostedBy is directly modifiable
+                assignment.PostedBy = thisProfessor;
+            }));
             res.status(200).json({
                 success: true,
                 message: "Missed Assignments fetched successfully",
-                Assignments: data,
+                Assignments: Assignments,
             });
         })
         .catch((error) => {
@@ -75,7 +114,6 @@ function getStudentMissedAssignmentsRoute(req, res) {
                 message: `Failed to fetch Missed Assignments, err : ${error.message}`,
             });
         });
-
 }
 
 module.exports = { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute };
