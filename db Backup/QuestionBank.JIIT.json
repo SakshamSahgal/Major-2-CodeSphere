@@ -1,0 +1,246 @@
+[{
+  "_id": {
+    "$oid": "65b7dd9b6dcc7b0c3d135950"
+  },
+  "ProblemStatement": "Print Hello World",
+  "SolutionCode": "cout << \" Hello World\";",
+  "Constraints": "none",
+  "QuestionName": "Hello world",
+  "RandomTestCode": "Hello",
+  "TestCases": [
+    {
+      "input": "Harsh",
+      "sampleTestCase": false
+    },
+    {
+      "input": "Harsh",
+      "sampleTestCase": false
+    },
+    {
+      "input": "Harsh",
+      "sampleTestCase": false
+    }
+  ],
+  "RandomTestChecked": true,
+  "CreatedBy": {
+    "$oid": "65b142dabb80231cd4d21359"
+  }
+},
+{
+  "_id": {
+    "$oid": "65be3f12963f205bb9e9bdfc"
+  },
+  "Constraints": "1 < n < 100\n",
+  "ProblemStatement": "You need to take input n and print that n",
+  "QuestionName": "Print N",
+  "RandomTestCode": "",
+  "SolutionCode": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main()\n{\n  int n;\n  cin>>n;\n  cout<<n;\n  return 0;\n}",
+  "TestCases": [
+    {
+      "input": "5",
+      "sampleTestCase": true,
+      "_id": {
+        "$oid": "65be3f12963f205bb9e9bdfd"
+      }
+    },
+    {
+      "input": "3",
+      "sampleTestCase": false,
+      "_id": {
+        "$oid": "65be3f12963f205bb9e9bdfe"
+      }
+    },
+    {
+      "input": "2",
+      "sampleTestCase": true,
+      "_id": {
+        "$oid": "65be3f12963f205bb9e9bdff"
+      }
+    },
+    {
+      "input": "105",
+      "sampleTestCase": false,
+      "_id": {
+        "$oid": "65be3f12963f205bb9e9be00"
+      }
+    },
+    {
+      "input": "23",
+      "sampleTestCase": false,
+      "_id": {
+        "$oid": "65be3f12963f205bb9e9be01"
+      }
+    }
+  ],
+  "RandomTestChecked": false,
+  "CreatedBy": {
+    "$oid": "65b142dabb80231cd4d21359"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65be672ba04cee3d59774ceb"
+  },
+  "Constraints": "1 < n < 100",
+  "ProblemStatement": "Take size of array as input and than all the elements of the array and than print it in a line.",
+  "QuestionName": "Print Array",
+  "RandomTestCode": "",
+  "SolutionCode": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main()\n{\n  int n;\n  cin>>n;\n  vector<int>v(n);\n  for(int i = 0;i<n;i++)cin>>v[i];\n  for(auto i:v)cout<<i<<\" \";\n  return 0;\n}",
+  "TestCases": [
+    {
+      "input": "3\n1 2 3 ",
+      "sampleTestCase": false,
+      "_id": {
+        "$oid": "65be672ba04cee3d59774cec"
+      }
+    },
+    {
+      "input": "5\n1 2 3 4 5",
+      "sampleTestCase": false,
+      "_id": {
+        "$oid": "65be672ba04cee3d59774ced"
+      }
+    },
+    {
+      "input": "1\n1",
+      "sampleTestCase": false,
+      "_id": {
+        "$oid": "65be672ba04cee3d59774cee"
+      }
+    }
+  ],
+  "RandomTestChecked": false,
+  "CreatedBy": {
+    "$oid": "65b142dabb80231cd4d21359"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65be686ca04cee3d5977517b"
+  },
+  "Constraints": "1 < n < 100",
+  "ProblemStatement": "take array as input and print it vertically",
+  "QuestionName": "Print Array vertically",
+  "RandomTestCode": "",
+  "SolutionCode": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main()\n{\n  int n;\n  cin>>n;\n  vector<int>v(n);\n  for(int i = 0;i<n;i++)cin>>v[i];\n  for(auto i:v)cout<<i<<endl;\n  return 0;\n}",
+  "TestCases": [
+    {
+      "input": "5\n1 2 3 4 5",
+      "sampleTestCase": false,
+      "_id": {
+        "$oid": "65be686ca04cee3d5977517c"
+      }
+    },
+    {
+      "input": "4\n1 2 3 4",
+      "sampleTestCase": false,
+      "_id": {
+        "$oid": "65be686ca04cee3d5977517d"
+      }
+    },
+    {
+      "input": "2 \n1 2",
+      "sampleTestCase": false,
+      "_id": {
+        "$oid": "65be686ca04cee3d5977517e"
+      }
+    }
+  ],
+  "RandomTestChecked": false,
+  "CreatedBy": {
+    "$oid": "65b142dabb80231cd4d21359"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65beac467153884eaa56bf83"
+  },
+  "Constraints": "n <= 1 < 100",
+  "ProblemStatement": "take a number input and print its value.",
+  "QuestionName": "Print Number",
+  "RandomTestCode": "#include <iostream>\n#include <cstdlib>\n#include <ctime>\n\nusing namespace std;\n\nint main() {\n    // Seed the random number generator with the current time\n    srand(time(0));\n\n    // Generate a random number between 1 and 99\n    int randomNumber = rand() % 99 + 1;\n    cout << randomNumber;\n\n    return 0;\n}",
+  "SolutionCode": "#include<iostream>\nusing namespace std;\n\nint main(){\n  int n;\n  cin>>n;\n  cout<<n;\n  return 0;\n}",
+  "TestCases": [
+    {
+      "input": "1",
+      "sampleTestCase": true,
+      "_id": {
+        "$oid": "65beac467153884eaa56bf84"
+      }
+    },
+    {
+      "input": "2",
+      "sampleTestCase": false,
+      "_id": {
+        "$oid": "65beac467153884eaa56bf85"
+      }
+    },
+    {
+      "input": "15",
+      "sampleTestCase": true,
+      "_id": {
+        "$oid": "65beac467153884eaa56bf86"
+      }
+    },
+    {
+      "input": "98",
+      "sampleTestCase": false,
+      "_id": {
+        "$oid": "65beac467153884eaa56bf87"
+      }
+    }
+  ],
+  "RandomTestChecked": true,
+  "CreatedBy": {
+    "$oid": "65b142dabb80231cd4d21359"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65bead897153884eaa56c56a"
+  },
+  "Constraints": "1 <= n < 100",
+  "ProblemStatement": "Take a number input and print it.",
+  "QuestionName": "Random Test",
+  "RandomTestCode": "#include <iostream>\n#include <cstdlib>\n#include <ctime>\n\nusing namespace std;\n\nint main() {\n    // Seed the random number generator with the current time\n    srand(time(0));\n\n    // Generate a random number between 1 and 99\n    int randomNumber = rand() % 99 + 1;\n    cout << randomNumber;\n\n    return 0;\n}",
+  "SolutionCode": "#include<iostream>\nusing namespace std;\n\nint main(){\n  int n;\n  cin>>n;\n  cout<<n;\n  return 0;\n}",
+  "TestCases": [
+    {
+      "input": "1",
+      "sampleTestCase": true,
+      "_id": {
+        "$oid": "65bead897153884eaa56c56b"
+      }
+    },
+    {
+      "input": "93",
+      "sampleTestCase": true,
+      "_id": {
+        "$oid": "65bead897153884eaa56c56c"
+      }
+    },
+    {
+      "input": "3",
+      "sampleTestCase": false,
+      "_id": {
+        "$oid": "65bead897153884eaa56c56d"
+      }
+    },
+    {
+      "input": "6",
+      "sampleTestCase": false,
+      "_id": {
+        "$oid": "65bead897153884eaa56c56e"
+      }
+    }
+  ],
+  "RandomTestChecked": true,
+  "CreatedBy": {
+    "$oid": "65b142dabb80231cd4d21359"
+  },
+  "__v": 0
+}]

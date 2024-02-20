@@ -39,7 +39,6 @@ function getStudentPendingAssignmentsRoute(req, res) {
             //iterate through the assignments and get the professor details for each assignment
             await Promise.all(data.map(async (assignment) => {
                 let thisProfessor = await GetProfessor(assignment.PostedBy, req.decoded.Institution);
-                console.log(thisProfessor)
                 assignment.PostedBy = thisProfessor;
             }));
 
@@ -67,7 +66,14 @@ function getStudentSubmittedAssignmentsRoute(req, res) {
     }
 
     readDB("Assignments", req.decoded.Institution, Querry, assignmentSchema)
-        .then((data) => {
+        .then(async (data) => {
+
+            //iterate through the assignments and get the professor details for each assignment
+            await Promise.all(data.map(async (assignment) => {
+                let thisProfessor = await GetProfessor(assignment.PostedBy, req.decoded.Institution);
+                assignment.PostedBy = thisProfessor;
+            }));
+
             res.status(200).json({
                 success: true,
                 message: "Submitted Assignments fetched successfully",
@@ -93,19 +99,15 @@ function getStudentMissedAssignmentsRoute(req, res) {
 
     readDB("Assignments", req.decoded.Institution, Querry, assignmentSchema)
         .then(async (data) => {
-            let Assignments = JSON.parse(JSON.stringify(data))
             //iterate through the assignments and get the professor details for each assignment
-            await Promise.all(Assignments.map(async (assignment, index) => {
+            await Promise.all(data.map(async (assignment, index) => {
                 let thisProfessor = await GetProfessor(assignment.PostedBy, req.decoded.Institution);
-                console.log(thisProfessor);
-
-                // Assuming assignment is mutable and PostedBy is directly modifiable
                 assignment.PostedBy = thisProfessor;
             }));
             res.status(200).json({
                 success: true,
                 message: "Missed Assignments fetched successfully",
-                Assignments: Assignments,
+                Assignments: data,
             });
         })
         .catch((error) => {

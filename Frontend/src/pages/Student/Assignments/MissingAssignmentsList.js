@@ -26,42 +26,53 @@ function MissingAssignmentsList() {
     }, [])
 
     return (
-        <div className="container px-3 my-1">
-            <div className="row my-3">
-                {missingAssignments.length === 0 ? (
-                    <h6 className="text-light text-center">No Missing Assignments</h6>
-                ) : (
-                    missingAssignments.map((assignment, index) => (
-                        <div key={index} className="card mb-3">
-                            <h5 className="card-header text-center">{assignment.AssignmentName}</h5>
-                            <div className="card-body">
-                                <div className="assignment-details">
-                                    <p className="card-text">
-                                        <strong>Posted On:</strong>{" "}
-                                        {convertIsoToNormalTime(assignment.PostedOn).date}{" "}
-                                        {convertIsoToNormalTime(assignment.PostedOn).time}{" "}
-                                        [ {getTimeElapsed(assignment.PostedOn)} ]
-                                    </p>
-                                    <p className="card-text">
-                                        <strong>Due Timestamp:</strong>{" "}
-                                        {convertIsoToNormalTime(assignment.DueTimestamp).date}{" "}
-                                        {convertIsoToNormalTime(assignment.DueTimestamp).time}{" "}
-                                        [ {getTimeElapsed(assignment.DueTimestamp)} ]
-                                    </p>
-                                    <p className="card-text">
-                                        <strong>Batches:</strong>{" "}
-                                        {assignment.Batches.join(", ")}
-                                    </p>
+        <div className="container px-1 my-1">
+
+            {missingAssignments.length === 0 ? (
+                <h6 className="text-light text-center">No Missing Assignments</h6>
+            ) : (
+                missingAssignments.map((assignment, index) => (
+                    <div key={index} className="row my-3 w-100">
+                        <div className="col">
+                            <div className="card">
+                                <div className="card-header d-flex align-items-center">
+                                    <small className="text-muted">Posted By: {assignment.PostedBy.Name}</small>
+                                    <h5 className="text-center mb-0 flex-grow-1">{assignment.AssignmentName}</h5>
+                                </div>
+                                <div className="card-body">
+                                    <div>
+                                        <p className="card-text">
+                                            <strong>Posted On:</strong>{" "}
+                                            {convertIsoToNormalTime(assignment.PostedOn).date}{" "}
+                                            {convertIsoToNormalTime(assignment.PostedOn).time}{" "}
+                                            <span className="text-muted">[ {getTimeElapsed(assignment.PostedOn)} ] </span>
+                                        </p>
+                                        <p className="card-text">
+                                            <strong>Due Timestamp:</strong>{" "}
+                                            {convertIsoToNormalTime(assignment.DueTimestamp).date}{" "}
+                                            {convertIsoToNormalTime(assignment.DueTimestamp).time}{" "}
+                                            <span className="text-muted">[ {getTimeElapsed(assignment.DueTimestamp)} ]</span>
+                                        </p>
+                                        <p className="card-text">
+                                            <strong>Batches:</strong>{" "}
+                                            {assignment.Batches.map((batch, batchIndex) => (
+                                                <span key={batchIndex} className="badge bg-secondary mx-1">
+                                                    {batch}
+                                                </span>
+                                            ))}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="card-footer d-flex justify-content-between">
+                                    <button className="btn btn-primary btn-sm d-block d-sm-inline-block"> Questions ({assignment.Questions.length}) </button>
+                                    <button className="btn btn-primary btn-sm d-block d-sm-inline-block"> Submissions ({assignment.SubmittedBy.length}) </button>
                                 </div>
                             </div>
-                            <div className="card-footer d-flex justify-content-between">
-                                <small className="text-muted">Posted By: {assignment.PostedBy.Name}</small>
-                                <button className="btn btn-primary">View Questions</button>
-                            </div>
                         </div>
-                    ))
-                )}
-            </div>
+                    </div>
+                ))
+            )}
+
         </div>
     );
 }

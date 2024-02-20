@@ -51,12 +51,17 @@ async function readDB(databaseName, collectionName, query, schema) {
         });
 
         console.log(`Data read from ${collectionName} collection in ${databaseName} database`);
-        return data;
+
+        // Make mutable copies of objects before returning
+        const mutableData = data.map(obj => obj._doc);
+
+        return mutableData;
     } catch (error) {
         console.error(`Error reading from the database: ${databaseName} collection: ${collectionName}, error: `, error);
         throw error; // Rethrow the error to handle it where readDB is called
     }
 }
+
 
 async function updateDB(databaseName, collectionName, FindQuerry, UpdateQuerry, schema) {
     try {
