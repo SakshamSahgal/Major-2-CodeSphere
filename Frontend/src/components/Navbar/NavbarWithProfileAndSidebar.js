@@ -9,7 +9,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-function NavbarWithProfileAndSidebar({ TabNames, TabLinks }) {
+function NavbarWithProfileAndSidebar({ TabNames, TabLinks, LoginType }) {
     const [showModal, setShowModal] = useState(false);
     const [profileData, setProfileData] = useState({});
     const [show, setShow] = useState(false);
@@ -57,7 +57,7 @@ function NavbarWithProfileAndSidebar({ TabNames, TabLinks }) {
                     <FontAwesomeIcon icon={faUser} onClick={handlesShowProfileModal} style={{ cursor: 'pointer', color: 'white' }} />
                 </Container>
             </Navbar>
-            <ProfileModal show={showModal} onHide={() => setShowModal(false)} profileData={profileData}/>
+            <ProfileModal show={showModal} onHide={() => setShowModal(false)} profileData={profileData} LoginType={LoginType}/>
         </>
     );
 }

@@ -2,11 +2,11 @@ import NavbarWithProfileAndSidebar from "../../../components/Navbar/NavbarWithPr
 import RightsReservedFooter from "../../../components/Footer/RightsReservedFooter";
 import StudentAssignmentNavtabs from "./StudentAssignmentNavtabs";
 
-function Assignments() {
+function StudentAssignments() {
 
   return (
     <div>
-      <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations"]} TabLinks={["/student/assignments", "/student/evaluations"]} />
+      <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations"]} TabLinks={["/students/assignments", "/students/evaluations"]} LoginType={"Students"} />
       <div className="container">
         <div className="row my-3">
           <h1 style={{ color: 'white', textAlign: 'center' }}>Assignments</h1>
@@ -20,4 +20,4 @@ function Assignments() {
   );
 }
 
-export default Assignments;
+export default StudentAssignments;

@@ -1,5 +1,5 @@
 
-function ProfessorLoginForm({ handleSubmit, handleInputChange, Institutions }) {
+function LoginForm({ handleSubmit, handleInputChange, Institutions, LoginType }) {
     return (
         <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -24,6 +24,6 @@ function ProfessorLoginForm({ handleSubmit, handleInputChange, Institutions }) {
             </div>
         </form>
     );
-}
+};
 
-export default ProfessorLoginForm;
+export default LoginForm;

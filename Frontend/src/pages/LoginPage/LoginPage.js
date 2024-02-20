@@ -1,39 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import PlainNavbar from "../../../components/Navbar/PlainNavbar";
-import RightsReservedFooter from "../../../components/Footer/RightsReservedFooter";
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { toast } from "react-toastify";
-import StudentLoginForm from './StudentLoginForm';
+import { toast } from 'react-toastify';
+import PlainNavbar from '../../components/Navbar/PlainNavbar';
+import RightsReservedFooter from '../../components/Footer/RightsReservedFooter';
+import LoginForm from './LoginForm';
 
-function Studentlogin() {
-    const [StudentLoggedIn, setStudentLoggedIn] = useState(false); //redirect to assignments page if already logged in
+//LoginType = 'Students' or 'Professors'
+function LoginPage({ LoginType }) {
+
     const [formData, setFormData] = useState({
         Institution: '',
         Username: '',
         Password: '',
-        LoginType: 'Students'
+        LoginType: LoginType
     });
+
     const [Institutions, setInstitutions] = useState([]);
 
-    // Check if Student is already logged in
-    useEffect(() => {
-        if (localStorage.getItem('StudentsLogin')) {
-            setStudentLoggedIn(true);
-        }
-    }, []);
 
     // Handle Form Submission
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             let response = await axios.post('/login', formData, { withCredentials: true });
-            console.log(response);
+            console.log(response.data);
             if (!response.data.success)
                 toast.error(response.data.message);
             else {
                 toast.success(response.data.message);
-                localStorage.setItem('StudentsLogin', true);
-                setStudentLoggedIn(true);
+                localStorage.setItem(`${LoginType}Login`, true);
+                window.location.href = `/${LoginType.toLowerCase()}/assignments`;
             }
         }
         catch (error) {
@@ -63,8 +59,9 @@ function Studentlogin() {
         fetchInstitutions();
     }, []);
 
-    if (StudentLoggedIn) {
-        window.location.href = '/student/assignments';
+    // Redirect to Assignments Page if already logged in
+    if (localStorage.getItem(`${LoginType}Login`) === 'true') {
+        window.location.href = `/${LoginType.toLowerCase()}/assignments`;
     }
 
     return (
@@ -73,8 +70,8 @@ function Studentlogin() {
             <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
                 <div className="card align-items-center" style={{ backgroundColor: 'black', color: 'white' }}>
                     <div className="card-body">
-                        <h5 className="card-title mb-4 text-center" style={{ fontFamily: 'Arial, sans-serif' }}>STUDENT LOGIN</h5>
-                        <StudentLoginForm handleSubmit={handleSubmit} handleInputChange={handleInputChange} Institutions={Institutions} />
+                        <h5 className="card-title mb-4 text-center" style={{ fontFamily: 'Arial, sans-serif' }}>{LoginType} LOGIN</h5>
+                        <LoginForm handleSubmit={handleSubmit} handleInputChange={handleInputChange} Institutions={Institutions} />
                     </div>
                 </div>
             </div>
@@ -83,4 +80,4 @@ function Studentlogin() {
     );
 }
 
-export default Studentlogin;
+export default LoginPage;

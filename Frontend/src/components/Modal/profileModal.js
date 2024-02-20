@@ -4,16 +4,16 @@ import { Modal } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { toast } from "react-toastify";
 
-function ProfileModal({ show, onHide, profileData }) {
+//LoginType = 'Students' or 'Professors'
+function ProfileModal({ show, onHide, profileData, LoginType }) {
     //show is True or False
     //onHide is a function to close the modal
 
     const Logout = async () => {
 
-        localStorage.removeItem('StudentsLogin');
-        localStorage.removeItem('ProfessorsLogin');
+        localStorage.removeItem(`${LoginType}Login`);
 
-        const response = await axios.delete('/logout', { withCredentials: true });
+        const response = await axios.delete('/logout', { withCredentials: true }); //this will remove the cookie from the browser
         console.log(response.data);
         if (response.data.success === false)
             toast.error(response.data.message);
