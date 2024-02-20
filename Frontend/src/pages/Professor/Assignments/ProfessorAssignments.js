@@ -1,8 +1,12 @@
+import RightsReservedFooter from '../../../components/Footer/RightsReservedFooter';
+import NavbarWithProfileAndSidebar from '../../../components/Navbar/NavbarWithProfileAndSidebar';
+
 
 function ProfessorAssignments(){
     return(
         <div>
-            <h1>Professor Assignments</h1>
+            <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations"]} TabLinks={["/professors/assignments", "/professors/evaluations"]} LoginType={"Professors"} />
+            <RightsReservedFooter />
         </div>
     )
 }
