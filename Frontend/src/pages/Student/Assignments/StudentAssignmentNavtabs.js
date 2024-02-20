@@ -1,7 +1,6 @@
 import { Nav, Tab } from 'react-bootstrap';
 import { useState } from 'react';
-import PendingAssignmentsList from './PendingAssignmentsList';
-import MissingAssignmentsList from './MissingAssignmentsList';
+import AssignmentList from './AssignmentList';
 
 function StudentAssignmentNavtabs({ activeTab }) {
     // State to store the active tab
@@ -36,21 +35,17 @@ function StudentAssignmentNavtabs({ activeTab }) {
             <Tab.Content>
                 <Tab.Pane eventKey="pending" style={{ color: "white" }}>
                     {showPending && (
-                        <>
-                            <PendingAssignmentsList />
-                        </>
+                        <AssignmentList listType={"Pending"} />
                     )}
                 </Tab.Pane>
                 <Tab.Pane eventKey="missed" style={{ color: "white" }}>
                     {showMissed && (
-                        <>
-                            <MissingAssignmentsList />
-                        </>
+                        <AssignmentList listType={"Missed"}/>
                     )}
                 </Tab.Pane>
                 <Tab.Pane eventKey="submitted" style={{ color: "white" }}>
                     {showSubmitted && (
-                        <div>Submitted</div>
+                        <AssignmentList listType={"Submitted"} />
                     )}
                 </Tab.Pane>
             </Tab.Content>

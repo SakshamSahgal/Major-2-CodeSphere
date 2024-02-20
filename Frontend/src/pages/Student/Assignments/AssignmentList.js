@@ -1,37 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
 import { getTimeElapsed, convertIsoToNormalTime } from "../../../Scripts/TimeFunctions";
 
-function MissingAssignmentsList() {
-    const [missingAssignments, setMissingAssignments] = useState([]);
+//List Type can be 'Pending', 'Missed' or 'Submitted'
+function AssignmentList({ listType }) {
+    const [assignments, setAssignments] = useState([]);
 
     useEffect(() => {
-        const fetchMissingAssignments = async () => {
+        const fetchAssignments = async () => {
             try {
-                const response = await axios.get(`/students/assignments/missed`, { withCredentials: true });
+                const response = await axios.get(`/students/assignments/${listType.toLowerCase()}`, { withCredentials: true });
                 console.log(response.data);
                 if (response.data.success) {
                     toast.success(response.data.message);
-                    setMissingAssignments(response.data.Assignments);
+                    setAssignments(response.data.Assignments);
                 } else {
                     toast.error(response.data.message);
                 }
             } catch (error) {
-                toast.error(`Error fetching Missed Assignments. Please try again later. err : ${error}`);
+                toast.error(`Error fetching ${listType} Assignments. Please try again later. err : ${error}`);
             }
         }
-        fetchMissingAssignments();
-    }, [])
+        fetchAssignments();
+    }, [listType])
 
     return (
         <div className="container px-1 my-1">
-
-            {missingAssignments.length === 0 ? (
-                <h6 className="text-light text-center">No Missing Assignments</h6>
+            {assignments.length === 0 ? (
+                <h6 className="text-light text-center">No {listType} Assignments</h6>
             ) : (
-                missingAssignments.map((assignment, index) => (
+                assignments.map((assignment, index) => (
                     <div key={index} className="row my-3 w-100">
                         <div className="col">
                             <div className="card">
@@ -72,9 +71,8 @@ function MissingAssignmentsList() {
                     </div>
                 ))
             )}
-
         </div>
     );
 }
 
-export default MissingAssignmentsList;
+export default AssignmentList;

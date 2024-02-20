@@ -43,7 +43,17 @@ function isStudent(req, res, next) {
     }
 }
 
+function isProfessor(req, res, next) {
+    if (req.decoded.LoginType === "Professors") {
+        next();
+    }
+    else {
+        res.status(401).json({
+            success: false,
+            message: "You are not authorized to access this route"
+        })
+    }
+}
 
-
-module.exports = { ValidateToken, isStudent }
+module.exports = { ValidateToken, isStudent, isProfessor }
 
