@@ -1,5 +1,5 @@
 const { readDB } = require("../db/mongoOperations");
-const { assignmentSchema, registeredCollegesSchema } = require("../db/schema");
+const { assignmentSchema, registeredCollegesSchema, QuestionSchema } = require("../db/schema");
 
 
 function getProfessorAssignmentsRoute(req, res) {
@@ -51,4 +51,52 @@ function getBatchesRoute(req, res) {
     });
 }
 
-module.exports = { getProfessorAssignmentsRoute, getBatchesRoute };
+function getMyQuestionsRoute(req, res) {
+
+    Querry = {
+        CreatedBy: req.decoded._id //only the questions posted by this professor will be fetched
+    }
+
+    readDB("QuestionBank", req.decoded.Institution, Querry, QuestionSchema)
+
+        .then(async (data) => {
+            res.status(200).json({
+                success: true,
+                message: "Questions fetched successfully",
+                Questions: data,
+            });
+        })
+        .catch((error) => {
+            //status 500 is for internal server error
+            res.status(500).json({
+                success: false,
+                message: `Failed to fetch Questions, err : ${error.message}`,
+            });
+        });
+}
+
+function getOtherQuestionsRoute(req, res) {
+
+    Querry = {
+        CreatedBy: { $ne: req.decoded._id } //only the questions posted by other professors will be fetched
+    }
+
+    readDB("QuestionBank", req.decoded.Institution, Querry, QuestionSchema)
+
+        .then(async (data) => {
+            res.status(200).json({
+                success: true,
+                message: "Questions fetched successfully",
+                Questions: data,
+            });
+        })
+        .catch((error) => {
+            //status 500 is for internal server error
+            res.status(500).json({
+                success: false,
+                message: `Failed to fetch Questions, err : ${error.message}`,
+            });
+        });
+}
+
+module.exports = { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getOtherQuestionsRoute };
