@@ -4,7 +4,7 @@ const { assignmentSchema } = require("../db/schema");
 
 function getProfessorAssignmentsRoute(req, res) {
     Querry = {
-        PostedBy: req.decoded._id
+        PostedBy: req.decoded._id //only the assignments posted by this professor will be fetched
     }
 
     readDB("Assignments", req.decoded.Institution, Querry, assignmentSchema)

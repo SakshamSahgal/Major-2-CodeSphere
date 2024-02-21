@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { convertIsoToNormalTime, getTimeElapsed } from '../../../Scripts/TimeFunctions';
 
+//this returns a list of assignments created by this professor
 function CreatedAssignments() {
     const [MyCreatedAssignments, setMyCreatedAssignments] = useState([]);
 

@@ -1,7 +1,7 @@
 import RightsReservedFooter from '../../../components/Footer/RightsReservedFooter';
 import NavbarWithProfileAndSidebar from '../../../components/Navbar/NavbarWithProfileAndSidebar';
 import CreatedAssignments from './CreatedAssignments';
-
+import CreateAssignmentModal from './CreateAssignmentModal';
 function ProfessorAssignments() {
     return (
         <div>
@@ -12,7 +12,7 @@ function ProfessorAssignments() {
                 </div>
                 <div className="row">
                     <div className="col text-center">
-                        <button className='btn btn-primary'>Create Assignment</button>
+                        <CreateAssignmentModal />
                     </div>
                 </div>
                 <div className="row">

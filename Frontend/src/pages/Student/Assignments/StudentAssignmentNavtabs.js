@@ -20,7 +20,7 @@ function StudentAssignmentNavtabs({ activeTab }) {
     };
 
     return (
-        <Tab.Container id="nav-tabs-example" defaultActiveKey={activeTab}>
+        <Tab.Container defaultActiveKey={activeTab}>
             <Nav variant="tabs" defaultActiveKey={activeTab} fill onSelect={handleTabChange}>
                 <Nav.Item>
                     <Nav.Link eventKey="pending">Pending</Nav.Link>
@@ -53,37 +53,5 @@ function StudentAssignmentNavtabs({ activeTab }) {
 
     );
 }
-
-// function StudentAssignmentNavtabs({ activeTab }) {
-//     return (
-//         <Tab.Container id="nav-tabs-example" defaultActiveKey={activeTab}>
-//             <Nav variant="tabs" fill>
-//                 <Nav.Item>
-//                     <Nav.Link eventKey="tab1">Tab 1</Nav.Link>
-//                 </Nav.Item>
-//                 <Nav.Item>
-//                     <Nav.Link eventKey="tab2">Tab 2</Nav.Link>
-//                 </Nav.Item>
-//                 <Nav.Item>
-//                     <Nav.Link eventKey="tab3">Tab 3</Nav.Link>
-//                 </Nav.Item>
-//             </Nav>
-//             <Tab.Content>
-//                 <Tab.Pane eventKey="tab1" style={{ color: "white" }} >
-//                     <h3>Tab 1 Content</h3>
-//                     <p>This is the content of Tab 1.</p>
-//                 </Tab.Pane>
-//                 <Tab.Pane eventKey="tab2" style={{ color: "white" }} >
-//                     <h3>Tab 2 Content</h3>
-//                     <p>This is the content of Tab 2.</p>
-//                 </Tab.Pane>
-//                 <Tab.Pane eventKey="tab3" style={{ color: "white" }} >
-//                     <h3>Tab 3 Content</h3>
-//                     <p>This is the content of Tab 3.</p>
-//                 </Tab.Pane>
-//             </Tab.Content>
-//         </Tab.Container>
-//     );
-// }
 
 export default StudentAssignmentNavtabs;
