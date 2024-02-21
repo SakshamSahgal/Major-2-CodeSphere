@@ -36,10 +36,10 @@ async function writeDB(databaseName, collectionName, data, schema) {
     }
 }
 
-async function readDB(databaseName, collectionName, query, schema) {
+async function readDB(databaseName, collectionName, query, schema, projection = {}) {
     try {
         const thisModel = connections[databaseName].model(collectionName, schema, collectionName);
-        const data = await thisModel.find(query);
+        const data = await thisModel.find(query, projection);
 
         // Validate data against the schema
         data.forEach((document) => {
@@ -61,6 +61,7 @@ async function readDB(databaseName, collectionName, query, schema) {
         throw error; // Rethrow the error to handle it where readDB is called
     }
 }
+
 
 
 async function updateDB(databaseName, collectionName, FindQuerry, UpdateQuerry, schema) {

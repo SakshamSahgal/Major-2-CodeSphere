@@ -1,7 +1,7 @@
 import React from "react";
-import { Tab, Nav, Form, Row, Col, Button } from "react-bootstrap";
+import { Tab, Nav, Form, Row, Col } from "react-bootstrap";
 
-function CreateAssignmentNavtabs({ activeTab }) {
+function CreateAssignmentNavtabs({ activeTab, Batches }) {
     return (
         <Tab.Container defaultActiveKey={activeTab}>
             <Nav variant="tabs" defaultActiveKey={activeTab} fill>
@@ -35,19 +35,19 @@ function CreateAssignmentNavtabs({ activeTab }) {
                         <Form.Group as={Row} controlId="year">
                             <Form.Label column sm={2}>Year:</Form.Label>
                             <Col sm={10}>
-                                <Form.Check type="radio" label="Year 1" id="year1" />
-                                <Form.Check type="radio" label="Year 2" id="year2" />
-                                <Form.Check type="radio" label="Year 3" id="year3" />
-                                {/* Add more radio buttons for other years if needed */}
+                                <Form.Check type="radio" label="First Year" id="First Year" name="year" />
+                                <Form.Check type="radio" label="Second Year" id="Second Year" name="year" />
+                                <Form.Check type="radio" label="Third Year" id="Third Year" name="year" />
+                                <Form.Check type="radio" label="Fourth Year" id="Fourth Year" name="year" />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} controlId="batches">
                             <Form.Label column sm={2}>Batches:</Form.Label>
                             <Col sm={10}>
-                                <Form.Check type="checkbox" label="Batch A" id="batchA" />
-                                <Form.Check type="checkbox" label="Batch B" id="batchB" />
-                                <Form.Check type="checkbox" label="Batch C" id="batchC" />
-                                {/* Add more checkboxes for other batches if needed */}
+                                {/* iterate over the batches Array */}
+                                {Batches.map((batch, index) => (
+                                    <Form.Check key={index} type="checkbox" label={batch} id={batch} />
+                                ))}
                             </Col>
                         </Form.Group>
                     </Tab.Pane>

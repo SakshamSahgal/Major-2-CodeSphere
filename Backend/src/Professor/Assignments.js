@@ -1,5 +1,5 @@
 const { readDB } = require("../db/mongoOperations");
-const { assignmentSchema } = require("../db/schema");
+const { assignmentSchema, registeredCollegesSchema } = require("../db/schema");
 
 
 function getProfessorAssignmentsRoute(req, res) {
@@ -25,4 +25,30 @@ function getProfessorAssignmentsRoute(req, res) {
         });
 }
 
-module.exports = { getProfessorAssignmentsRoute };
+
+function getBatchesRoute(req, res) {
+
+    readDB("Colleges", "Registered", { Name: req.decoded.Institution }, registeredCollegesSchema).then((data) => {
+        if (data.length === 0) {
+            res.status(404).json({
+                success: false,
+                message: "College not found",
+            });
+            return;
+        }
+        else {
+            res.status(200).json({
+                success: true,
+                message: "Batches fetched successfully",
+                Batches: data[0].Batches,
+            });
+        }
+    }).catch((error) => {
+        res.status(500).json({
+            success: false,
+            message: `Failed to fetch Batches, err : ${error.message}`,
+        });
+    });
+}
+
+module.exports = { getProfessorAssignmentsRoute, getBatchesRoute };

@@ -4,7 +4,7 @@ const { RequestedCollegesSchema, registeredCollegesSchema } = require("../db/sch
 
 function registeredCollegeRoute(req, res) {
     console.log(`Recieved request to get list of registered colleges`)
-    readDB("Colleges", "Registered", {}, registeredCollegesSchema).then((result) => {
+    readDB("Colleges", "Registered", {}, registeredCollegesSchema, { Name: 1 }).then((result) => {
         res.json({
             success: true,
             message: "College List",
