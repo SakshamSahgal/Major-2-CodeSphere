@@ -109,4 +109,32 @@ function getOtherQuestionsRoute(req, res) {
         });
 }
 
-module.exports = { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getOtherQuestionsRoute };
+function createAssignmentRoute(req, res) {
+
+    console.log(`Recieved request to add assignment with details: `)
+    console.log(req.body);
+
+    let thisAssignment = req.body;
+    thisAssignment.PostedBy = req.decoded._id;
+    thisAssignment.College = req.decoded.Institution;
+    thisAssignment.PostedOn = new Date();
+
+    writeDB("Assignments", req.decoded.Institution, thisAssignment, assignmentSchema).then((data) => {
+        console.log("Assignment added successfully");
+        console.log(data);
+        res.status(200).json({
+            success: true,
+            message: "Assignment added successfully",
+        });
+
+    }).catch((error) => {
+        res.status(500).json({
+            success: false,
+            message: `Failed to add Assignment, err : ${error.message}`,
+        });
+    });
+
+}
+
+
+module.exports = { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getOtherQuestionsRoute, createAssignmentRoute };
