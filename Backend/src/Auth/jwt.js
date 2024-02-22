@@ -57,7 +57,6 @@ function loginRoute(req, res) {
             console.log('Generated Token:', token);
 
             res.status(200).cookie(`token`, token, {
-                maxAge: 1000 * 60 * 60 * 24,    // 1 days
                 sameSite: 'none',
                 secure: true,                   // Set to true to ensure the cookie is only sent over HTTPS
             }).json({

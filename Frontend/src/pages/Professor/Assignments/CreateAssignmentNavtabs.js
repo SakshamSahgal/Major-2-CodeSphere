@@ -183,7 +183,7 @@ function CreateAssignmentNavtabs({ activeTab, Batches, MyQuestions, OtherQuestio
                             </Tab.Content>
 
                         </Tab.Container>
-                        <Button variant="primary" onClick={handleSubmit}>Submit</Button>
+                        <Button variant="primary" className="w-100" onClick={handleSubmit}>Submit</Button>
                     </Tab.Pane>
 
                 </Tab.Content>
