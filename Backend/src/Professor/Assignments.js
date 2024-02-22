@@ -141,9 +141,8 @@ function createAssignmentRoute(req, res) {
 
     console.log(thisAssignment)
 
-    writeDB("Assignments", req.decoded.Institution, thisAssignment, assignmentSchema).then((data) => {
+    writeDB("Assignments", req.decoded.Institution, thisAssignment, assignmentSchema).then(() => {
         console.log("Assignment added successfully");
-        console.log(data);
         res.status(200).json({
             success: true,
             message: "Assignment added successfully",
