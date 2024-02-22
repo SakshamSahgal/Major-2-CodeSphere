@@ -32,4 +32,4 @@ app.get("/students/assignments/missed", ValidateToken, isStudent, getStudentMiss
 app.get("/professors/myAssignments", ValidateToken, isProfessor, getProfessorAssignmentsRoute);
 app.get("/professors/getMyQuestions", ValidateToken, isProfessor, getMyQuestionsRoute);
 app.get("/professors/getOtherQuestions", ValidateToken, isProfessor, getOtherQuestionsRoute);
-app.get("/getBatches", ValidateToken, isProfessor, getBatchesRoute);
+app.get("/getBatches", ValidateToken, isProfessor, getBatchesRoute);    //Sends the Batches to display in Create Assignment Modal

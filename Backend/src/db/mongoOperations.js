@@ -36,19 +36,12 @@ async function writeDB(databaseName, collectionName, data, schema) {
     }
 }
 
+//we dont need validation while Read because it can have projection and we can use it to get only the required fields
+
 async function readDB(databaseName, collectionName, query, schema, projection = {}) {
     try {
         const thisModel = connections[databaseName].model(collectionName, schema, collectionName);
         const data = await thisModel.find(query, projection);
-
-        // Validate data against the schema
-        data.forEach((document) => {
-            const validationResult = thisModel.validate(document);
-            if (validationResult.error) {
-                console.error(`Validation error for document in ${collectionName} collection in ${databaseName} database:`, validationResult.error);
-                throw new Error(`Data validation failed for document in ${collectionName} collection`);
-            }
-        });
 
         console.log(`Data read from ${collectionName} collection in ${databaseName} database`);
 

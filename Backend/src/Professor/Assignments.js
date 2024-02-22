@@ -57,7 +57,12 @@ function getMyQuestionsRoute(req, res) {
         CreatedBy: req.decoded._id //only the questions posted by this professor will be fetched
     }
 
-    readDB("QuestionBank", req.decoded.Institution, Querry, QuestionSchema)
+    Projection = {
+        QuestionName: 1,
+        _id: 1
+    }
+
+    readDB("QuestionBank", req.decoded.Institution, Querry, QuestionSchema, Projection)
 
         .then(async (data) => {
             res.status(200).json({
@@ -77,11 +82,16 @@ function getMyQuestionsRoute(req, res) {
 
 function getOtherQuestionsRoute(req, res) {
 
+    Projection = {
+        QuestionName: 1,
+        _id: 1
+    }
+
     Querry = {
         CreatedBy: { $ne: req.decoded._id } //only the questions posted by other professors will be fetched
     }
 
-    readDB("QuestionBank", req.decoded.Institution, Querry, QuestionSchema)
+    readDB("QuestionBank", req.decoded.Institution, Querry, QuestionSchema, Projection)
 
         .then(async (data) => {
             res.status(200).json({
