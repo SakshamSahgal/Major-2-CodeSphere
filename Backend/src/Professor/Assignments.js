@@ -1,5 +1,6 @@
-const { readDB } = require("../db/mongoOperations");
+const { readDB, writeDB } = require("../db/mongoOperations");
 const { assignmentSchema, registeredCollegesSchema, QuestionSchema } = require("../db/schema");
+const { GetProfessor } = require('../other/Common');
 
 
 function getProfessorAssignmentsRoute(req, res) {
@@ -10,6 +11,12 @@ function getProfessorAssignmentsRoute(req, res) {
     readDB("Assignments", req.decoded.Institution, Querry, assignmentSchema)
 
         .then(async (data) => {
+
+            //iterate through the assignments and get the professor details for each assignment
+            await Promise.all(data.map(async (assignment) => {
+                let thisProfessor = await GetProfessor(assignment.PostedBy, req.decoded.Institution);
+                assignment.PostedBy = thisProfessor;
+            }));
 
             res.status(200).json({
                 success: true,
@@ -65,6 +72,13 @@ function getMyQuestionsRoute(req, res) {
     readDB("QuestionBank", req.decoded.Institution, Querry, QuestionSchema, Projection)
 
         .then(async (data) => {
+
+            //iterate through the assignments and get the professor details for each assignment
+            await Promise.all(data.map(async (assignment) => {
+                let thisProfessor = await GetProfessor(assignment.PostedBy, req.decoded.Institution);
+                assignment.PostedBy = thisProfessor;
+            }));
+
             res.status(200).json({
                 success: true,
                 message: "Questions fetched successfully",
@@ -94,6 +108,13 @@ function getOtherQuestionsRoute(req, res) {
     readDB("QuestionBank", req.decoded.Institution, Querry, QuestionSchema, Projection)
 
         .then(async (data) => {
+
+            //iterate through the assignments and get the professor details for each assignment
+            await Promise.all(data.map(async (assignment) => {
+                let thisProfessor = await GetProfessor(assignment.PostedBy, req.decoded.Institution);
+                assignment.PostedBy = thisProfessor;
+            }));
+
             res.status(200).json({
                 success: true,
                 message: "Questions fetched successfully",
@@ -116,8 +137,9 @@ function createAssignmentRoute(req, res) {
 
     let thisAssignment = req.body;
     thisAssignment.PostedBy = req.decoded._id;
-    thisAssignment.College = req.decoded.Institution;
     thisAssignment.PostedOn = new Date();
+
+    console.log(thisAssignment)
 
     writeDB("Assignments", req.decoded.Institution, thisAssignment, assignmentSchema).then((data) => {
         console.log("Assignment added successfully");

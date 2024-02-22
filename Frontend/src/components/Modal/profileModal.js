@@ -3,6 +3,8 @@ import React from "react";
 import { Modal } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { toast } from "react-toastify";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 //LoginType = 'Students' or 'Professors'
 function ProfileModal({ show, onHide, profileData, LoginType }) {
@@ -26,10 +28,11 @@ function ProfileModal({ show, onHide, profileData, LoginType }) {
     return (
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header closeButton>
-                <Modal.Title>Profile</Modal.Title>
+                <Modal.Title className="text-center w-100">
+                    <FontAwesomeIcon icon={faUser} style={{ cursor: 'pointer', color: 'black', margin: 'auto' }} />
+                </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {/* iterate over the contents of profiledata object */}
                 <ul className="list-group text-center">
                     {Object.keys(profileData).map((key, index) => (
                         <li key={index} className="list-group-item">
@@ -39,7 +42,6 @@ function ProfileModal({ show, onHide, profileData, LoginType }) {
                 </ul>
             </Modal.Body>
             <Modal.Footer>
-                {/* add a logout button in center*/}
                 <Button variant="danger" className="w-100" onClick={Logout}>Logout</Button>
             </Modal.Footer>
         </Modal>

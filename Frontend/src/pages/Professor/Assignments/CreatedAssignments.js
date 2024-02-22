@@ -61,6 +61,10 @@ function CreatedAssignments() {
                                                 </span>
                                             ))}
                                         </p>
+                                        <p className='card-text'>
+                                            <strong>Year:</strong>{" "}
+                                            {assignment.Year}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="card-footer d-flex justify-content-between">
