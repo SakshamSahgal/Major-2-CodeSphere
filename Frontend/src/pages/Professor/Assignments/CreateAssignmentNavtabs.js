@@ -23,7 +23,13 @@ function CreateAssignmentNavtabs({ activeTab, Batches, MyQuestions, OtherQuestio
             const response = await axios.post("/professors/createAssignment", formData, { withCredentials: true });
             console.log(response.data);
             if (response.data.success)
+            {
                 toast.success(response.data.message);
+                // reload after 1 sec
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            }
             else
                 toast.error(response.data.message);
         }

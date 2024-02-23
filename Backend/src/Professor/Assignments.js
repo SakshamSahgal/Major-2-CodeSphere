@@ -1,4 +1,4 @@
-const { readDB, writeDB } = require("../db/mongoOperations");
+const { readDB, writeDB, deleteIfExistsDB } = require("../db/mongoOperations");
 const { assignmentSchema, registeredCollegesSchema, QuestionSchema } = require("../db/schema");
 const { GetProfessor } = require('../other/Common');
 
@@ -157,5 +157,32 @@ function createAssignmentRoute(req, res) {
 
 }
 
+async function deleteAssignmentRoute(req, res) {
+    console.log(`Received request to delete assignment with id: ${req.params._id}`);
 
-module.exports = { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getOtherQuestionsRoute, createAssignmentRoute };
+    try {
+        const query = { _id: req.params._id, PostedBy: req.decoded._id };
+        const deletedAssignment = await deleteIfExistsDB("Assignments", req.decoded.Institution, query, assignmentSchema);
+
+        if (!deletedAssignment) {
+            res.status(403).json({
+                success: false,
+                message: "Either you are not authorized to delete this assignment, or the assignment does not exist",
+            });
+            return;
+        }
+
+        console.log("Assignment deleted successfully");
+        res.status(200).json({
+            success: true,
+            message: "Assignment deleted successfully",
+        });
+    } catch (error) {
+        console.error("Failed to delete assignment:", error);
+        res.status(500).json({
+            success: false,
+            message: `Failed to delete assignment, error: ${error.message}`,
+        });
+    }
+}
+module.exports = { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getOtherQuestionsRoute, createAssignmentRoute, deleteAssignmentRoute };

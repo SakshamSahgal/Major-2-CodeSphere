@@ -8,7 +8,7 @@ const { loginRoute, logoutRoute, getProfileRoute } = require("./Auth/jwt");
 const { ValidateToken, isStudent, isProfessor } = require("./Middlewares/Auth");
 const { registerCollegeRoute, registeredCollegeRoute } = require("./other/Colleges");
 const { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute } = require("./Student/Assignments");
-const { getProfessorAssignmentsRoute, getBatchesRoute,getMyQuestionsRoute,getOtherQuestionsRoute,createAssignmentRoute } = require("./Professor/Assignments.js");
+const { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getOtherQuestionsRoute, createAssignmentRoute, deleteAssignmentRoute } = require("./Professor/Assignments.js");
 const PORT = process.env.PORT || 8080;
 
 
@@ -32,5 +32,6 @@ app.get("/students/assignments/missed", ValidateToken, isStudent, getStudentMiss
 app.get("/professors/myAssignments", ValidateToken, isProfessor, getProfessorAssignmentsRoute);
 app.get("/professors/getMyQuestions", ValidateToken, isProfessor, getMyQuestionsRoute);
 app.get("/professors/getOtherQuestions", ValidateToken, isProfessor, getOtherQuestionsRoute);
-app.get("/getBatches", ValidateToken, isProfessor, getBatchesRoute);    //Sends the Batches to display in Create Assignment Modal
-app.post("/professors/createAssignment", ValidateToken, isProfessor, createAssignmentRoute);  //Creates an assignment
+app.get("/getBatches", ValidateToken, isProfessor, getBatchesRoute);                                        //Sends the Batches to display in Create Assignment Modal
+app.post("/professors/createAssignment", ValidateToken, isProfessor, createAssignmentRoute);                //Creates an assignment
+app.delete("/professors/deleteAssignment/:_id", ValidateToken, isProfessor, deleteAssignmentRoute);              //Deletes an assignment
