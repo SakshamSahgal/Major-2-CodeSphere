@@ -8,15 +8,14 @@ function getProfessorAssignmentsRoute(req, res) {
         PostedBy: req.decoded._id //only the assignments posted by this professor will be fetched
     }
 
-    readDB("Assignments", req.decoded.Institution, Querry, assignmentSchema)
+    //remove the PostedBy field from the projection, as it is not required
+    Projection = {
+        PostedBy: 0
+    }
+
+    readDB("Assignments", req.decoded.Institution, Querry, assignmentSchema, Projection)
 
         .then(async (data) => {
-
-            //iterate through the assignments and get the professor details for each assignment
-            await Promise.all(data.map(async (assignment) => {
-                let thisProfessor = await GetProfessor(assignment.PostedBy, req.decoded.Institution);
-                assignment.PostedBy = thisProfessor;
-            }));
 
             res.status(200).json({
                 success: true,
@@ -66,18 +65,12 @@ function getMyQuestionsRoute(req, res) {
 
     Projection = {
         QuestionName: 1,
-        _id: 1
+        _id: 1,
     }
 
     readDB("QuestionBank", req.decoded.Institution, Querry, QuestionSchema, Projection)
 
         .then(async (data) => {
-
-            //iterate through the assignments and get the professor details for each assignment
-            await Promise.all(data.map(async (assignment) => {
-                let thisProfessor = await GetProfessor(assignment.PostedBy, req.decoded.Institution);
-                assignment.PostedBy = thisProfessor;
-            }));
 
             res.status(200).json({
                 success: true,
@@ -98,7 +91,7 @@ function getOtherQuestionsRoute(req, res) {
 
     Projection = {
         QuestionName: 1,
-        _id: 1
+        _id: 1,
     }
 
     Querry = {
@@ -108,12 +101,6 @@ function getOtherQuestionsRoute(req, res) {
     readDB("QuestionBank", req.decoded.Institution, Querry, QuestionSchema, Projection)
 
         .then(async (data) => {
-
-            //iterate through the assignments and get the professor details for each assignment
-            await Promise.all(data.map(async (assignment) => {
-                let thisProfessor = await GetProfessor(assignment.PostedBy, req.decoded.Institution);
-                assignment.PostedBy = thisProfessor;
-            }));
 
             res.status(200).json({
                 success: true,

@@ -34,4 +34,4 @@ app.get("/professors/getMyQuestions", ValidateToken, isProfessor, getMyQuestions
 app.get("/professors/getOtherQuestions", ValidateToken, isProfessor, getOtherQuestionsRoute);
 app.get("/getBatches", ValidateToken, isProfessor, getBatchesRoute);                                        //Sends the Batches to display in Create Assignment Modal
 app.post("/professors/createAssignment", ValidateToken, isProfessor, createAssignmentRoute);                //Creates an assignment
-app.delete("/professors/deleteAssignment/:_id", ValidateToken, isProfessor, deleteAssignmentRoute);              //Deletes an assignment
+app.delete("/professors/deleteAssignment/:_id", ValidateToken, isProfessor, deleteAssignmentRoute);         //Deletes an assignment

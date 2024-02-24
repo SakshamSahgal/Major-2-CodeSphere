@@ -2,11 +2,13 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { convertIsoToNormalTime, getTimeElapsed } from '../../../Scripts/TimeFunctions';
-
+import AssignmentListSkeleton from '../../../components/Skeletons/AssignmentListSkeleton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 //this returns a list of assignments created by this professor
 function CreatedAssignments() {
-    const [MyCreatedAssignments, setMyCreatedAssignments] = useState([]);
+    const [MyCreatedAssignments, setMyCreatedAssignments] = useState(null);
 
     useEffect(() => {
         // Fetch created assignments from the database
@@ -46,6 +48,11 @@ function CreatedAssignments() {
         }
     };
 
+    if (MyCreatedAssignments === null) {
+        return (
+            <AssignmentListSkeleton count={1} />
+        );
+    }
     return (
         <>
             {MyCreatedAssignments.length === 0 ? (
@@ -55,11 +62,12 @@ function CreatedAssignments() {
                     <div className="col">
                         <div className="card">
                             <div className="card-header d-flex align-items-center justify-content-between">
-
-                                <small className="text-muted">Posted By: {assignment.PostedBy.Name}</small>
-                                <h5 className="text-center mb-0 flex-grow-1">{assignment.AssignmentName}</h5>
-                                <button className="btn btn-danger btn-sm" onClick={() => handleDeleteAssignment(assignment._id)}> Delete </button>
+                                <h5 className="text-center mb-0 flex-grow-1" style={{ fontSize: '16px' }}>{assignment.AssignmentName}</h5> {/* Adjust font size */}
+                                <button className="btn btn-danger btn-sm" onClick={() => handleDeleteAssignment(assignment._id)}>
+                                    <FontAwesomeIcon icon={faTrash} /> {/* Show trash icon on smaller screens */}
+                                </button>
                             </div>
+                            
                             <div className="card-body">
                                 <div>
                                     <p className="card-text">

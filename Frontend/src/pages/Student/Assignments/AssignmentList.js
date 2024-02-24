@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getTimeElapsed, convertIsoToNormalTime } from "../../../Scripts/TimeFunctions";
+import AssignmentListSkeleton from "../../../components/Skeletons/AssignmentListSkeleton";
 
 //List Type can be 'Pending', 'Missed' or 'Submitted'
 function AssignmentList({ listType }) {
-    const [assignments, setAssignments] = useState([]);
+    const [assignments, setAssignments] = useState(null);
 
     useEffect(() => {
         const fetchAssignments = async () => {
@@ -13,7 +14,7 @@ function AssignmentList({ listType }) {
                 const response = await axios.get(`/students/assignments/${listType.toLowerCase()}`, { withCredentials: true });
                 console.log(response.data);
                 if (response.data.success) {
-                    toast.success(response.data.message);
+                    // toast.success(response.data.message);
                     setAssignments(response.data.Assignments);
                 } else {
                     toast.error(response.data.message);
@@ -24,6 +25,14 @@ function AssignmentList({ listType }) {
         }
         fetchAssignments();
     }, [listType])
+
+    // Return the skeleton while data is being fetched
+    if (assignments === null) {
+        return (
+            <AssignmentListSkeleton count={1}/>
+        );
+    }
+
 
     return (
         <div className="container px-1 my-1">
