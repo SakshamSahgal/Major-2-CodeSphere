@@ -29,9 +29,9 @@ app.get("/students/assignments/pending", ValidateToken, isStudent, getStudentPen
 app.get("/students/assignments/submitted", ValidateToken, isStudent, getStudentSubmittedAssignmentsRoute);
 app.get("/students/assignments/missed", ValidateToken, isStudent, getStudentMissedAssignmentsRoute);
 
+app.get("/getBatches", ValidateToken, isProfessor, getBatchesRoute);                                        //Sends the Batches to display in Create Assignment Modal
 app.get("/professors/myAssignments", ValidateToken, isProfessor, getProfessorAssignmentsRoute);
 app.get("/professors/getMyQuestions", ValidateToken, isProfessor, getMyQuestionsRoute);
 app.get("/professors/getOtherQuestions", ValidateToken, isProfessor, getOtherQuestionsRoute);
-app.get("/getBatches", ValidateToken, isProfessor, getBatchesRoute);                                        //Sends the Batches to display in Create Assignment Modal
 app.post("/professors/createAssignment", ValidateToken, isProfessor, createAssignmentRoute);                //Creates an assignment
 app.delete("/professors/deleteAssignment/:_id", ValidateToken, isProfessor, deleteAssignmentRoute);         //Deletes an assignment

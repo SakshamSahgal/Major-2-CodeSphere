@@ -1,7 +1,5 @@
 const { readDB, writeDB, deleteIfExistsDB } = require("../db/mongoOperations");
 const { assignmentSchema, registeredCollegesSchema, QuestionSchema } = require("../db/schema");
-const { GetProfessor } = require('../other/Common');
-
 
 function getProfessorAssignmentsRoute(req, res) {
     Querry = {

@@ -69,7 +69,7 @@ function CreateAssignmentModal() {
 
     return (
         <>
-            <Button variant="primary" onClick={toggleModal}> Create Assignment </Button>
+            <Button variant="primary" className="w-100" onClick={toggleModal}> Create Assignment </Button>
 
             <Modal show={showModal} onHide={toggleModal}>
                 <Modal.Header closeButton>
