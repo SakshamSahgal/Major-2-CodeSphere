@@ -91,7 +91,7 @@ function CreatedAssignments() {
                             </p>
                             <p className='card-text'>
                                 <strong>Year:</strong>{" "}
-                                {assignment.Year}
+                                <span className="badge bg-success mx-1">{assignment.Year}</span>
                             </p>
                         </div>
                     </div>
