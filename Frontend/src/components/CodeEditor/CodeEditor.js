@@ -21,7 +21,7 @@ function CodeEditor({ height }) {
                 <div className="row my-3">
                     <div className="col text-end">
                         <Dropdown>
-                            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                            <Dropdown.Toggle variant="danger" id="dropdown-basic">
                                 Select Theme
                             </Dropdown.Toggle>
                             <Dropdown.Menu>

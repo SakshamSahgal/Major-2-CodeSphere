@@ -1,21 +1,32 @@
-import React from 'react';
-import { Form } from 'react-bootstrap';
-import CodeEditor from "../../../../components/CodeEditor/CodeEditor"
+import { Form, Nav, Tab } from 'react-bootstrap';
+import CodeEditor from '../../../../components/CodeEditor/CodeEditor';
 
 function CodeTab() {
-    return (
-        <>
-            <Form.Group controlId="SolutionCode" className="my-3">
-                <Form.Label style={{ color: "white" }}>Solution Code</Form.Label>
-                <CodeEditor height="500px" />
-            </Form.Group>
 
-            <Form.Check type="checkbox" id="randomTestChecked" label="Random Test Checked" style={{ color: "white" }} />
-            <Form.Group controlId="randomTestCode" className="my-3">
-                <Form.Label style={{ color: "white" }}>Random Test Code</Form.Label>
-                <CodeEditor height="500px" />
-            </Form.Group>
-        </>
+
+    return (
+        <Tab.Container defaultActiveKey={"SolutionCode"}>
+            <Nav variant="tabs" className="my-3" fill>
+                <Nav.Item>
+                    <Nav.Link eventKey="SolutionCode">Solution Code</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey="RandomTestCode">Random Test Code</Nav.Link>
+                </Nav.Item>
+            </Nav>
+            <Tab.Content>
+                <Tab.Pane eventKey="SolutionCode">
+                    <Form.Group controlId="SolutionCode" className="my-3">
+                        <CodeEditor height="500px" />
+                    </Form.Group>
+                </Tab.Pane>
+                <Tab.Pane eventKey="RandomTestCode">
+                    <Form.Group controlId="randomTestCode" className="my-3">
+                        <CodeEditor height="500px" />
+                    </Form.Group>
+                </Tab.Pane>
+            </Tab.Content>
+        </Tab.Container>
     );
 }
 
