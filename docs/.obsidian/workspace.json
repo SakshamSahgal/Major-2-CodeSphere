@@ -11,8 +11,12 @@
             "id": "cd01d27dd688d6e1",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "APIs.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -81,6 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "APIs.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,6 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "APIs.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -118,7 +124,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "APIs.md"
+              }
             }
           }
         ]
@@ -141,9 +149,15 @@
   "active": "cd01d27dd688d6e1",
   "lastOpenFiles": [
     "index.md",
-    "APIs.md",
-    "APIs",
     "HowToRun.md",
+    "APIs.md",
+    "APIs/getProfile.md",
+    "Middlewares/isStudent.md",
+    "Middlewares/isProfessor.md",
+    "Middlewares/ValidateToken.md",
+    "APIs/registerCollege.md",
+    "Middlewares",
+    "APIs",
     "_config.yml"
   ]
 }

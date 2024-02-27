@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
 
 // This middleware is used to validate the token in the cookies
-// if the token is not present it will send a response with status 401
-// if the token is invalid it will send a response with status 401
-// if the token is valid it will call the next middleware
+// It takes the token from req.cookies.token
+// If the token is not present it will send a response with status 401
+// If the token is invalid it will send a response with status 401
+// If the token is valid it will call the next middleware , the decoded payload is stored in req.decoded
 
 function ValidateToken(req, res, next) {
     const token = req.cookies.token;
@@ -31,6 +32,11 @@ function ValidateToken(req, res, next) {
     }
 }
 
+// This Middleware is used to check if the user is a student
+// It checks the req.decoded.LoginType
+// If the user is a student it will call the next middleware
+// If the user is not a student it will send a response with status 401 which means unauthorized
+
 function isStudent(req, res, next) {
     if (req.decoded.LoginType === "Students") {
         next();
@@ -42,6 +48,11 @@ function isStudent(req, res, next) {
         })
     }
 }
+
+// This Middleware is used to check if the user is a professor
+// It checks the req.decoded.LoginType
+// If the user is a professor it will call the next middleware
+// If the user is not a professor it will send a response with status 401 which means unauthorized
 
 function isProfessor(req, res, next) {
     if (req.decoded.LoginType === "Professors") {

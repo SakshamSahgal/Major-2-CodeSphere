@@ -3,7 +3,7 @@ import RegisterCollege from './pages/RegisterCollege/RegisterCollege';
 import StudentAssignments from './pages/Student/Assignments/StudentAssignments';
 import ProfessorAssignments from './pages/Professor/Assignments/ProfessorAssignments';
 import Evaluations from './pages/Student/Evaluations/Evaluations';
-
+import ProfessorAddQuestion from './pages/Professor/AddQuestion/ProfessorAddQuestion';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
@@ -22,6 +22,7 @@ function App() {
           <Route path="/professorlogin" element={<LoginPage LoginType={"Professors"} />} />
           <Route path="/studentlogin" element={<LoginPage LoginType={"Students"} />} />
           <Route path="/professors/assignments" element={<ProfessorAssignments />} />
+          <Route path="/professors/addQuestion" element={<ProfessorAddQuestion />} />
           <Route path="/students/assignments" element={<StudentAssignments />} />
           <Route path="/students/evaluations" element={<Evaluations />} />
           <Route path="/registercollege" element={<RegisterCollege />} />

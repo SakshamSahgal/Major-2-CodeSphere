@@ -94,6 +94,11 @@ function logoutRoute(req, res) {
     })
 }
 
+//This route is used to get the profile of the user
+//It will send the profile of the user based on req.decoded.LoginType
+//If the user is a student it will send the profile of the student containing Batch, Name, Username, Year and Institution
+//If the user is a professor it will send the profile of the professor, containing Name, Username and Institution
+
 function getProfileRoute(req, res) {
     console.log("Recieved request to get profile")
     console.log(req.decoded)

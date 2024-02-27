@@ -21,8 +21,8 @@ app.listen(PORT, () => {
 app.post("/login", loginRoute);
 app.delete("/logout", ValidateToken, logoutRoute);
 
-app.get("/registeredColleges", registeredCollegeRoute);
 app.post("/registerCollege", registerCollegeRoute);
+app.get("/registeredColleges", registeredCollegeRoute);
 app.get("/getProfile", ValidateToken, getProfileRoute);
 
 app.get("/students/assignments/pending", ValidateToken, isStudent, getStudentPendingAssignmentsRoute);

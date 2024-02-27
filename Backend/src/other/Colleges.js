@@ -19,6 +19,10 @@ function registeredCollegeRoute(req, res) {
     })
 }
 
+// This is the function to register a college. 
+// It will take the collegeName, Name, Email and PhoneNo from the request body 
+// and write it to the Colleges DB / Requested Collection.
+
 function registerCollegeRoute(req, res) {
     console.log(`Recieved request to register college with collegeName: ${req.body.CollegeName} and Name: ${req.body.Name} and Email: ${req.body.Email} and PhoneNo: ${req.body.PhoneNo}`)
     console.log(req.body);
