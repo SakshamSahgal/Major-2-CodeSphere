@@ -6,7 +6,7 @@ function StudentAssignments() {
 
   return (
     <div>
-      <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations"]} TabLinks={["/students/assignments", "/students/evaluations"]} LoginType={"Students"} />
+      <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations"]} TabLinks={["/students/assignments", "/students/evaluations"]} LoginType={"Students"} ActiveTabIndex={0}/>
       <div className="container">
         <div className="row my-3">
           <h1 style={{ color: 'white', textAlign: 'center' }}>Assignments</h1>

@@ -4,7 +4,7 @@ import RightsReservedFooter from "../../../components/Footer/RightsReservedFoote
 function ProfessorAddQuestion() {
   return (
     <>
-      <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations", "AddQuestion", "Questions"]} TabLinks={["/professors/assignments", "/professors/evaluations", "/professors/addQuestion", "/professors/questions"]} LoginType={"Professors"} />
+      <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations", "AddQuestion", "Questions"]} TabLinks={["/professors/assignments", "/professors/evaluations", "/professors/addQuestion", "/professors/questions"]} LoginType={"Professors"} ActiveTabIndex={2}/>
       <RightsReservedFooter />
     </>
   );

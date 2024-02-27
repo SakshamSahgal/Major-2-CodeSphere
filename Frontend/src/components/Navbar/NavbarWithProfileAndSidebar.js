@@ -9,7 +9,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-function NavbarWithProfileAndSidebar({ TabNames, TabLinks, LoginType }) {
+function NavbarWithProfileAndSidebar({ TabNames, TabLinks, LoginType, ActiveTabIndex }) {
     const [showModal, setShowModal] = useState(false);
     const [profileData, setProfileData] = useState({});
     const [show, setShow] = useState(false);
@@ -48,7 +48,7 @@ function NavbarWithProfileAndSidebar({ TabNames, TabLinks, LoginType }) {
                                 {TabNames.map((tab, index) => (
                                     <li key={index} className="nav-item">
                                         {/* make only the first one active */}
-                                        <a href={TabLinks[index]} className={`nav-link ${index === 0 ? 'active' : ''}`} aria-current="page">{tab}</a>
+                                        <a href={TabLinks[index]} className={`nav-link ${index === ActiveTabIndex ? 'active' : ''}`} style={{ fontSize: '19px' }} aria-current="page">{tab}</a>
                                     </li>
                                 ))}
                             </ul>
@@ -57,7 +57,7 @@ function NavbarWithProfileAndSidebar({ TabNames, TabLinks, LoginType }) {
                     <FontAwesomeIcon icon={faUser} onClick={handlesShowProfileModal} style={{ cursor: 'pointer', color: 'white' }} />
                 </Container>
             </Navbar>
-            <ProfileModal show={showModal} onHide={() => setShowModal(false)} profileData={profileData} LoginType={LoginType}/>
+            <ProfileModal show={showModal} onHide={() => setShowModal(false)} profileData={profileData} LoginType={LoginType} />
         </>
     );
 }

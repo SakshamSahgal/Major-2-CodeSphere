@@ -5,7 +5,7 @@ import CreateAssignmentModal from './CreateAssignmentModal';
 function ProfessorAssignments() {
     return (
         <div>
-            <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations","AddQuestion","Questions"]} TabLinks={["/professors/assignments", "/professors/evaluations","/professors/addQuestion","/professors/questions"]} LoginType={"Professors"} />
+            <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations","AddQuestion","Questions"]} TabLinks={["/professors/assignments", "/professors/evaluations","/professors/addQuestion","/professors/questions"]} LoginType={"Professors"} ActiveTabIndex={0} />
             <div className="container px-3">
                 <div className="row my-3">
                     <h1 style={{ color: 'white', textAlign: 'center' }}>ASSIGNMENTS</h1>
