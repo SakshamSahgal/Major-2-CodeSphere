@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@uiw/codemirror-theme-abyss": "^4.21.24",
     "@uiw/codemirror-theme-dracula": "^4.21.24",
+    "@uiw/codemirror-theme-github": "^4.21.24",
     "@uiw/codemirror-theme-okaidia": "^4.21.24",
     "@uiw/react-codemirror": "^4.21.24",
     "axios": "^1.6.7",

@@ -18,16 +18,16 @@ function ProfessorAddQuestion({ activeTab }) {
           <Tab.Container defaultActiveKey={activeTab}>
             <Nav variant="tabs" defaultActiveKey={activeTab} fill>
               <Nav.Item>
-                <Nav.Link eventKey="Description">Description</Nav.Link>
+                <Nav.Link eventKey="Description" style={{ fontSize : "20px" }}>Description</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="Code">Code</Nav.Link>
+                <Nav.Link eventKey="Code" style={{ fontSize : "20px" }}>Code</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="TestCases">TestCases</Nav.Link>
+                <Nav.Link eventKey="TestCases" style={{ fontSize : "20px" }}>TestCases</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="Preview">Preview</Nav.Link>
+                <Nav.Link eventKey="Preview" style={{ fontSize : "20px" }}>Preview</Nav.Link>
               </Nav.Item>
             </Nav>
             <Form>
@@ -49,7 +49,7 @@ function ProfessorAddQuestion({ activeTab }) {
           </Tab.Container>
         </div>
       </div>
-      <RightsReservedFooter />
+      {/* <RightsReservedFooter /> */}
     </>
   );
 }

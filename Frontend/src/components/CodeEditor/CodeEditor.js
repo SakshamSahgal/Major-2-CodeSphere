@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { cpp } from "@codemirror/lang-cpp";
 import CodeMirror from '@uiw/react-codemirror';
 import { Dropdown } from 'react-bootstrap';
@@ -7,13 +7,24 @@ import { Dropdown } from 'react-bootstrap';
 import { abyss } from '@uiw/codemirror-theme-abyss';
 import { dracula } from '@uiw/codemirror-theme-dracula';
 import { okaidia } from '@uiw/codemirror-theme-okaidia';
+import { githubLight } from '@uiw/codemirror-theme-github'; // GitHub theme
+import { githubDark } from '@uiw/codemirror-theme-github'; // GitHub theme
 
-function CodeEditor({ height }) {
+function CodeEditor({ height, defaultCode, onUpdateCode }) {
     const [selectedTheme, setSelectedTheme] = useState('default');
 
     const handleThemeChange = (theme) => {
         setSelectedTheme(theme);
     };
+
+    const handleChange = (editor, data, value) => {
+        onUpdateCode(editor); // Call the onUpdateCode function passed from the parent component
+    };
+
+    useEffect(() => {
+        // Call onUpdateCode with defaultCode when component mounts
+        onUpdateCode(defaultCode);
+    }, []); // Empty dependency array ensures this effect runs only once, on mount
 
     return (
         <>
@@ -29,6 +40,8 @@ function CodeEditor({ height }) {
                                 <Dropdown.Item onClick={() => handleThemeChange(abyss)}>Abyss</Dropdown.Item>
                                 <Dropdown.Item onClick={() => handleThemeChange(dracula)}>Dracula</Dropdown.Item>
                                 <Dropdown.Item onClick={() => handleThemeChange(okaidia)}>Okaidia</Dropdown.Item>
+                                <Dropdown.Item onClick={() => handleThemeChange(githubLight)}>githubLight</Dropdown.Item>
+                                <Dropdown.Item onClick={() => handleThemeChange(githubDark)}>githubDark</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                     </div>
@@ -36,12 +49,11 @@ function CodeEditor({ height }) {
                 <div className="row">
                     <div className="col">
                         <CodeMirror
+                            value={defaultCode}
                             height={height || "500px"}
                             theme={selectedTheme === 'default' ? undefined : selectedTheme}
                             extensions={[cpp()]}
-                            onChange={(editor, data, value) => {
-                                // Handle changes here if needed
-                            }}
+                            onChange={handleChange}
                         />
                     </div>
                 </div>
