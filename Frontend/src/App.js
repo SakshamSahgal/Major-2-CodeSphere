@@ -22,7 +22,7 @@ function App() {
           <Route path="/professorlogin" element={<LoginPage LoginType={"Professors"} />} />
           <Route path="/studentlogin" element={<LoginPage LoginType={"Students"} />} />
           <Route path="/professors/assignments" element={<ProfessorAssignments />} />
-          <Route path="/professors/addQuestion" element={<ProfessorAddQuestion />} />
+          <Route path="/professors/addQuestion" element={<ProfessorAddQuestion  activeTab={"Description"}/>} />
           <Route path="/students/assignments" element={<StudentAssignments />} />
           <Route path="/students/evaluations" element={<Evaluations />} />
           <Route path="/registercollege" element={<RegisterCollege />} />
