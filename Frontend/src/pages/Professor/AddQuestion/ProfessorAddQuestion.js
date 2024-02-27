@@ -1,5 +1,5 @@
 import NavbarWithProfileAndSidebar from "../../../components/Navbar/NavbarWithProfileAndSidebar";
-import RightsReservedFooter from "../../../components/Footer/RightsReservedFooter";
+// import RightsReservedFooter from "../../../components/Footer/RightsReservedFooter";
 import { Form, Nav, Tab } from "react-bootstrap";
 import DescriptionTab from "./NavTabs/DescriptionTab";
 import CodeTab from "./NavTabs/CodeTab";

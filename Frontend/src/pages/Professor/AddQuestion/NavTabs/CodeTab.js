@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Nav, Tab } from 'react-bootstrap';
 import CodeEditor from '../../../../components/CodeEditor/CodeEditor';
 import TestSolutionCodeModal from '../TestSolutionCodeModal/TestSolutionCodeModal';
+import SolutionCodeTab from './SolutionCodeTab';
 
 function CodeTab() {
     return (
@@ -16,12 +17,7 @@ function CodeTab() {
             </Nav>
             <Tab.Content>
                 <Tab.Pane eventKey="SolutionCode">
-                    <Form.Group controlId="SolutionCode" className="my-3">
-                        <CodeEditor height={"500px"} defaultCode={"abc"} onUpdateCode={(value) => { console.log(value) }} />
-                        <hr style={{ color: "white" }} />
-                        <TestSolutionCodeModal />
-                        <hr style={{ color: "white" }} />
-                    </Form.Group>
+                    <SolutionCodeTab />
                 </Tab.Pane>
                 <Tab.Pane eventKey="RandomTestCode">
                     <Form.Group controlId="randomTestCode" className="my-3">
