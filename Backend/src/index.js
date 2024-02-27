@@ -35,3 +35,27 @@ app.get("/professors/getMyQuestions", ValidateToken, isProfessor, getMyQuestions
 app.get("/professors/getOtherQuestions", ValidateToken, isProfessor, getOtherQuestionsRoute);
 app.post("/professors/createAssignment", ValidateToken, isProfessor, createAssignmentRoute);                //Creates an assignment
 app.delete("/professors/deleteAssignment/:_id", ValidateToken, isProfessor, deleteAssignmentRoute);         //Deletes an assignment
+
+
+
+// Step 1: Run code
+app.get('/test', (req, res) => {
+  setTimeout(() => {
+
+    res.write('Step 1: Code executed\n');
+
+    // Step 2: Validate output
+    setTimeout(() => {
+
+      res.write('Step 2: Output validated\n');
+
+      // Step 3: Output matched
+      setTimeout(() => {
+
+        res.write('Step 3: Output matched\n');
+        res.end(); // End the response
+        
+      }, 2000); // Simulate 2 seconds for step 3
+    }, 2000); // Simulate 2 seconds for step 2
+  }, 2000); // Simulate 2 seconds for step 1
+});

@@ -13,7 +13,6 @@
     "@uiw/codemirror-theme-abyss": "^4.21.24",
     "@uiw/codemirror-theme-dracula": "^4.21.24",
     "@uiw/codemirror-theme-okaidia": "^4.21.24",
-    "@uiw/codemirror-themes": "^4.21.24",
     "@uiw/react-codemirror": "^4.21.24",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.2",
