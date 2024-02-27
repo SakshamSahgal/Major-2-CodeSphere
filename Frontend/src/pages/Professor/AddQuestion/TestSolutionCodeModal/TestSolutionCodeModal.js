@@ -18,7 +18,6 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
         console.log("Validation Test Cases:", validationTestCasesValue);
         console.log("Expected Output:", expectedOutputValue);
         console.log("Solution Code To Test:", SolutionCodeToTest);
-        const res
         // Perform further validation or actions with these values
     }
 
