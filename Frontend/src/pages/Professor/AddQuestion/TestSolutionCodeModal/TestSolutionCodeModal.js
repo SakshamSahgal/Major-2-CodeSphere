@@ -3,6 +3,8 @@ import React, { useState, useRef } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 import { Form } from 'react-bootstrap';
+// import dotenv from 'dotenv';
+// dotenv.config();
 
 function TestSolutionCodeModal({ SolutionCodeToTest }) {
     const [showModal, setShowModal] = useState(false);
@@ -12,13 +14,33 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
     const handleCloseModal = () => setShowModal(false);
     const handleShowModal = () => setShowModal(true);
 
-    const handleValidateSolutionCode = () => {
+    const handleValidateSolutionCode = async () => {
         const validationTestCasesValue = validationTestCasesRef.current.value;
         const expectedOutputValue = expectedOutputRef.current.value;
         console.log("Validation Test Cases:", validationTestCasesValue);
         console.log("Expected Output:", expectedOutputValue);
         console.log("Solution Code To Test:", SolutionCodeToTest);
-        // Perform further validation or actions with these values
+
+
+        // Create a new WebSocket connection
+        const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_WS_LOCALHOST}/websocket`);
+
+        // Event listener for when the connection is opened
+        socket.onopen = () => {
+            console.log('WebSocket connection opened');
+        };
+
+        // Event listener for incoming messages
+        socket.onmessage = (event) => {
+            console.log('Received message:', event.data);
+        };
+
+        // Event listener for when the connection is closed
+        socket.onclose = () => {
+            console.log('WebSocket connection closed');
+        };
+
+        // socket.close();
     }
 
     return (

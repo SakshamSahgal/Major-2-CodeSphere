@@ -32,6 +32,34 @@ function ValidateToken(req, res, next) {
     }
 }
 
+// This middleware is used to authenticate the websocket connection
+function ValidateWsToken(ws, req, next) {
+    const token = req.cookies.token;
+    if (token) {
+        jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+            if (err) {
+                console.log("Error in verifying token")
+                ws.send({
+                    success: false,
+                    message: "Invalid Token"
+                })
+                ws.close(1008);
+            } else {
+                console.log('JWT verified. User:', decoded);
+                req.decoded = decoded; // Attach user information to WebSocket object if needed
+                next();
+            }
+        });
+    } else {
+        ws.send({
+            success: false,
+            message: "Token not found"
+        });
+        ws.close(1008);
+    }
+}
+
+
 // This Middleware is used to check if the user is a student
 // It checks the req.decoded.LoginType
 // If the user is a student it will call the next middleware
@@ -66,5 +94,5 @@ function isProfessor(req, res, next) {
     }
 }
 
-module.exports = { ValidateToken, isStudent, isProfessor }
+module.exports = { ValidateToken, isStudent, isProfessor, ValidateWsToken }
 

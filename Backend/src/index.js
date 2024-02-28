@@ -5,10 +5,13 @@ dotenv.config();
 const { app } = require("./app");
 const { connectDB } = require("./db/mongoOperations");
 const { loginRoute, logoutRoute, getProfileRoute } = require("./Auth/jwt");
-const { ValidateToken, isStudent, isProfessor } = require("./Middlewares/Auth");
+const { ValidateToken, isStudent, isProfessor, ValidateWsToken } = require("./Middlewares/Auth");
 const { registerCollegeRoute, registeredCollegeRoute } = require("./other/Colleges");
 const { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute } = require("./Student/Assignments");
 const { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getOtherQuestionsRoute, createAssignmentRoute, deleteAssignmentRoute } = require("./Professor/Assignments.js");
+const { TestSolutionCode } = require("./Professor/Question.js");
+
+
 const PORT = process.env.PORT || 8080;
 
 
@@ -36,26 +39,4 @@ app.get("/professors/getOtherQuestions", ValidateToken, isProfessor, getOtherQue
 app.post("/professors/createAssignment", ValidateToken, isProfessor, createAssignmentRoute);                //Creates an assignment
 app.delete("/professors/deleteAssignment/:_id", ValidateToken, isProfessor, deleteAssignmentRoute);         //Deletes an assignment
 
-
-
-// Step 1: Run code
-app.get('/test', (req, res) => {
-  setTimeout(() => {
-
-    res.write('Step 1: Code executed\n');
-
-    // Step 2: Validate output
-    setTimeout(() => {
-
-      res.write('Step 2: Output validated\n');
-
-      // Step 3: Output matched
-      setTimeout(() => {
-
-        res.write('Step 3: Output matched\n');
-        res.end(); // End the response
-        
-      }, 2000); // Simulate 2 seconds for step 3
-    }, 2000); // Simulate 2 seconds for step 2
-  }, 2000); // Simulate 2 seconds for step 1
-});
+app.ws('/websocket', ValidateWsToken, TestSolutionCode);
