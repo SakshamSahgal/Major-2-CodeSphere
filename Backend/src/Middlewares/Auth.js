@@ -38,12 +38,13 @@ function ValidateWsToken(ws, req, next) {
     if (token) {
         jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
             if (err) {
-                console.log("Error in verifying token")
-                ws.send({
+                console.log("Error in verifying token");
+                ws.send(JSON.stringify({
                     success: false,
                     message: "Invalid Token"
-                })
-                ws.close(1008);
+                }), () => {
+                    ws.close(1008); //1008 is the status code for Policy Violation
+                });
             } else {
                 console.log('JWT verified. User:', decoded);
                 req.decoded = decoded; // Attach user information to WebSocket object if needed
@@ -51,11 +52,12 @@ function ValidateWsToken(ws, req, next) {
             }
         });
     } else {
-        ws.send({
+        ws.send(JSON.stringify({
             success: false,
             message: "Token not found"
+        }), () => {
+            ws.close(1008);  //1008 is the status code for Policy Violation
         });
-        ws.close(1008);
     }
 }
 

@@ -32,7 +32,7 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
 
         // Event listener for incoming messages
         socket.onmessage = (event) => {
-            console.log('Received message:', event.data);
+            console.log(JSON.parse(event.data));
         };
 
         // Event listener for when the connection is closed
