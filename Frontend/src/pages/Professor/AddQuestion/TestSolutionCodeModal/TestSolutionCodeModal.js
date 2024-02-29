@@ -4,8 +4,7 @@ import { Button, Modal } from 'react-bootstrap';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-// import dotenv from 'dotenv';
-// dotenv.config();
+
 
 function TestSolutionCodeModal({ SolutionCodeToTest }) {
     const [showModal, setShowModal] = useState(false);
@@ -14,6 +13,9 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
 
     const handleCloseModal = () => setShowModal(false);
     const handleShowModal = () => setShowModal(true);
+
+    // To display the ws response message from the server
+    const [responseMessage, setResponseMessage] = useState(null);
 
     const handleValidateSolutionCode = async () => {
 
@@ -47,8 +49,11 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
                 try {
                     const response = JSON.parse(event.data);
                     console.log(response);
+                    setResponseMessage({
+                        message: (response.message) ? response.message : '',
+                        verdict: (response.verdict) ? response.verdict : ''
+                    });
                     if (response.success === false) {
-                        toast.error(response.message);
                         socket.close();
                     }
                 }
@@ -97,6 +102,23 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
                     <Button variant="danger" onClick={handleValidateSolutionCode} className='w-100'>
                         Test Code
                     </Button>
+                    {/* only show this if it is not null */}
+                    {
+                        responseMessage &&
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-12">
+                                    <div className="alert alert-primary mt-3" role="alert">
+                                        <h4 className="alert-heading">Response</h4>
+                                        <p>{responseMessage.message}</p>
+                                        <hr />
+                                        <p className="mb-0">{responseMessage.verdict}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
                 </Modal.Footer>
             </Modal>
         </>

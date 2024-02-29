@@ -152,4 +152,4 @@ async function RunCpp(code, input) {
 //     }
 // });
 
-module.exports = { RunCpp };
+module.exports = { RunCpp, DeleteAfterExecution };

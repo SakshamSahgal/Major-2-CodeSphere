@@ -1,5 +1,6 @@
 
-const { RunCpp } = require('../Code/Run');
+const { RunCpp, DeleteAfterExecution } = require('../Code/Run');
+const fs = require('fs');
 
 function ValidateSolutionCode(ws, req) {
 
@@ -36,9 +37,10 @@ function ValidateSolutionCode(ws, req) {
 
                     //read the output file from response.outputFilePath and compare it with expectedOutputValue
 
-                    const fs = require('fs');
-                    const path = require('path');
-                    const expectedOutputValue = data.expectedOutputValue;
+                    ws.send(JSON.stringify({
+                        success: true,
+                        message: "Reading the Generated Output from the Code...",
+                    }));
 
                     fs.readFile(response.outputFilePath, 'utf8', (err, readContent) => {
                         if (err) {
@@ -58,6 +60,7 @@ function ValidateSolutionCode(ws, req) {
                                     verdict: "Accepted"
                                 }), () => {
                                     ws.close(1000);
+                                    DeleteAfterExecution(response.outputFilePath);
                                 });
                             }
                             else {
@@ -67,6 +70,7 @@ function ValidateSolutionCode(ws, req) {
                                     verdict: "Wrong Answer"
                                 }), () => {
                                     ws.close(1000);
+                                    DeleteAfterExecution(response.outputFilePath);
                                 });
                             }
                         }

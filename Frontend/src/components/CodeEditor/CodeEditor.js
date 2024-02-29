@@ -21,10 +21,10 @@ function CodeEditor({ height, defaultCode, onUpdateCode }) {
         onUpdateCode(editor); // Call the onUpdateCode function passed from the parent component
     };
 
-    useEffect(() => {
-        // Call onUpdateCode with defaultCode when component mounts
-        onUpdateCode(defaultCode);
-    }, []); // Empty dependency array ensures this effect runs only once, on mount
+    // useEffect(() => {
+    //     // Call onUpdateCode with defaultCode when component mounts
+    //     onUpdateCode(defaultCode);
+    // }, []); // Empty dependency array ensures this effect runs only once, on mount
 
     return (
         <>
