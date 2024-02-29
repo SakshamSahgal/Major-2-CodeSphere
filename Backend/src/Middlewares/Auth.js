@@ -38,7 +38,7 @@ function ValidateWsToken(ws, req, next) {
     if (token) {
         jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
             if (err) {
-                console.log("Error in verifying token");
+                // console.log("Error in verifying token");
                 ws.send(JSON.stringify({
                     success: false,
                     message: "Invalid Token"

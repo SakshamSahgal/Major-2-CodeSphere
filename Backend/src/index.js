@@ -9,7 +9,7 @@ const { ValidateToken, isStudent, isProfessor, ValidateWsToken } = require("./Mi
 const { registerCollegeRoute, registeredCollegeRoute } = require("./other/Colleges");
 const { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute } = require("./Student/Assignments");
 const { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getOtherQuestionsRoute, createAssignmentRoute, deleteAssignmentRoute } = require("./Professor/Assignments.js");
-const { TestSolutionCode } = require("./Professor/Question.js");
+const { ValidateSolutionCode } = require("./Professor/Question.js");
 
 
 const PORT = process.env.PORT || 8080;
@@ -39,4 +39,5 @@ app.get("/professors/getOtherQuestions", ValidateToken, isProfessor, getOtherQue
 app.post("/professors/createAssignment", ValidateToken, isProfessor, createAssignmentRoute);                //Creates an assignment
 app.delete("/professors/deleteAssignment/:_id", ValidateToken, isProfessor, deleteAssignmentRoute);         //Deletes an assignment
 
-app.ws('/websocket', ValidateWsToken, TestSolutionCode);
+app.ws('/validateSolutionCode', ValidateWsToken, ValidateSolutionCode);
+

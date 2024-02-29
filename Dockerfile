@@ -9,13 +9,13 @@ RUN apt-get install -y gcc g++
 WORKDIR /app
 
 # Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+COPY Backend/package*.json ./
 
 # Install Node.js dependencies
 RUN npm install
 
-# Copy the rest of the application code
-COPY . .
+# Copy the rest of the Backend folder content (except dockerignore contents) to the working directory
+COPY Backend .
 
 # Expose the port your app runs on
 EXPOSE 8080
