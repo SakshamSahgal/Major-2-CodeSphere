@@ -1,6 +1,5 @@
 import React from 'react';
-import { Form, Nav, Tab } from 'react-bootstrap';
-import CodeEditor from '../../../../components/CodeEditor/CodeEditor';
+import { Nav, Tab } from 'react-bootstrap';
 import SolutionCodeTab from './SolutionCodeTab';
 import RandomTestCodeTab from './RandomTestCodeTab';
 

@@ -4,13 +4,15 @@ import { Button, Modal } from 'react-bootstrap';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+
 import VerdictBadge from "./VerdictBadge"
+import CharacterCounter from "../../../../components/CommonComponents/CharacterCounter"
+
 
 function TestSolutionCodeModal({ SolutionCodeToTest }) {
     const [showModal, setShowModal] = useState(false);
     const validationTestCaseRef = useRef(null);
     const expectedOutputRef = useRef(null);
-
 
     // To display the ws response message from the server
     const [responseMessage, setResponseMessage] = useState(null);
@@ -23,10 +25,8 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
 
     const handleValidateSolutionCode = async () => {
 
-        const validationTestCaseValue = validationTestCaseRef.current.value;
-        const expectedOutputValue = expectedOutputRef.current.value;
-        // console.log("Validation Test Cases:", validationTestCaseValue);
-        // console.log("Expected Output:", expectedOutputValue);
+        // console.log("Validation Test Cases:", validationTestCaseRef.current.value);
+        // console.log("Expected Output:", expectedOutputRef.current.value);
         // console.log("Solution Code To Test:", SolutionCodeToTest);
 
         try {
@@ -38,8 +38,8 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
                     socket.send(JSON.stringify({
                         type: 'Validation',
                         SolutionCodeToTest: SolutionCodeToTest,
-                        validationTestCaseValue: validationTestCaseValue,
-                        expectedOutputValue: expectedOutputValue
+                        validationTestCaseValue: validationTestCaseRef.current.value,
+                        expectedOutputValue: expectedOutputRef.current.value
                     }));
                 }
                 catch (error) {
@@ -95,11 +95,13 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
                 <Modal.Body>
                     <Form.Group controlId="validationTestCases" className="my-3">
                         <Form.Label>Validation Input Test Case</Form.Label>
-                        <Form.Control as="textarea" rows={3} placeholder="Enter validation input test case..." ref={validationTestCaseRef} />
+                        <Form.Control as="textarea" rows={3} maxLength={200} placeholder="Enter validation input test case..." ref={validationTestCaseRef} />
+                        <CharacterCounter maxLength={200} textAreaRef={validationTestCaseRef} />
                     </Form.Group>
                     <Form.Group controlId="expectedOutput" className="my-3">
                         <Form.Label>Expected Output</Form.Label>
-                        <Form.Control as="textarea" rows={3} placeholder="Enter expected output..." ref={expectedOutputRef} />
+                        <Form.Control as="textarea" rows={3} maxLength={200} placeholder="Enter expected output..." ref={expectedOutputRef} />
+                        <CharacterCounter maxLength={200} textAreaRef={expectedOutputRef} />
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
