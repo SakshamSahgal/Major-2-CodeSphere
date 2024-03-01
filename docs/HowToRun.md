@@ -3,10 +3,12 @@
 
 `NOTE` : Make sure you have`Docker` installed
 
-1. goto `root` directory.
-2. run `docker build -t testimage .` to build the docker image.
-3. run `docker run -p 8080:8080 testimage` to run the image.
-4. You can then access the webapp from `http://localhost:8080/`
+1. create a `.env` in /Backend
+2. save the `.env` with the `required parameters`
+3. go to the `root` directory.
+4. run `docker build -t testimage .` to build the docker image.
+5. run `docker run -p 8080:8080 testimage` to run the image.
+6. You can then access the web-app from `http://localhost:8080/`
 
 # To run Node Backend
 

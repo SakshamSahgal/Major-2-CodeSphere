@@ -135,21 +135,4 @@ async function RunCpp(code, input) {
 }
 
 
-
-// app.get("/RunCpp", (req, res) => {
-//     const { code, input } = req.body;
-
-//     if (!input) {
-//         input = "";
-//     }
-
-//     if (!code) {
-//         res.status(400).json({ success: false, message: "code is required in the body of the request" });
-//     } else {
-//         RunCpp(code, input).then((response) => {
-//             res.status(200).json(response);
-//         });
-//     }
-// });
-
 module.exports = { RunCpp, DeleteAfterExecution };
