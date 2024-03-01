@@ -4,7 +4,7 @@ import { Button, Modal } from 'react-bootstrap';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-
+import VerdictBadge from "./VerdictBadge"
 
 function TestSolutionCodeModal({ SolutionCodeToTest }) {
     const [showModal, setShowModal] = useState(false);
@@ -112,11 +112,10 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
                         <div className="container">
                             <div className="row">
                                 <div className="col-12">
-                                    <div className="alert alert-primary mt-3" role="alert">
-                                        <h4 className="alert-heading">Response</h4>
+                                    <div className="alert alert-primary mt-3 text-center" role="alert">
                                         <p>{responseMessage.message}</p>
                                         <hr />
-                                        <p className="mb-0">{responseMessage.verdict}</p>
+                                        <p className="mb-0">{<VerdictBadge verdict={responseMessage.verdict} />}</p>
                                     </div>
                                 </div>
                             </div>

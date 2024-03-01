@@ -120,7 +120,7 @@ async function RunCpp(code, input, TimeLimit) {
                 Response_sent = true;
                 clearTimeout(timeoutId);
                 DeleteAfterExecution(scriptPath, executablePath, outputFilePath);
-                resolve({ success: false, message: `Error occured while running the script ${executablePath}`, verdict: "Runtime Error" });
+                resolve({ success: false, message: `Error occured while running the script ${executablePath}`, verdict: "Compilation Error" });
             }
         });
 
