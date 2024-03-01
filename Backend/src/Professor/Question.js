@@ -94,4 +94,77 @@ function ValidateSolutionCode(ws, req) {
     });
 }
 
-module.exports = { ValidateSolutionCode };
+function ValidateRandomTestCaseCode(ws, req) {
+
+    console.log('WebSocket connection established');
+
+    ws.on('message', async (message) => {
+        try {
+
+            const data = JSON.parse(message);
+
+            if (data.type === "RunRandomTestCaseCode") {
+
+                console.log(data)
+
+                ws.send(JSON.stringify({ success: true, message: "Running the code...", verdict: "Processing.." }));
+
+                let response = await RunCpp(data.RandomTestCaseCode, "", 5000)
+
+                //if the code is not executed successfully, send the error message as response and close the connection
+                if (!response.success) {
+                    ws.send(JSON.stringify(response), () => {
+                        ws.close(1008);
+                    });
+                }
+                else {
+
+                    //read the output file from response.outputFilePath and send it as response
+                    ws.send(JSON.stringify({ success: true, message: "Reading the Generated Output from the Code...", verdict: "Reading Output.." }));
+
+                    fs.readFile(response.outputFilePath, 'utf8', (err, readContent) => {
+                        if (err) {
+                            ws.send(JSON.stringify({
+                                success: false,
+                                message: `Error occured while reading the output file ${response.outputFilePath}`,
+                                verdict: "Runtime Error"
+                            }), () => {
+                                ws.close(1008);
+                            });
+                        }
+                        else {
+                            ws.send(JSON.stringify({
+                                success: true,
+                                message: "Output read successfully",
+                                output: readContent,
+                                verdict: "Output Read"
+                            }), () => {
+                                ws.close(1000);
+                                DeleteAfterExecution(response.outputFilePath);
+                            });
+                        }
+                    })
+                }
+            }
+            else {
+                ws.send(JSON.stringify({
+                    success: false,
+                    message: "Invalid Type",
+                }), () => {
+                    ws.close(1008);  //1008 is the status code for Policy Violation
+                });
+            }
+        }
+        catch (e) {
+            ws.send(JSON.stringify({
+                success: false,
+                message: "Invalid JSON format recieved from client",
+            }), () => {
+                ws.close(1008);  //1008 is the status code for Policy Violation
+            }
+            );
+        }
+    });
+}
+
+module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode };

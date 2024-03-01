@@ -9,7 +9,7 @@ const { ValidateToken, isStudent, isProfessor, ValidateWsToken } = require("./Mi
 const { registerCollegeRoute, registeredCollegeRoute } = require("./other/Colleges");
 const { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute } = require("./Student/Assignments");
 const { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getOtherQuestionsRoute, createAssignmentRoute, deleteAssignmentRoute } = require("./Professor/Assignments.js");
-const { ValidateSolutionCode } = require("./Professor/Question.js");
+const { ValidateSolutionCode, ValidateRandomTestCaseCode } = require("./Professor/Question.js");
 const path = require("path");
 
 const PORT = process.env.PORT || 8080;
@@ -40,7 +40,7 @@ app.post("/professors/createAssignment", ValidateToken, isProfessor, createAssig
 app.delete("/professors/deleteAssignment/:_id", ValidateToken, isProfessor, deleteAssignmentRoute);         //Deletes an assignment
 
 app.ws('/validateSolutionCode', ValidateWsToken, ValidateSolutionCode);
-
+app.ws("/RunRandomTestCaseCode", ValidateWsToken, ValidateRandomTestCaseCode);
 
 
 //this route is used to serve the react app

@@ -94,8 +94,8 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group controlId="validationTestCases" className="my-3">
-                        <Form.Label>Validation Test Cases</Form.Label>
-                        <Form.Control as="textarea" rows={3} placeholder="Enter validation test cases..." ref={validationTestCaseRef} />
+                        <Form.Label>Validation Input Test Case</Form.Label>
+                        <Form.Control as="textarea" rows={3} placeholder="Enter validation input test case..." ref={validationTestCaseRef} />
                     </Form.Group>
                     <Form.Group controlId="expectedOutput" className="my-3">
                         <Form.Label>Expected Output</Form.Label>

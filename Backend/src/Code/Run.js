@@ -26,6 +26,13 @@ function DeleteAfterExecution(...filePaths) {
 //Then it passes the input to the stdin of the running script
 //Then it writes the output to a .txt file
 
+//Possible Responses - 
+//{ success: false, message: `script took too long to execute.`, verdict: "Time Limit Exceeded" }
+//{ success: false, message: `Error occurred while writing the ${scriptPath} file`, verdict: "Runtime Error" }
+//{ success: false, message: `Error occurred while appending data to the ${outputFilePath} file`, verdict: "Runtime Error" }
+//{ success: false, message: `Error occured while running the script ${executablePath}`, verdict: "Compilation Error" }
+//{ success: true, outputFilePath: outputFilePath, verdict: "Run Successful" }
+
 async function RunCpp(code, input, TimeLimit) {
     return new Promise((resolve, reject) => {
         let Response_sent = false;

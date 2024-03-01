@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Nav, Tab } from 'react-bootstrap';
 import CodeEditor from '../../../../components/CodeEditor/CodeEditor';
 import SolutionCodeTab from './SolutionCodeTab';
+import RandomTestCodeTab from './RandomTestCodeTab';
 
 function CodeTab() {
     return (
@@ -11,7 +12,7 @@ function CodeTab() {
                     <Nav.Link eventKey="SolutionCode">Solution Code</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link eventKey="RandomTestCode">Random Test Code</Nav.Link>
+                    <Nav.Link eventKey="RandomTestCode">Random Test Case Code</Nav.Link>
                 </Nav.Item>
             </Nav>
             <Tab.Content>
@@ -19,9 +20,7 @@ function CodeTab() {
                     <SolutionCodeTab />
                 </Tab.Pane>
                 <Tab.Pane eventKey="RandomTestCode">
-                    <Form.Group controlId="randomTestCode" className="my-3">
-                        <CodeEditor height={"500px"} defaultCode={"abc"} onUpdateCode={(value) => { console.log(value) }} />
-                    </Form.Group>
+                    <RandomTestCodeTab />
                 </Tab.Pane>
             </Tab.Content>
         </Tab.Container>
