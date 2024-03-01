@@ -15,12 +15,9 @@ function ValidateSolutionCode(ws, req) {
 
                 console.log(data)
 
-                ws.send(JSON.stringify({
-                    success: true,
-                    message: "Running the code...",
-                }));
+                ws.send(JSON.stringify({ success: true, message: "Running the code...", verdict: "Processing.." }));
 
-                let response = await RunCpp(data.SolutionCodeToTest, data.validationTestCaseValue)
+                let response = await RunCpp(data.SolutionCodeToTest, data.validationTestCaseValue, 5000)
 
                 //if the code is not executed successfully, send the error message as response and close the connection
                 if (!response.success) {
@@ -30,17 +27,11 @@ function ValidateSolutionCode(ws, req) {
                 }
                 else {
 
-                    ws.send(JSON.stringify({
-                        success: true,
-                        message: "Code executed successfully, matching the output...",
-                    }));
+                    ws.send(JSON.stringify({ success: true, message: "Code executed successfully, matching the output...", verdict: "Comparing.." }));
 
                     //read the output file from response.outputFilePath and compare it with expectedOutputValue
 
-                    ws.send(JSON.stringify({
-                        success: true,
-                        message: "Reading the Generated Output from the Code...",
-                    }));
+                    ws.send(JSON.stringify({ success: true, message: "Reading the Generated Output from the Code...", verdict: "Reading Output.." }));
 
                     fs.readFile(response.outputFilePath, 'utf8', (err, readContent) => {
                         if (err) {
@@ -75,9 +66,7 @@ function ValidateSolutionCode(ws, req) {
                             }
                         }
                     });
-
                 }
-
             }
             else {
                 ws.send(JSON.stringify({

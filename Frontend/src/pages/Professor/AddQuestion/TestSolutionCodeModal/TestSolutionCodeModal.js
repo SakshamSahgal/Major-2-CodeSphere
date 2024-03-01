@@ -11,11 +11,15 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
     const validationTestCaseRef = useRef(null);
     const expectedOutputRef = useRef(null);
 
-    const handleCloseModal = () => setShowModal(false);
-    const handleShowModal = () => setShowModal(true);
 
     // To display the ws response message from the server
     const [responseMessage, setResponseMessage] = useState(null);
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setResponseMessage(null);
+    }
+    const handleShowModal = () => setShowModal(true);
 
     const handleValidateSolutionCode = async () => {
 
@@ -118,7 +122,7 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
                             </div>
                         </div>
                     }
-                    
+
                 </Modal.Footer>
             </Modal>
         </>

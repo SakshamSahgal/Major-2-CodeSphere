@@ -10,6 +10,9 @@ function DeleteAfterExecution(...filePaths) {
                 if (err) {
                     console.log(`Error occured while deleting the ${filePath} file, err : ${err}`)
                 }
+                else {
+                    console.log(`Successfully deleted the ${filePath} file`)
+                }
             });
         }
     });
@@ -23,7 +26,7 @@ function DeleteAfterExecution(...filePaths) {
 //Then it passes the input to the stdin of the running script
 //Then it writes the output to a .txt file
 
-async function RunCpp(code, input) {
+async function RunCpp(code, input, TimeLimit) {
     return new Promise((resolve, reject) => {
         let Response_sent = false;
 
@@ -32,7 +35,7 @@ async function RunCpp(code, input) {
         let executablePath = path.join(__dirname, `${scriptName}.exe`)
         let outputFilePath = path.join(__dirname, `${scriptName}.txt`)
         let scriptProcess = null;
-        let executionTimeout = 5000; //Timeout for the script execution to prevent infinite loops and detect TLEs
+        let executionTimeout = TimeLimit; //Timeout for the script execution to prevent infinite loops and detect TLEs
         let ProcessKillingStarted = false;
 
         //this will be used to kill the process if it takes too long to execute and it will run after the executionTimeout time
