@@ -1,6 +1,7 @@
 import { Form } from "react-bootstrap";
 import CodeEditor from "../../../../components/CodeEditor/CodeEditor";
 import RunRandomTestCaseCodeModal from "../RunRandomTestCaseCodeModal/RunRandomTestCaseCodeModal";
+import { useState } from "react";
 
 let DefaultCode =
 
@@ -22,12 +23,15 @@ int main() {
 }`;
 
 function RandomTestCaseCodeTab() {
+
+    const [RandomTestCaseCode, setRandomTestCaseCode] = useState(DefaultCode);
+
     return (
         <>
             <Form.Group controlId="randomTestCode" className="my-3">
-                <CodeEditor height={"500px"} defaultCode={DefaultCode} onUpdateCode={(value) => { console.log(value) }} />
+                <CodeEditor height={"500px"} defaultCode={DefaultCode} onUpdateCode={(value) => { setRandomTestCaseCode(value) }} />
                 <hr style={{ color: "white" }} />
-                <RunRandomTestCaseCodeModal />
+                <RunRandomTestCaseCodeModal CodeToRun={RandomTestCaseCode} />
                 <hr style={{ color: "white" }} />
             </Form.Group>
         </>

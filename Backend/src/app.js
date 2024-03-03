@@ -16,6 +16,8 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 expressWs(app);
+// add static folder as public
+app.use(express.static(path.join(__dirname, "..", 'public')));
 // add static folder as build
 app.use(express.static(path.join(__dirname, "..", 'build')));
 

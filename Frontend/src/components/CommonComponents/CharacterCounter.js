@@ -16,7 +16,7 @@ function CharacterCounter({ maxLength, textAreaRef }) {
     return (
         <div>
             {remainingChars >= 0 ? (
-                <p>{remainingChars} characters remaining</p>
+                <p className='text-muted'>  {remainingChars} characters remaining</p>
             ) : (
                 <p style={{ color: 'red' }}>{Math.abs(remainingChars)} characters over limit</p>
             )}

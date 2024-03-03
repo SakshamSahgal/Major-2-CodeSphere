@@ -1,4 +1,5 @@
 
+const path = require('path');
 const { RunCpp, DeleteAfterExecution } = require('../Code/Run');
 const fs = require('fs');
 
@@ -118,32 +119,65 @@ function ValidateRandomTestCaseCode(ws, req) {
                     });
                 }
                 else {
+                    try {
+                        //copy the output file to the public/TemeroryCodeBase folder
+                        ws.send(JSON.stringify({ success: true, message: "Code executed successfully, piping the output stream...", verdict: "Copying.." }));
 
-                    //read the output file from response.outputFilePath and send it as response
-                    ws.send(JSON.stringify({ success: true, message: "Reading the Generated Output from the Code...", verdict: "Reading Output.." }));
+                        //get the filename from the response.outputFilePath
+                        let fileName = path.basename(response.outputFilePath);
+                        let copyFilePath = path.join(__dirname, "..", "..", "public", "TemperoryCodeBase", fileName);
 
-                    fs.readFile(response.outputFilePath, 'utf8', (err, readContent) => {
-                        if (err) {
-                            ws.send(JSON.stringify({
-                                success: false,
-                                message: `Error occured while reading the output file ${response.outputFilePath}`,
-                                verdict: "Runtime Error"
-                            }), () => {
-                                ws.close(1008);
-                            });
-                        }
-                        else {
+                        // Create read stream from response.outputFilePath
+                        const readStream = fs.createReadStream(response.outputFilePath);
+
+                        // Create write stream to copyFilePath in append mode
+                        const writeStream = fs.createWriteStream(copyFilePath, { flags: 'a' });
+
+                        // Pipe the read stream to the write stream
+                        readStream.pipe(writeStream);
+
+                        // Listen for events on the write stream
+                        writeStream.on('finish', () => {
+                            let outputLink = process.env.BackendHost + "/TemperoryCodeBase/" + fileName;
                             ws.send(JSON.stringify({
                                 success: true,
-                                message: "Output read successfully",
-                                output: readContent,
-                                verdict: "Output Read"
+                                message: "Output Link will expire in 5 minutes",
+                                verdict: outputLink
                             }), () => {
                                 ws.close(1000);
                                 DeleteAfterExecution(response.outputFilePath);
+                                //delete the Temp public file after 5 minutes
+                                setTimeout(() => {
+                                    DeleteAfterExecution(copyFilePath);
+                                }, 300000);
                             });
-                        }
-                    })
+                        });
+
+                        writeStream.on('error', (err) => {
+                            console.error(err);
+                            ws.send(JSON.stringify({
+                                success: false,
+                                message: `Error occurred while writing the stream from ${response.outputFilePath} to ${copyFilePath}`,
+                                verdict: "Internal Server Error"
+                            }), () => {
+                                ws.close(1008);
+                                DeleteAfterExecution(response.outputFilePath);
+                                DeleteAfterExecution(copyFilePath);
+                            });
+                        });
+                    }
+                    catch (e) {
+                        ws.send(JSON.stringify({
+                            success: false,
+                            message: `Error occoured while `,
+                            verdict: "Internal Server Error"
+                        }), () => {
+                            ws.close(1008);
+                            DeleteAfterExecution(response.outputFilePath);
+                        });
+                    }
+
+
                 }
             }
             else {
