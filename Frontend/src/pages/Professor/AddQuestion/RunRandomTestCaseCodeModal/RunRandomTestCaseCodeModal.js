@@ -4,6 +4,7 @@ import { Button, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
+import VerdictBadge from '../../../../components/CommonComponents/VerdictBadge';
 
 function RunRandomTestCaseCodeModal({ CodeToRun }) {
     const [showModal, setShowModal] = useState(false);
@@ -74,12 +75,6 @@ function RunRandomTestCaseCodeModal({ CodeToRun }) {
                         <FontAwesomeIcon icon={faCode} className="ms-2" /></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" className='w-100' onClick={handleCloseModal}>
-                        Close
-                    </Button>
                     {/* only show this if it is not null */}
                     {
                         responseMessage &&
@@ -95,12 +90,18 @@ function RunRandomTestCaseCodeModal({ CodeToRun }) {
                                                 target="_blank"
                                                 rel="noreferrer">{responseMessage.verdict}
                                             </a> :
-                                            <p>{responseMessage.verdict}</p>}
+                                           <VerdictBadge verdict={responseMessage.verdict} />
+                                        }
                                     </div>
                                 </div>
                             </div>
                         </div>
                     }
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" className='w-100' onClick={handleCloseModal}>
+                        Close
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </>

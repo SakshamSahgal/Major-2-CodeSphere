@@ -2,11 +2,12 @@ import React from 'react';
 
 function VerdictBadge({ verdict }) {
     const verdictMap = {
-        'Accepted': { variant: 'success', text: 'Accepted' },
-        'Wrong Answer': { variant: 'danger', text: 'Wrong Answer' },
-        'Time Limit Exceeded': { variant: 'warning', text: 'Time Limit Exceeded' },
-        'Runtime Error': { variant: 'danger', text: 'Runtime Error' },
-        'Compilation Error': { variant: 'danger', text: 'Compilation Error' }
+        'Accepted': { variant: 'success', text: 'AC' },
+        'Wrong Answer': { variant: 'danger', text: 'WA' },
+        'Time Limit Exceeded': { variant: 'warning', text: 'TLE' },
+        'Runtime Error': { variant: 'danger', text: 'RE' },
+        'Compilation Error': { variant: 'danger', text: 'CE' },
+        'Memory Limit Exceeded': { variant: 'warning', text: 'MLE' },
     };
 
     const { variant = 'secondary', text = verdict } = verdictMap[verdict] || {};

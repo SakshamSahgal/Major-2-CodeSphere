@@ -148,6 +148,7 @@ function ValidateRandomTestCaseCode(ws, req) {
                                 DeleteAfterExecution(response.outputFilePath);
                                 //delete the Temp public file after 5 minutes
                                 setTimeout(() => {
+                                    console.log(`Deleting Temperory public File ${copyFilePath} after Timeout of 5 minutes`)
                                     DeleteAfterExecution(copyFilePath);
                                 }, 300000);
                             });

@@ -90,18 +90,57 @@ async function RunCpp(code, input, TimeLimit) {
         scriptProcess.stdout.on('data', (data) => {
 
             if (!Response_sent) {
-                // Write the output to a text file
-                fs.appendFile(outputFilePath, data, (err) => {
-                    if (err) {
-                        console.log(`error while appending stdout to the output to ${outputFilePath}, err : ${err}`);
-                        Response_sent = true; // Set Response_sent to true to indicate response is sent
-                        clearTimeout(timeoutId); // Clear the TLE timeout
-                        DeleteAfterExecution(scriptPath, executablePath, outputFilePath);
-                        resolve({ success: false, message: `Error occurred while appending data to the ${outputFilePath} file`, verdict: "Runtime Error" });
-                    } else {
-                        console.log(`appending chunk ${++chunkCounter} stdout to the output to ${outputFilePath}`);
-                    }
-                });
+
+                //writing the first chunk of the output to the output file, so file can be created and further chunks can be appended
+                if (chunkCounter === 0) {
+                    // Write the output to a text file
+                    fs.appendFile(outputFilePath, data, (err) => {
+                        if (err) {
+                            console.log(`error while appending stdout to the output to ${outputFilePath}, err : ${err}`);
+                            Response_sent = true; // Set Response_sent to true to indicate response is sent
+                            clearTimeout(timeoutId); // Clear the TLE timeout
+                            DeleteAfterExecution(scriptPath, executablePath, outputFilePath);
+                            resolve({ success: false, message: `Error occurred while appending data to the ${outputFilePath} file`, verdict: "Runtime Error" });
+                        } else {
+                            console.log(`appending chunk ${++chunkCounter} stdout to the output to ${outputFilePath}`);
+                        }
+                    });
+                } else {
+                    fs.stat(outputFilePath, (err, stats) => {
+                        if (err) {
+                            console.log(`Error while getting ${outputFilePath} file stats: ${err}`);
+                        }
+                        else {
+                            const fileSizeInBytes = stats.size;
+                            const fileSizeInMB = fileSizeInBytes / (1024 * 1024); // Convert bytes to MB
+                            console.log(`File Size in MB : ${fileSizeInMB}`);
+                            if (fileSizeInBytes >= process.env.MemoryLimitForCodeInBytes) {
+                                console.log(`File size exceeds ${(process.env.MemoryLimitForCodeInBytes / (1024 * 1024))} MB. Stopping further writing.`);
+                                Response_sent = true; // Set Response_sent to true to indicate response is sent
+                                clearTimeout(timeoutId); // Clear the TLE timeout
+                                DeleteAfterExecution(scriptPath, executablePath, outputFilePath);
+                                resolve({ success: false, message: `File size exceeds ${(process.env.MemoryLimitForCodeInBytes / (1024 * 1024))} MB`, verdict: "Memory Limit Exceeded" });
+                            }
+                            else {
+                                // Write the output to a text file
+                                fs.appendFile(outputFilePath, data, (err) => {
+                                    if (err) {
+                                        console.log(`error while appending stdout to the output to ${outputFilePath}, err : ${err}`);
+                                        Response_sent = true; // Set Response_sent to true to indicate response is sent
+                                        clearTimeout(timeoutId); // Clear the TLE timeout
+                                        DeleteAfterExecution(scriptPath, executablePath, outputFilePath);
+                                        resolve({ success: false, message: `Error occurred while appending data to the ${outputFilePath} file`, verdict: "Runtime Error" });
+                                    } else {
+                                        console.log(`appending chunk ${++chunkCounter} stdout to the output to ${outputFilePath}`);
+                                    }
+                                });
+                            }
+                        }
+                    })
+                }
+
+
+
             } else {
                 // If response is already sent, stop further writing
                 //kill the process if not already killed
@@ -127,7 +166,7 @@ async function RunCpp(code, input, TimeLimit) {
                 Response_sent = true;
                 clearTimeout(timeoutId);
                 DeleteAfterExecution(scriptPath, executablePath, outputFilePath);
-                resolve({ success: false, message: `Error occured while running the script ${executablePath}`, verdict: "Compilation Error" });
+                resolve({ success: false, message: `stderr: ${data}`, verdict: "Compilation Error" });
             }
         });
 
