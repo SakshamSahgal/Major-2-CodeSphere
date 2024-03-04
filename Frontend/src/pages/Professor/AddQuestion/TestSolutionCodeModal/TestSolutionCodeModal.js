@@ -93,7 +93,7 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form.Group controlId="validationTestCases" className="my-3">
+                    <Form.Group controlId="validationTestCase" className="my-3">
                         <Form.Label>Validation Input Test Case</Form.Label>
                         <Form.Control as="textarea" rows={3} maxLength={200} placeholder="Enter validation input test case..." ref={validationTestCaseRef} />
                         <CharacterCounter maxLength={200} textAreaRef={validationTestCaseRef} />

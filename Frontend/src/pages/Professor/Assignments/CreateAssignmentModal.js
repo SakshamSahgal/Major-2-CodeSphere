@@ -15,6 +15,7 @@ function CreateAssignmentModal() {
         const fetchBatches = async () => {
             try {
                 const response = await axios(`/getBatches`, { withCredentials: true });
+
                 if (response.data.success)
                     setBatches(response.data.Batches);
                 else {
@@ -22,7 +23,12 @@ function CreateAssignmentModal() {
                 }
             }
             catch (err) {
-                toast.error(`error while fetching Batches, error ${err.message}`);
+                if (err.response.status === 401) {
+                    localStorage.clear();
+                    window.location = "/";
+                }
+                else
+                    toast.error(`error while fetching Batches, error ${err.message}`);
             }
         };
 

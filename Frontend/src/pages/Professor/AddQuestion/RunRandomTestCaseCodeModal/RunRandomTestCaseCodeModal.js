@@ -88,7 +88,7 @@ function RunRandomTestCaseCodeModal({ CodeToRun }) {
                                         {responseMessage.verdict.includes('http') ?
                                             <a href={responseMessage.verdict}
                                                 target="_blank"
-                                                rel="noreferrer">{responseMessage.verdict}
+                                                rel="noreferrer">{"Link"}
                                             </a> :
                                            <VerdictBadge verdict={responseMessage.verdict} />
                                         }
