@@ -1,11 +1,11 @@
+import { useState } from "react";
 import NavbarWithProfileAndSidebar from "../../../components/Navbar/NavbarWithProfileAndSidebar";
 // import RightsReservedFooter from "../../../components/Footer/RightsReservedFooter";
 import { Form, Nav, Tab } from "react-bootstrap";
 import DescriptionTab from "./NavTabs/DescriptionTab";
 import CodeTab from "./NavTabs/CodeTab/CodeTab";
 import TestcasesTab from "./NavTabs/TestcasesTab";
-import { useState } from "react";
-
+import PreviewTab from "./NavTabs/PreviewTab";
 
 let DefaultSolutionCode =
 
@@ -93,7 +93,7 @@ function ProfessorAddQuestion({ activeTab }) {
                   <TestcasesTab handleInputChange={handleInputChange} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="Preview">
-
+                  <PreviewTab formData={formData} />
                 </Tab.Pane>
               </Tab.Content>
             </Form>
