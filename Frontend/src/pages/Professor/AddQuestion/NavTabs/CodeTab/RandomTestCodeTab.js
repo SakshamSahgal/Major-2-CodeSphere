@@ -1,6 +1,6 @@
 import { Form } from "react-bootstrap";
-import CodeEditor from "../../../../components/CodeEditor/CodeEditor";
-import RunRandomTestCaseCodeModal from "../RunRandomTestCaseCodeModal/RunRandomTestCaseCodeModal";
+import CodeEditor from "../../../../../components/CodeEditor/CodeEditor";
+import RunRandomTestCaseCodeModal from "../../RunRandomTestCaseCodeModal/RunRandomTestCaseCodeModal";
 
 
 

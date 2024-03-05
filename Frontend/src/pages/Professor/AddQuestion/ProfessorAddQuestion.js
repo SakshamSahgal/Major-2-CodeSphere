@@ -2,7 +2,7 @@ import NavbarWithProfileAndSidebar from "../../../components/Navbar/NavbarWithPr
 // import RightsReservedFooter from "../../../components/Footer/RightsReservedFooter";
 import { Form, Nav, Tab } from "react-bootstrap";
 import DescriptionTab from "./NavTabs/DescriptionTab";
-import CodeTab from "./NavTabs/CodeTab";
+import CodeTab from "./NavTabs/CodeTab/CodeTab";
 import TestcasesTab from "./NavTabs/TestcasesTab";
 import { useState } from "react";
 
@@ -43,8 +43,9 @@ function ProfessorAddQuestion({ activeTab }) {
     Constraints: '',
     SolutionCode: DefaultSolutionCode,
     RandomTestCode: DefaultRandomTestCode,
-    TestCases: [] // Assuming testCases is an array of objects with properties input, name, isChecked
+    TestCases: [] // testCases is an array of objects with properties input, name, isChecked
   });
+
 
   const handleInputChange = (field, value) => {
     setFormData({
@@ -89,7 +90,7 @@ function ProfessorAddQuestion({ activeTab }) {
                   <CodeTab formData={formData} DefaultSolutionCode={DefaultSolutionCode} DefaultRandomTestCode={DefaultRandomTestCode} handleInputChange={handleInputChange} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="TestCases">
-                  <TestcasesTab />
+                  <TestcasesTab handleInputChange={handleInputChange} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="Preview">
 

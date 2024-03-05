@@ -1,12 +1,17 @@
-import React, { useState } from "react";
-import TestCase from "./../TestCase";
+import React, { useEffect, useState } from "react";
+import TestCase from "../TestCase"
 
-function TestcasesTab() {
-    const [testcases, setTestcases] = useState([{ name: "Testcase 1", sampleTestCase: false, input: "" }]);
+function TestcasesTab({ handleInputChange }) {
+    const [testcases, setTestcases] = useState([{ sampleTestCase: false, input: "" }]);
+
+    //this will be called whenever the testcases array changes
+    useEffect(() => {
+        handleInputChange('TestCases', testcases);
+    }, [testcases]);
 
     //function that adds a new testcase
     const addTestcase = () => {
-        const newTestcases = [...testcases, { name: `Testcase ${testcases.length + 1}`, sampleTestCase: false, input: "" }];
+        const newTestcases = [...testcases, { sampleTestCase: false, input: "" }];
         setTestcases(newTestcases);
     };
 
@@ -31,7 +36,7 @@ function TestcasesTab() {
         setTestcases(updatedTestcases);
     }
 
-    console.log(testcases);
+    // console.log(testcases);
 
     return (
         <div style={{ color: "white" }}>
@@ -54,7 +59,7 @@ function TestcasesTab() {
                             <TestCase
                                 index={index}
                                 toggleSample={toggleSample}
-                                name={testcase.name}
+                                name={`Testcase ${index + 1}`}
                                 isChecked={testcase.sampleTestCase}
                                 input={testcase.input}
                                 updateTestcase={updateTestcase}
