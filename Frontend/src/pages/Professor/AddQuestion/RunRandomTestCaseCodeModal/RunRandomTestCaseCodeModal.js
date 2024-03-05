@@ -15,6 +15,7 @@ function RunRandomTestCaseCodeModal({ CodeToRun }) {
     const handleCloseModal = () => setShowModal(false);
     const handleShowModal = () => {
         setShowModal(true);
+        console.log("Code to run:", CodeToRun);
         try {
             const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_WS_LOCALHOST}/RunRandomTestCaseCode`);
 

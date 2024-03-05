@@ -3,7 +3,9 @@ import { Nav, Tab } from 'react-bootstrap';
 import SolutionCodeTab from './SolutionCodeTab';
 import RandomTestCodeTab from './RandomTestCodeTab';
 
-function CodeTab() {
+function CodeTab({ formData, DefaultSolutionCode, DefaultRandomTestCode, handleInputChange }) {
+
+
     return (
         <Tab.Container defaultActiveKey={"SolutionCode"}>
             <Nav variant="tabs" className="my-3" fill>
@@ -16,10 +18,10 @@ function CodeTab() {
             </Nav>
             <Tab.Content>
                 <Tab.Pane eventKey="SolutionCode">
-                    <SolutionCodeTab />
+                    <SolutionCodeTab formData={formData} DefaultSolutionCode={DefaultSolutionCode} handleInputChange={handleInputChange} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="RandomTestCode">
-                    <RandomTestCodeTab />
+                    <RandomTestCodeTab formData={formData} DefaultRandomTestCode={DefaultRandomTestCode} handleInputChange={handleInputChange} />
                 </Tab.Pane>
             </Tab.Content>
         </Tab.Container>

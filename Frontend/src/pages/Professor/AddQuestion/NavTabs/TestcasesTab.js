@@ -3,7 +3,6 @@ import TestCase from "./../TestCase";
 
 function TestcasesTab() {
     const [testcases, setTestcases] = useState([{ name: "Testcase 1", sampleTestCase: false, input: "" }]);
-    // console.log(testcases);
 
     //function that adds a new testcase
     const addTestcase = () => {

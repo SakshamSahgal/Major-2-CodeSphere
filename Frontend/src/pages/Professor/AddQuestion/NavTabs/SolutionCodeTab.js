@@ -3,25 +3,17 @@ import CodeEditor from "../../../../components/CodeEditor/CodeEditor";
 import TestSolutionCodeModal from "../TestSolutionCodeModal/TestSolutionCodeModal";
 import { useState } from "react";
 
-let DefaultCode =
-
-    `#include <iostream>
-using namespace std;
-int main() {
-    cout << "Hello, World!";
-    return 0;
-}`;
 
 
-function SolutionCodeTab() {
 
-    const [SolutionCodeToTest, setSolutionCodeToTest] = useState(DefaultCode);
+function SolutionCodeTab({ formData, DefaultSolutionCode, handleInputChange }) {
+
 
     return (
         <Form.Group controlId="SolutionCode" className="my-3">
-            <CodeEditor height={"500px"} defaultCode={DefaultCode} onUpdateCode={(value) => { setSolutionCodeToTest(value) }} />
+            <CodeEditor height={"500px"} defaultCode={DefaultSolutionCode} onUpdateCode={(codeWritten) => handleInputChange('SolutionCode', codeWritten)} />
             <hr style={{ color: "white" }} />
-            <TestSolutionCodeModal SolutionCodeToTest={SolutionCodeToTest} />
+            <TestSolutionCodeModal SolutionCodeToTest={formData.SolutionCode} />
             <hr style={{ color: "white" }} />
         </Form.Group>
     );

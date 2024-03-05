@@ -4,8 +4,57 @@ import { Form, Nav, Tab } from "react-bootstrap";
 import DescriptionTab from "./NavTabs/DescriptionTab";
 import CodeTab from "./NavTabs/CodeTab";
 import TestcasesTab from "./NavTabs/TestcasesTab";
+import { useState } from "react";
+
+
+let DefaultSolutionCode =
+
+  `#include <iostream>
+using namespace std;
+int main() {
+    cout << "Hello, World!";
+    return 0;
+}`;
+
+let DefaultRandomTestCode =
+
+  `#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+int main() {
+    // Seed the random number generator with the current time
+    srand(time(0));
+
+    // Generate a random number between 1 and 99
+    int randomNumber = rand() % 99 + 1;
+    cout << randomNumber;
+
+    return 0;
+}`;
 
 function ProfessorAddQuestion({ activeTab }) {
+
+  const [formData, setFormData] = useState({
+    QuestionName: '',
+    ProblemStatement: '',
+    Constraints: '',
+    SolutionCode: DefaultSolutionCode,
+    RandomTestCode: DefaultRandomTestCode,
+    TestCases: [] // Assuming testCases is an array of objects with properties input, name, isChecked
+  });
+
+  const handleInputChange = (field, value) => {
+    setFormData({
+      ...formData,
+      [field]: value
+    });
+  };
+
+  console.log(formData);
+
   return (
     <>
       <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations", "AddQuestion", "Questions"]} TabLinks={["/professors/assignments", "/professors/evaluations", "/professors/addQuestion", "/professors/questions"]} LoginType={"Professors"} ActiveTabIndex={2} />
@@ -34,10 +83,10 @@ function ProfessorAddQuestion({ activeTab }) {
             <Form>
               <Tab.Content>
                 <Tab.Pane eventKey="Description" style={{ color: "white" }}>
-                  <DescriptionTab />
+                  <DescriptionTab handleInputChange={handleInputChange} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="Code">
-                  <CodeTab />
+                  <CodeTab formData={formData} DefaultSolutionCode={DefaultSolutionCode} DefaultRandomTestCode={DefaultRandomTestCode} handleInputChange={handleInputChange} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="TestCases">
                   <TestcasesTab />
