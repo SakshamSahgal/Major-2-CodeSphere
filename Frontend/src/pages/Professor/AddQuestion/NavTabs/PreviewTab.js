@@ -3,8 +3,47 @@ import CodeMirror from '@uiw/react-codemirror';
 import { cpp } from "@codemirror/lang-cpp";
 import { githubDark } from '@uiw/codemirror-theme-github'; // GitHub theme
 import InfoModal from "../../../../components/Modal/InfoModal"
+import { toast } from "react-toastify";
 
 function PreviewTab({ formData, FormMetaData }) {
+
+    const HandleSubmit = (e) => {
+        e.preventDefault(); // Prevents default refresh by the browser
+        console.log("Submit");
+        if (formData.QuestionName === "") {
+            toast.error("Question Name is required");
+        }
+        if (formData.ProblemStatement === "") {
+            toast.error("Problem Statement is required");
+        }
+        if (formData.Constraints === "") {
+            toast.error("Constraints is required");
+        }
+        if (formData.InputFormat === "") {
+            toast.error("Input Format is required");
+        }
+        if (formData.OutputFormat === "") {
+            toast.error("Output Format is required");
+        }
+        if (formData.TestCases.length === 0) {
+            toast.error("Test Cases are required");
+        }
+        else {
+            if (!formData.TestCases.some(testcase => !testcase.sampleTestCase)) { // no object with sampleTestCase = false
+                toast.error("Hidden Test Cases are required");
+            }
+            if (!formData.TestCases.some(testcase => testcase.sampleTestCase)) { //no object with sampleTestCase = true
+                toast.error("Sample Test Cases are required");
+            }
+        }
+        if(formData.SolutionCode === ""){
+            toast.error("Solution Code is required");
+        }
+        if(formData.RandomTestChecked && formData.RandomTestCode === ""){
+            toast.error("Random Test Code is required, if you have checked the Random Test Case Generator");
+        }
+    }
+
     return (
         <div>
             <div className="container">
@@ -61,7 +100,7 @@ function PreviewTab({ formData, FormMetaData }) {
                                 </div>
                                 <br />
                                 <div>
-                                    <Card.Title>Sample Test Cases <span className="text-muted">(Visible to user)</span></Card.Title>
+                                    <Card.Title>Sample Test Cases <InfoModal info={FormMetaData.SampleTestCasesInfoModal} /></Card.Title>
                                     {formData.TestCases.some(testcase => testcase.sampleTestCase) ? (
                                         formData.TestCases.map((testcase, index) => (
                                             testcase.sampleTestCase && (
@@ -83,7 +122,7 @@ function PreviewTab({ formData, FormMetaData }) {
                                         <p>No sample test cases provided</p>
                                     )}
                                     <br />
-                                    <Card.Title>Hidden Test Cases <span className="text-muted">(Not visible to user)</span> </Card.Title>
+                                    <Card.Title>Hidden Test Cases <InfoModal info={FormMetaData.HiddenTestCasesInfoModal} /></Card.Title>
                                     {formData.TestCases.some(testcase => !testcase.sampleTestCase) ? (
                                         formData.TestCases.map((testcase, index) => (
                                             !testcase.sampleTestCase && (
@@ -146,6 +185,11 @@ function PreviewTab({ formData, FormMetaData }) {
                                 )}
                             </Card.Body>
                         </Card>
+                    </div>
+                </div>
+                <div className="row mb-3">
+                    <div className="col">
+                        <button className="btn btn-primary w-100 mb-3" onClick={HandleSubmit}>Create</button>
                     </div>
                 </div>
             </div>
