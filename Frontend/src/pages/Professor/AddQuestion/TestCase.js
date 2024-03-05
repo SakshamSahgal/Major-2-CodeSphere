@@ -2,7 +2,10 @@ import { Form } from "react-bootstrap";
 import CharacterCounter from "../../../components/CommonComponents/CharacterCounter"; // Assuming CharacterCounter is in a separate file
 import { useRef } from 'react';
 
-function TestCase({ index, toggleSample, name, isChecked, updateTestcase }) {
+
+
+
+function TestCase({ index, toggleSample, name, isChecked, input, updateTestcase }) {
 
     const textAreaRef = useRef(null);
 
@@ -21,6 +24,7 @@ function TestCase({ index, toggleSample, name, isChecked, updateTestcase }) {
                 as="textarea"
                 placeholder={name}
                 maxLength={200}
+                value={input}
                 onChange={(e) => updateTestcase(index, e.target.value)} // Added onChange handler
                 ref={textAreaRef}
             />

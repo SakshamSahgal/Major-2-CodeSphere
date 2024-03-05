@@ -28,7 +28,7 @@ function RandomTestCaseCodeTab() {
 
     return (
         <>
-            <Form.Group controlId="randomTestCode" className="my-3">
+            <Form.Group controlId="RandomTestCode" className="my-3">
                 <CodeEditor height={"500px"} defaultCode={DefaultCode} onUpdateCode={(value) => { setRandomTestCaseCode(value) }} />
                 <hr style={{ color: "white" }} />
                 <RunRandomTestCaseCodeModal CodeToRun={RandomTestCaseCode} />

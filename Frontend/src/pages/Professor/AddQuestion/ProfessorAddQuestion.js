@@ -40,7 +40,7 @@ function ProfessorAddQuestion({ activeTab }) {
                   <CodeTab />
                 </Tab.Pane>
                 <Tab.Pane eventKey="TestCases">
-                  <TestcasesTab activeTab={"SampleTestCases"} />
+                  <TestcasesTab />
                 </Tab.Pane>
                 <Tab.Pane eventKey="Preview">
 
