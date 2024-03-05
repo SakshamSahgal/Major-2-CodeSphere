@@ -36,8 +36,6 @@ function TestcasesTab({ handleInputChange }) {
         setTestcases(updatedTestcases);
     }
 
-    // console.log(testcases);
-
     return (
         <div style={{ color: "white" }}>
             <div className="container">

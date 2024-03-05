@@ -1,6 +1,6 @@
 import { Form } from "react-bootstrap";
 import CodeEditor from "../../../../../components/CodeEditor/CodeEditor";
-import TestSolutionCodeModal from "../../TestSolutionCodeModal/TestSolutionCodeModal";
+import TestSolutionCodeModal from "../CodeTab/TestSolutionCodeModal/TestSolutionCodeModal";
 
 
 

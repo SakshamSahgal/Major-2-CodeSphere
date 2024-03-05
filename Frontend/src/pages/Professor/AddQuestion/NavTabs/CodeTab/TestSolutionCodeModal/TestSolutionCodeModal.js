@@ -5,8 +5,8 @@ import { faCode } from '@fortawesome/free-solid-svg-icons';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
-import VerdictBadge from "../../../../components/CommonComponents/VerdictBadge"
-import CharacterCounter from "../../../../components/CommonComponents/CharacterCounter"
+import VerdictBadge from "../../../../../../components/CommonComponents/VerdictBadge"
+import CharacterCounter from "../../../../../../components/CommonComponents/CharacterCounter"
 
 
 function TestSolutionCodeModal({ SolutionCodeToTest }) {

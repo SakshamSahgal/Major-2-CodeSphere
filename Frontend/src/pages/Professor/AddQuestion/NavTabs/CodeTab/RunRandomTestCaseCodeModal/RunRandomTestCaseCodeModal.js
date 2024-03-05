@@ -4,7 +4,7 @@ import { Button, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
-import VerdictBadge from '../../../../components/CommonComponents/VerdictBadge';
+import VerdictBadge from '../../../../../../components/CommonComponents/VerdictBadge';
 
 function RunRandomTestCaseCodeModal({ CodeToRun }) {
     const [showModal, setShowModal] = useState(false);
