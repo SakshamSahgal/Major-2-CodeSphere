@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { cpp } from "@codemirror/lang-cpp";
 import CodeMirror from '@uiw/react-codemirror';
 import { Dropdown } from 'react-bootstrap';
@@ -10,7 +10,7 @@ import { okaidia } from '@uiw/codemirror-theme-okaidia';
 import { githubLight } from '@uiw/codemirror-theme-github'; // GitHub theme
 import { githubDark } from '@uiw/codemirror-theme-github'; // GitHub theme
 
-function CodeEditor({ height, defaultCode, onUpdateCode, defaultTheme = githubDark}) {
+function CodeEditor({ height, defaultCode, onUpdateCode, defaultTheme = githubDark, isEditable }) {
     const [selectedTheme, setSelectedTheme] = useState(defaultTheme);
 
     const handleThemeChange = (theme) => {
@@ -53,6 +53,7 @@ function CodeEditor({ height, defaultCode, onUpdateCode, defaultTheme = githubDa
                             height={height || "500px"}
                             theme={selectedTheme === 'default' ? undefined : selectedTheme}
                             extensions={[cpp()]}
+                            editable={isEditable}
                             onChange={handleChange}
                         />
                     </div>

@@ -40,12 +40,21 @@ function ProfessorAddQuestion({ activeTab }) {
   const [formData, setFormData] = useState({
     QuestionName: '',
     ProblemStatement: '',
-    Constraints: '',
+    Constraints: "",
+    InputFormat: "",
+    OutputFormat: "",
     SolutionCode: DefaultSolutionCode,
+    RandomTestChecked: false,
     RandomTestCode: DefaultRandomTestCode,
     TestCases: [] // testCases is an array of objects with properties input, name, isChecked
   });
 
+  const FormMetaData = {
+    SolutionCodeTabDescription: `This Code will be used to evaluate correct Output for Testcases`,
+    SolutionInfoButtonDescription: `This Code will be used to evaluate correct Output for Testcases`,
+    RandomTestCodeTabDescription: `This Code will be used to generate random Testcases,\n please ensure that the code you provide here matches the input format`,
+    RandomTestCaseInfoButtonDescription : `This Code will be used to generate random Testcases,\n please ensure that the code you provide here matches the input format`
+  }
 
   const handleInputChange = (field, value) => {
     setFormData({
@@ -93,7 +102,7 @@ function ProfessorAddQuestion({ activeTab }) {
                   <TestcasesTab handleInputChange={handleInputChange} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="Preview">
-                  <PreviewTab formData={formData} />
+                  <PreviewTab formData={formData} FormMetaData={FormMetaData} />
                 </Tab.Pane>
               </Tab.Content>
             </Form>

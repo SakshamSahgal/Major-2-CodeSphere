@@ -47,6 +47,8 @@ const professorsSchema = new mongoose.Schema({
 
 const QuestionSchema = new mongoose.Schema({
     Constraints: { type: String, required: true },
+    InputFormat: { type: String, required: true },
+    OutputFormat: { type: String, required: true },
     ProblemStatement: { type: String, required: true },
     QuestionName: { type: String, required: true, unique: true },
     RandomTestCode: { type: String, required: false },
