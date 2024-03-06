@@ -59,6 +59,9 @@ function PreviewTab({ formData, FormMetaData }) {
             console.log("All fields are filled");
             console.log(formData);
             try {
+                if (!formData.RandomTestChecked) { // if Random Test Case Generator is not checked, then RandomTestCode should be empty
+                    formData.RandomTestCode = "";
+                }
                 const response = await axios.post("/professors/createQuestion", formData, { withCredentials: true });
                 toast[response.data.success ? "success" : "error"](response.data.message);
                 if (response.data.success) {
