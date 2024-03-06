@@ -46,11 +46,11 @@ const professorsSchema = new mongoose.Schema({
 });
 
 const QuestionSchema = new mongoose.Schema({
-    Constraints: { type: String, required: true },
-    InputFormat: { type: String, required: true },
-    OutputFormat: { type: String, required: true },
-    ProblemStatement: { type: String, required: true },
-    QuestionName: { type: String, required: true, unique: true },
+    Constraints: { type: String, required: true, maxlength: 500 },
+    InputFormat: { type: String, required: true, maxlength: 500 },
+    OutputFormat: { type: String, required: true, maxlength: 500 },
+    ProblemStatement: { type: String, required: true, maxlength: 1800 },
+    QuestionName: { type: String, required: true, unique: true, maxlength: 50 },
     RandomTestCode: { type: String, required: false },
     SolutionCode: { type: String, required: true },
     TestCases: [{
@@ -59,6 +59,7 @@ const QuestionSchema = new mongoose.Schema({
     }],
     RandomTestChecked: { type: Boolean, required: true },
     CreatedBy: { type: mongoose.Schema.Types.ObjectId, required: true },
+    CreatedOn: { type: Date, required: true },
 });
 
 // Conditional validation for RandomTestCode

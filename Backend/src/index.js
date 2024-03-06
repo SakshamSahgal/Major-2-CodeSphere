@@ -9,7 +9,7 @@ const { ValidateToken, isStudent, isProfessor, ValidateWsToken } = require("./Mi
 const { registerCollegeRoute, registeredCollegeRoute } = require("./other/Colleges");
 const { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute } = require("./Student/Assignments");
 const { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getOtherQuestionsRoute, createAssignmentRoute, deleteAssignmentRoute } = require("./Professor/Assignments.js");
-const { ValidateSolutionCode, ValidateRandomTestCaseCode } = require("./Professor/Question.js");
+const { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute } = require("./Professor/Question.js");
 const path = require("path");
 
 const PORT = process.env.PORT || 8080;
@@ -38,10 +38,10 @@ app.get("/professors/getMyQuestions", ValidateToken, isProfessor, getMyQuestions
 app.get("/professors/getOtherQuestions", ValidateToken, isProfessor, getOtherQuestionsRoute);
 app.post("/professors/createAssignment", ValidateToken, isProfessor, createAssignmentRoute);                //Creates an assignment
 app.delete("/professors/deleteAssignment/:_id", ValidateToken, isProfessor, deleteAssignmentRoute);         //Deletes an assignment
+app.post("/professors/createQuestion", ValidateToken, isProfessor, createQuestionRoute);                    //Creates a Question
 
 app.ws('/validateSolutionCode', ValidateWsToken, ValidateSolutionCode);
 app.ws("/RunRandomTestCaseCode", ValidateWsToken, ValidateRandomTestCaseCode);
-
 
 //this route is used to serve the react app
 //it should be the last route because it is a catch all route, so if no other route is matched then this route is used

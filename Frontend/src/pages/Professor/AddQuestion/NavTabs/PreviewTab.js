@@ -4,43 +4,71 @@ import { cpp } from "@codemirror/lang-cpp";
 import { githubDark } from '@uiw/codemirror-theme-github'; // GitHub theme
 import InfoModal from "../../../../components/Modal/InfoModal"
 import { toast } from "react-toastify";
+import axios from "axios";
 
 function PreviewTab({ formData, FormMetaData }) {
 
-    const HandleSubmit = (e) => {
+    const HandleSubmit = async (e) => {
         e.preventDefault(); // Prevents default refresh by the browser
         console.log("Submit");
+        let fail = false;
         if (formData.QuestionName === "") {
             toast.error("Question Name is required");
+            fail = true;
         }
         if (formData.ProblemStatement === "") {
             toast.error("Problem Statement is required");
+            fail = true;
         }
         if (formData.Constraints === "") {
             toast.error("Constraints is required");
+            fail = true;
         }
         if (formData.InputFormat === "") {
             toast.error("Input Format is required");
+            fail = true;
         }
         if (formData.OutputFormat === "") {
             toast.error("Output Format is required");
+            fail = true;
         }
         if (formData.TestCases.length === 0) {
             toast.error("Test Cases are required");
+            fail = true;
         }
         else {
             if (!formData.TestCases.some(testcase => !testcase.sampleTestCase)) { // no object with sampleTestCase = false
-                toast.error("Hidden Test Cases are required");
+                toast.error("atleast one Hidden Test Case is required");
+                fail = true;
             }
             if (!formData.TestCases.some(testcase => testcase.sampleTestCase)) { //no object with sampleTestCase = true
-                toast.error("Sample Test Cases are required");
+                toast.error("atleast one Sample Test Case is required");
+                fail = true;
             }
         }
-        if(formData.SolutionCode === ""){
+        if (formData.SolutionCode === "") {
             toast.error("Solution Code is required");
+            fail = true;
         }
-        if(formData.RandomTestChecked && formData.RandomTestCode === ""){
+        if (formData.RandomTestChecked && formData.RandomTestCode === "") {
             toast.error("Random Test Code is required, if you have checked the Random Test Case Generator");
+            fail = true;
+        }
+
+        if (!fail) { // if no error, means all fields are filled
+            console.log("All fields are filled");
+            console.log(formData);
+            try {
+                const response = await axios.post("/professors/createQuestion", formData, { withCredentials: true });
+                toast[response.data.success ? "success" : "error"](response.data.message);
+                if (response.data.success) {
+                    window.location.reload();
+                }
+            }
+            catch (err) {
+                console.log(err);
+                toast.error(err.message);
+            }
         }
     }
 
@@ -196,5 +224,6 @@ function PreviewTab({ formData, FormMetaData }) {
         </div>
     );
 }
+
 
 export default PreviewTab;

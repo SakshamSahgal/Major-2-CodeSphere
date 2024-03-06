@@ -1,7 +1,8 @@
-
 const path = require('path');
 const { RunCpp, DeleteAfterExecution } = require('../Code/Run');
 const fs = require('fs');
+const { writeDB } = require('../db/mongoOperations');
+const { QuestionSchema } = require('../db/schema');
 
 function ValidateSolutionCode(ws, req) {
 
@@ -202,4 +203,22 @@ function ValidateRandomTestCaseCode(ws, req) {
     });
 }
 
-module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode };
+function createQuestionRoute(req, res) {
+    console.log(req.body);
+    req.body.CreatedBy = req.decoded._id;
+    req.body.CreatedOn = new Date();
+    writeDB("QuestionBank", req.decoded.Institution, req.body, QuestionSchema).then((data) => {
+        res.status(201).send({
+            success: true,
+            message: "Question Created Successfully"
+        });
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: `Failed to Create Question, error: ${error.message}`
+        });
+    });
+}
+
+module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute };
