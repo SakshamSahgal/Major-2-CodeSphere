@@ -23,12 +23,13 @@ function CreateAssignmentModal() {
                 }
             }
             catch (err) {
-                if (err.response.status === 401) {
-                    localStorage.clear();
-                    window.location = "/";
+                // if the status if 401 then redirect to home
+                if(err.response && err.response.status === 401)
+                {
+                    localStorage.clear(); //clear the local storage
+                    window.location = "/"; //redirect to home
                 }
-                else
-                    toast.error(`error while fetching Batches, error ${err.message}`);
+                toast.error(`error while fetching Batches, error ${err.message}`);
             }
         };
 
@@ -77,7 +78,7 @@ function CreateAssignmentModal() {
         <>
             <Button variant="primary" className="w-100" onClick={toggleModal}> Create Assignment </Button>
 
-            <Modal show={showModal} onHide={toggleModal}>
+            <Modal show={showModal} onHide={toggleModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Create Assignment</Modal.Title>
                 </Modal.Header>

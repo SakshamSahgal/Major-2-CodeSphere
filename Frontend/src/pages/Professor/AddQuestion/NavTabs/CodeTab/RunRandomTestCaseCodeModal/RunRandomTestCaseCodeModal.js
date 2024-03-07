@@ -70,7 +70,7 @@ function RunRandomTestCaseCodeModal({ CodeToRun }) {
                 <FontAwesomeIcon icon={faCode} className="ms-2" />
             </Button>
 
-            <Modal show={showModal} onHide={handleCloseModal}>
+            <Modal show={showModal} onHide={handleCloseModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title> Test Code
                         <FontAwesomeIcon icon={faCode} className="ms-2" /></Modal.Title>

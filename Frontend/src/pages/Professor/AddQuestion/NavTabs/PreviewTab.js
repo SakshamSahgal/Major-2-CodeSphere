@@ -70,7 +70,7 @@ function PreviewTab({ formData, FormMetaData }) {
             }
             catch (err) {
                 console.log(err);
-                toast.error(err.message);
+                toast.error(`Error while creating question: ${err}`);
             }
         }
     }

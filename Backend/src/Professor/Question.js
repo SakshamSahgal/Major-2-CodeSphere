@@ -221,4 +221,18 @@ function createQuestionRoute(req, res) {
     });
 }
 
-module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute };
+function FetchQuestionDetailsRoute(req, res) {
+    //fetch the question details from the database
+    const Querry = {
+        _id: req.params.QuestionID
+    }
+    const Projection = {
+        _id: 0,
+        __v: 0
+    }
+
+    
+
+}
+
+module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, FetchQuestionDetailsRoute };

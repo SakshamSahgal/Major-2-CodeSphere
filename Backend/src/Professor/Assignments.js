@@ -55,6 +55,7 @@ function getBatchesRoute(req, res) {
     });
 }
 
+//Only sends the question name and ID
 function getMyQuestionsRoute(req, res) {
 
     Querry = {
@@ -85,6 +86,7 @@ function getMyQuestionsRoute(req, res) {
         });
 }
 
+//Only sends the question name and ID
 function getOtherQuestionsRoute(req, res) {
 
     Projection = {

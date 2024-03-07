@@ -52,6 +52,11 @@ function LoginPage({ LoginType }) {
                 const response = await axios.get('/registeredColleges');
                 setInstitutions(response.data.result);
             } catch (error) {
+                // if the status if 401 then redirect to home
+                if (error.response && error.response.status === 401) {
+                    localStorage.clear(); //clear the local storage
+                    window.location = "/"; //redirect to home
+                }
                 toast.error(`Error fetching Institution. Please try again later. err : ${error}`);
             }
         };

@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap";
 
 function QuestionsTab({ setFormData, MyQuestions, OtherQuestions, handleSubmit }) {
     return (
-        <Tab.Pane eventKey="Questions">
+        <>
             <Tab.Container defaultActiveKey={"MyQuestions"}>
                 <Nav variant="tabs" fill>
                     <Nav.Item>
@@ -83,7 +83,7 @@ function QuestionsTab({ setFormData, MyQuestions, OtherQuestions, handleSubmit }
                 </Tab.Content>
             </Tab.Container>
             <Button variant="primary" className="w-100" onClick={handleSubmit}>Submit</Button>
-        </Tab.Pane>
+        </>
     )
 }
 

@@ -14,14 +14,18 @@ function ProfileModal({ show, onHide, profileData, LoginType }) {
     const Logout = async () => {
 
         localStorage.removeItem(`${LoginType}Login`);
-
-        const response = await axios.delete('/logout', { withCredentials: true }); //this will remove the cookie from the browser
-        console.log(response.data);
-        if (response.data.success === false)
-            toast.error(response.data.message);
-        else {
-            toast.success(response.data.message);
-            window.location.href = '/';
+        try {
+            const response = await axios.delete('/logout', { withCredentials: true }); //this will remove the cookie from the browser
+            console.log(response.data);
+            if (response.data.success === false)
+                toast.error(response.data.message);
+            else {
+                toast.success(response.data.message);
+                window.location.href = '/';
+            }
+        }
+        catch (err) {
+            toast.error(`Error while Logging out: ${err}`)
         }
     }
 

@@ -22,8 +22,7 @@ function CreateAssignmentNavtabs({ activeTab, Batches, MyQuestions, OtherQuestio
         try {
             const response = await axios.post("/professors/createAssignment", formData, { withCredentials: true });
             console.log(response.data);
-            if (response.data.success)
-            {
+            if (response.data.success) {
                 toast.success(response.data.message);
                 // reload after 1 sec
                 setTimeout(() => {
@@ -55,7 +54,9 @@ function CreateAssignmentNavtabs({ activeTab, Batches, MyQuestions, OtherQuestio
                 <Tab.Content>
                     <OverviewTab formData={formData} setFormData={setFormData} />
                     <TargetStudentsTab formData={formData} setFormData={setFormData} Batches={Batches} />
-                    <QuestionsTab setFormData={setFormData} MyQuestions={MyQuestions} OtherQuestions={OtherQuestions} handleSubmit={handleSubmit} />
+                    <Tab.Pane eventKey="Questions">
+                        <QuestionsTab setFormData={setFormData} MyQuestions={MyQuestions} OtherQuestions={OtherQuestions} handleSubmit={handleSubmit} />
+                    </Tab.Pane>
                 </Tab.Content>
             </Form>
         </Tab.Container>

@@ -17,16 +17,20 @@ function NavbarWithProfileAndSidebar({ TabNames, TabLinks, LoginType, ActiveTabI
     const handleShow = () => setShow(true);
 
     const handlesShowProfileModal = async () => {
-        const response = await axios.get('/getProfile', { withCredentials: true });
-        console.log(response.data);
-        if (response.data.success === false) {
-            toast.error(response.data.message);
-            return;
+        try{
+            const response = await axios.get('/getProfile', { withCredentials: true });
+            console.log(response.data);
+            if (response.data.success === false) {
+                toast.error(response.data.message);
+                return;
+            }
+            else {
+                setProfileData(response.data.profile);
+            }
+            setShowModal(true);
+        }catch(err){
+            toast.error(`Error fetching Profile: ${err}`);
         }
-        else {
-            setProfileData(response.data.profile);
-        }
-        setShowModal(true);
     }
 
     return (

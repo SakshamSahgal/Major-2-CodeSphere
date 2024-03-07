@@ -75,9 +75,7 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
         catch (error) {
             toast.error(`Error while Creating a ws Connection, err : ${error.message}`);
         }
-
     }
-
     return (
         <>
             <Button variant="primary" onClick={handleShowModal} className="my-3 w-100 mb-3" >
@@ -85,7 +83,7 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
                 <FontAwesomeIcon icon={faCode} className="ms-2" />
             </Button>
 
-            <Modal show={showModal} onHide={handleCloseModal}>
+            <Modal show={showModal} onHide={handleCloseModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>
                         Validate Code
