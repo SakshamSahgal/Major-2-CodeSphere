@@ -53,9 +53,9 @@ function ProfessorAddQuestion({ activeTab }) {
     SolutionCodeTabDescription: `This Code will be used to evaluate correct Output for Testcases`,
     SolutionInfoButtonDescription: `This Code will be used to evaluate correct Output for Testcases`,
     RandomTestCodeTabDescription: `This Code will be used to generate random Testcases,\n please ensure that the code you provide here matches the input format`,
-    RandomTestCaseInfoButtonDescription : `This Code will be used to generate random Testcases,\n please ensure that the code you provide here matches the input format`,
-    HiddenTestCasesInfoModal : "These are the testcases That will not be visible to the user, and will be used for evaluation, make sure they exactly match the input format",
-    SampleTestCasesInfoModal : "These are the testcases That will be visible to the user, and will be used for evaluation, make sure they exactly match the input format"
+    RandomTestCaseInfoButtonDescription: `This Code will be used to generate random Testcases,\n please ensure that the code you provide here matches the input format`,
+    HiddenTestCasesInfoModal: "These are the testcases That will not be visible to the user, and will be used for evaluation, make sure they exactly match the input format",
+    SampleTestCasesInfoModal: "These are the testcases That will be visible to the user, and will be used for evaluation, make sure they exactly match the input format"
   }
 
   const handleInputChange = (field, value) => {

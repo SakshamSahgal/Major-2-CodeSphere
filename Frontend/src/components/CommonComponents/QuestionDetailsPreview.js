@@ -1,0 +1,88 @@
+import React from "react";
+import { Card, ListGroup } from "react-bootstrap";
+import InfoModal from "../Modal/InfoModal";
+
+
+function QuestionDetailsPreview({ QuestionName, ProblemStatement, Constraints, InputFormat, OutputFormat, SampleTestCases, TimeLimitPerTestCase, MemoryLimitPerTestCase, FormMetaData }) {
+    return (
+        <Card style={{ border: "none" }}>
+            <Card.Body>
+                {<div>
+                    <Card.Title style={{ textAlign: "center", fontSize: "25px" }}>
+                        {QuestionName !== "" ? QuestionName : "No Question Name provided"}
+                    </Card.Title>
+                    <Card.Subtitle style={{ textAlign: "center" }} className="mb-2 text-muted">
+                        time limit per test : {TimeLimitPerTestCase} second
+                    </Card.Subtitle>
+                    <Card.Subtitle style={{ textAlign: "center" }} className="mb-2 text-muted">
+                        memory limit per test : {MemoryLimitPerTestCase} megabytes
+                    </Card.Subtitle>
+                    <hr />
+                </div>
+                }
+                {ProblemStatement !== "" ? (
+                    <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word", textAlign: "justify" }}>
+                        {ProblemStatement}
+                    </pre>
+                ) : (
+                    <Card.Text>No Problem Statement provided</Card.Text>
+                )}
+                <br />
+                <div>
+                    <Card.Title>Constraints</Card.Title>
+                    {Constraints !== "" ? (
+                        <pre>{Constraints}</pre>
+                    ) : (
+                        <p>No constraints provided</p>
+                    )}
+                </div>
+                <br />
+                <div>
+                    <Card.Title>Input Format</Card.Title>
+                    {InputFormat !== "" ? (
+                        <pre>{InputFormat}</pre>
+                    ) : (
+                        <p>No InputFormat provided</p>
+                    )}
+                </div>
+                <br />
+                <div>
+                    <Card.Title>OutputFormat Format</Card.Title>
+                    {OutputFormat !== "" ? (
+                        <pre>{OutputFormat}</pre>
+                    ) : (
+                        <p>No OutputFormat provided</p>
+                    )}
+                </div>
+                <br />
+                <div>
+                    <Card.Title>Sample Test Cases <InfoModal info={FormMetaData.SampleTestCasesInfoModal} /></Card.Title>
+                    {SampleTestCases.length ? (
+                        SampleTestCases.map((testcase, index) => (
+                            testcase.sampleTestCase && (
+                                <div key={index}>
+                                    Sample Test Case {index}
+                                    <Card>
+                                        <ListGroup variant="flush" className="px-1">
+                                            <ListGroup.Item>
+                                                <div>
+                                                    <pre>{testcase.input}</pre>
+                                                </div>
+                                            </ListGroup.Item>
+                                        </ListGroup>
+                                    </Card>
+                                </div>
+                            )
+                        ))
+                    ) : (
+                        <p>No sample test cases provided</p>
+                    )}
+                    <br />
+
+                </div>
+            </Card.Body>
+        </Card>
+    );
+}
+
+export default QuestionDetailsPreview;
