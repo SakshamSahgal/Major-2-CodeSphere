@@ -5,9 +5,13 @@ import { faEye } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import QuestionListSkeleton from '../../../components/Skeletons/QuestionsListSkeleton';
+import PreviewQuestionModal from '../../../components/Modal/PreviewQuestionModal';
 
 function QuestionsList({ apiRoute }) {
-    const [Questions, setQuestions] = useState(null);
+    const [Questions, setQuestions] = useState(null);               // This state will store the Questions array fetched from the server
+    const [selectedQuestion, setSelectedQuestion] = useState(null); // This state will store the selected question
+    const [modalShow, setModalShow] = useState(false);            // This state will control the visibility of the modal
+
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
@@ -27,6 +31,16 @@ function QuestionsList({ apiRoute }) {
         fetchQuestions();
     }, []);
 
+    const openModal = (question) => {
+        setSelectedQuestion(question);
+        setModalShow(true);
+    };
+
+    const closeModal = () => {
+        setModalShow(false);
+    };
+
+
     return (
         <>
             {Questions === null ? ( // Display skeleton if Questions is null
@@ -34,16 +48,20 @@ function QuestionsList({ apiRoute }) {
             ) : Questions.length === 0 ? ( // Display no Questions if Questions is an empty array
                 <p style={{ color: "white" }} className='text-center'>No Questions</p>
             ) : (
-                <ListGroup>
-                    <hr />
-                    {Questions.map((question, index) => (
-                        <ListGroup.Item action key={index} className="d-flex justify-content-between align-items-center mb-2">
-                            {question.QuestionName}
-                            <FontAwesomeIcon icon={faEye} className='mx-1' />
-                        </ListGroup.Item>
-                    ))}
-                    <hr />
-                </ListGroup>
+                <>
+                    <ListGroup>
+                        <hr />
+                        {Questions.map((question, index) => (
+                            <ListGroup.Item action key={index} className="d-flex justify-content-between align-items-center mb-2 rounded" onClick={() => openModal(question)}>
+                                {question.QuestionName}
+                                <FontAwesomeIcon icon={faEye} className='mx-1' />
+                            </ListGroup.Item>
+                        ))}
+                        <hr />
+                    </ListGroup>
+                    <PreviewQuestionModal show={modalShow} onClose={closeModal} title={selectedQuestion?.QuestionName} _id={selectedQuestion?._id} />
+                </>
+
             )}
         </>
     )
