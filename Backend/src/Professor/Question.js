@@ -231,8 +231,6 @@ function FetchQuestionDetailsRoute(req, res) {
         __v: 0
     }
 
-    
-
 }
 
 module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, FetchQuestionDetailsRoute };
