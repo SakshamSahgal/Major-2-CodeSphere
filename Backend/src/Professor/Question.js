@@ -1,8 +1,9 @@
 const path = require('path');
 const { RunCpp, DeleteAfterExecution } = require('../Code/Run');
 const fs = require('fs');
-const { writeDB } = require('../db/mongoOperations');
+const { writeDB, readDB } = require('../db/mongoOperations');
 const { QuestionSchema } = require('../db/schema');
+const { GetProfessor } = require('../other/Common');
 
 function ValidateSolutionCode(ws, req) {
 
@@ -221,16 +222,44 @@ function createQuestionRoute(req, res) {
     });
 }
 
-function FetchQuestionDetailsRoute(req, res) {
-    //fetch the question details from the database
-    const Querry = {
-        _id: req.params.QuestionID
-    }
-    const Projection = {
-        _id: 0,
-        __v: 0
-    }
+async function FetchQuestionDetailsRoute(req, res) {
+    try {
+        console.log(req.params._id);
 
+        // Fetch the question details from the database
+        const Querry = {
+            _id: req.params._id // This is the Question ID
+        };
+
+        const Projection = {
+            _id: 0,
+            __v: 0
+        };
+
+        const data = await readDB("QuestionBank", req.decoded.Institution, Querry, QuestionSchema, Projection);
+
+        if (data.length === 0) {
+            res.status(404).send({
+                success: false,
+                message: "Question not found"
+            });
+        } else {
+            // Fetch additional details about the creator
+            data[0].CreatedBy = await GetProfessor(data[0].CreatedBy, req.decoded.Institution);
+
+            res.status(200).send({
+                success: true,
+                message: "Question Details Fetched Successfully",
+                Question: data[0]
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: `Failed to Fetch Question Details, error: ${error.message}`
+        });
+    }
 }
 
 module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, FetchQuestionDetailsRoute };

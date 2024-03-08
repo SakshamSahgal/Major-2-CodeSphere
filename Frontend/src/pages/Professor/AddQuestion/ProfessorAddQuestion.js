@@ -78,7 +78,7 @@ function ProfessorAddQuestion({ activeTab }) {
         </div>
         <div className="row">
           <Tab.Container defaultActiveKey={activeTab}>
-            <Nav variant="tabs" defaultActiveKey={activeTab} fill>
+            <Nav variant="tabs" fill>
               <Nav.Item>
                 <Nav.Link eventKey="Description" style={{ fontSize: "20px" }}>Description</Nav.Link>
               </Nav.Item>

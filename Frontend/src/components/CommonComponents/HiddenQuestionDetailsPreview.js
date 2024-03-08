@@ -10,7 +10,7 @@ function HiddenQuestionDetailsPreview({ HiddenTestCases, SolutionCode, RandomTes
     return (
         <Card style={{ border: "none" }} className="my-3">
             <Card.Body>
-                <Card.Title>Hidden Test Cases <InfoModal info={FormMetaData.HiddenTestCasesInfoModal} /></Card.Title>
+                <Card.Title>Hidden Test Cases <InfoModal info={FormMetaData?.HiddenTestCasesInfoModal} /></Card.Title>
                 {HiddenTestCases.length ? (
                     HiddenTestCases.map((testcase, index) => (
                         (
@@ -34,7 +34,7 @@ function HiddenQuestionDetailsPreview({ HiddenTestCases, SolutionCode, RandomTes
                 {SolutionCode != "" ? (
                     <div>
                         <br />
-                        <Card.Title>Solution Code <InfoModal info={FormMetaData.SolutionInfoButtonDescription} /> </Card.Title>
+                        <Card.Title>Solution Code <InfoModal info={FormMetaData?.SolutionInfoButtonDescription} /> </Card.Title>
                         <CodeMirror
                             value={SolutionCode}
                             theme={githubDark}
@@ -53,7 +53,7 @@ function HiddenQuestionDetailsPreview({ HiddenTestCases, SolutionCode, RandomTes
                 {RandomTestChecked ? (
                     <div>
                         <br />
-                        <Card.Title>Random Test Case Generator <InfoModal info={FormMetaData.SolutionInfoButtonDescription} /> </Card.Title>
+                        <Card.Title>Random Test Case Generator <InfoModal info={FormMetaData?.SolutionInfoButtonDescription} /> </Card.Title>
                         <CodeMirror
                             value={RandomTestCode}
                             theme={githubDark}
@@ -64,7 +64,7 @@ function HiddenQuestionDetailsPreview({ HiddenTestCases, SolutionCode, RandomTes
                 ) : (
                     <div>
                         <br />
-                        <Card.Title>Random Test Case Generator <InfoModal info={FormMetaData.RandomTestCaseInfoButtonDescription} /> </Card.Title>
+                        <Card.Title>Random Test Case Generator <InfoModal info={FormMetaData?.RandomTestCaseInfoButtonDescription} /> </Card.Title>
                         <p>No Random Test Code Generator provided</p>
                     </div>
                 )}

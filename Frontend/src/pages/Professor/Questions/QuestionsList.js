@@ -7,11 +7,13 @@ import { toast } from 'react-toastify';
 import QuestionListSkeleton from '../../../components/Skeletons/QuestionsListSkeleton';
 import PreviewQuestionModal from '../../../components/Modal/PreviewQuestionModal';
 
+//This is used on Questions page to display the list of Questions
 function QuestionsList({ apiRoute }) {
     const [Questions, setQuestions] = useState(null);               // This state will store the Questions array fetched from the server
     const [selectedQuestion, setSelectedQuestion] = useState(null); // This state will store the selected question
     const [modalShow, setModalShow] = useState(false);            // This state will control the visibility of the modal
 
+    //this will fetch the Questions from the server as soon as the component is mounted
     useEffect(() => {
         const fetchQuestions = async () => {
             try {

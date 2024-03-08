@@ -14,6 +14,10 @@ function InfoModal({ info }) {
         setShowModal(false);
     };
 
+    if (!info) {
+        return null; // Return null if info is null
+    }
+
     return (
         <>
             <FontAwesomeIcon icon={faInfoCircle} onClick={handleButtonClick} className='mx-1' />

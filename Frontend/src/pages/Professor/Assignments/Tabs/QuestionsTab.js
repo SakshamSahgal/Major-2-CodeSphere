@@ -1,6 +1,7 @@
 import { Tab, Nav, Form } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 
+//This Tab will be used to select questions for the assignment
 function QuestionsTab({ setFormData, MyQuestions, OtherQuestions, handleSubmit }) {
     return (
         <>

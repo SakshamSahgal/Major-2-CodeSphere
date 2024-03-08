@@ -1,5 +1,5 @@
-const {readDB} = require('../db/mongoOperations')
-const {professorsSchema} = require('../db/schema')
+const { readDB } = require('../db/mongoOperations')
+const { professorsSchema } = require('../db/schema')
 
 async function GetProfessor(id, college) {
     //read the professor from the database
@@ -22,4 +22,4 @@ async function GetProfessor(id, college) {
     }
 }
 
-module.exports = { GetProfessor}
+module.exports = { GetProfessor }

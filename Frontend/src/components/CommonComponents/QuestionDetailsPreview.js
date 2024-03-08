@@ -9,18 +9,18 @@ function QuestionDetailsPreview({ QuestionName, ProblemStatement, Constraints, I
             <Card.Body>
                 {<div>
                     <Card.Title style={{ textAlign: "center", fontSize: "25px" }}>
-                        {QuestionName !== "" ? QuestionName : "No Question Name provided"}
+                        {QuestionName && QuestionName !== "" ? QuestionName : "No Question Name provided"}
                     </Card.Title>
                     <Card.Subtitle style={{ textAlign: "center" }} className="mb-2 text-muted">
-                        time limit per test : {TimeLimitPerTestCase} second
+                        time limit per test : {TimeLimitPerTestCase ? TimeLimitPerTestCase : "0"} second
                     </Card.Subtitle>
                     <Card.Subtitle style={{ textAlign: "center" }} className="mb-2 text-muted">
-                        memory limit per test : {MemoryLimitPerTestCase} megabytes
+                        memory limit per test : {MemoryLimitPerTestCase ? MemoryLimitPerTestCase : "0"} megabytes
                     </Card.Subtitle>
                     <hr />
                 </div>
                 }
-                {ProblemStatement !== "" ? (
+                {ProblemStatement && ProblemStatement !== "" ? (
                     <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word", textAlign: "justify" }}>
                         {ProblemStatement}
                     </pre>
@@ -30,7 +30,7 @@ function QuestionDetailsPreview({ QuestionName, ProblemStatement, Constraints, I
                 <br />
                 <div>
                     <Card.Title>Constraints</Card.Title>
-                    {Constraints !== "" ? (
+                    {Constraints && Constraints !== "" ? (
                         <pre>{Constraints}</pre>
                     ) : (
                         <p>No constraints provided</p>
@@ -39,10 +39,10 @@ function QuestionDetailsPreview({ QuestionName, ProblemStatement, Constraints, I
                 <br />
                 <div>
                     <Card.Title>Input Format</Card.Title>
-                    {InputFormat !== "" ? (
+                    {InputFormat && InputFormat !== "" ? (
                         <pre>{InputFormat}</pre>
                     ) : (
-                        <p>No InputFormat provided</p>
+                        <p>No Input Format provided</p>
                     )}
                 </div>
                 <br />
@@ -56,8 +56,8 @@ function QuestionDetailsPreview({ QuestionName, ProblemStatement, Constraints, I
                 </div>
                 <br />
                 <div>
-                    <Card.Title>Sample Test Cases <InfoModal info={FormMetaData.SampleTestCasesInfoModal} /></Card.Title>
-                    {SampleTestCases.length ? (
+                    <Card.Title>Sample Test Cases <InfoModal info={FormMetaData?.SampleTestCasesInfoModal} /></Card.Title>
+                    {SampleTestCases?.length ? (
                         SampleTestCases.map((testcase, index) => (
                             testcase.sampleTestCase && (
                                 <div key={index}>

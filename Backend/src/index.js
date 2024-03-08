@@ -9,7 +9,7 @@ const { ValidateToken, isStudent, isProfessor, ValidateWsToken } = require("./Mi
 const { registerCollegeRoute, registeredCollegeRoute } = require("./other/Colleges");
 const { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute } = require("./Student/Assignments");
 const { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getOtherQuestionsRoute, createAssignmentRoute, deleteAssignmentRoute } = require("./Professor/Assignments.js");
-const { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute } = require("./Professor/Question.js");
+const { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, FetchQuestionDetailsRoute } = require("./Professor/Question.js");
 const path = require("path");
 
 const PORT = process.env.PORT || 8080;
@@ -35,6 +35,7 @@ app.get("/students/assignments/missed", ValidateToken, isStudent, getStudentMiss
 app.get("/getBatches", ValidateToken, isProfessor, getBatchesRoute);                                        //Sends the Batches to display in Create Assignment Modal
 app.get("/professors/myAssignments", ValidateToken, isProfessor, getProfessorAssignmentsRoute);
 app.get("/professors/getMyQuestions", ValidateToken, isProfessor, getMyQuestionsRoute);
+app.get("/professors/getQuestionDetails/:_id",ValidateToken, isProfessor, FetchQuestionDetailsRoute)        //Fetches the details of a question with the given id
 app.get("/professors/getOtherQuestions", ValidateToken, isProfessor, getOtherQuestionsRoute);
 app.post("/professors/createAssignment", ValidateToken, isProfessor, createAssignmentRoute);                //Creates an assignment
 app.delete("/professors/deleteAssignment/:_id", ValidateToken, isProfessor, deleteAssignmentRoute);         //Deletes an assignment
