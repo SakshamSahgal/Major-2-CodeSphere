@@ -10,7 +10,7 @@ import { Row, Col } from 'react-bootstrap';
 import HiddenQuestionDetailsPreview from '../CommonComponents/HiddenQuestionDetailsPreview';
 
 //This is a modal that will be used to preview the question when the user clicks on any Question in the QuestionsList
-function PreviewQuestionModal({ show, onClose, title, _id }) {
+function PreviewQuestionModal({ show, onClose, _id }) {
 
     const [Question, setQuestion] = useState(null);
 
@@ -38,9 +38,6 @@ function PreviewQuestionModal({ show, onClose, title, _id }) {
 
     return (
         <Modal show={show} onHide={onClose}>
-            <Modal.Header closeButton>
-                <Modal.Title>{title}</Modal.Title>
-            </Modal.Header>
             <Modal.Body>
 
                 {(Question === null) ? (

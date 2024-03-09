@@ -33,7 +33,6 @@ function AssignmentList({ listType }) {
         );
     }
 
-
     return (
         <div className="container px-1 my-1">
             {assignments.length === 0 ? (
@@ -74,6 +73,10 @@ function AssignmentList({ listType }) {
                                 <div className="card-footer d-flex justify-content-between">
                                     <button className="btn btn-primary btn-sm d-block d-sm-inline-block"> Questions ({assignment.Questions.length}) </button>
                                     <button className="btn btn-primary btn-sm d-block d-sm-inline-block"> Submissions ({assignment.SubmittedBy.length}) </button>
+                                    {/* show a solve button if the listType is Pending */}
+                                    {listType === "Pending" && (
+                                        <a href={`/students/solveAssignment/${assignment._id}`} className="btn btn-success btn-sm d-block d-sm-inline-block">Solve</a>
+                                    )}
                                 </div>
                             </div>
                         </div>

@@ -14,7 +14,7 @@ function OverviewTab({ formData, setFormData }) {
             </Form.Group>
             <hr />
             <Form.Group as={Row} controlId="DueTimestamp" className="mb-3">
-                <Form.Label column sm={4}>Date and Time:</Form.Label>
+                <Form.Label column sm={4}>Due Date and Time:</Form.Label>
                 <Col sm={8}>
                     <Form.Control type="datetime-local" onChange={(e) => setFormData({ ...formData, DueTimestamp: e.target.value })} />
                 </Col>

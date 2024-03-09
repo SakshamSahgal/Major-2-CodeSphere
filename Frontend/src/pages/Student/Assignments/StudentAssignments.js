@@ -2,8 +2,8 @@ import NavbarWithProfileAndSidebar from "../../../components/Navbar/NavbarWithPr
 import RightsReservedFooter from "../../../components/Footer/RightsReservedFooter";
 import StudentAssignmentNavtabs from "./StudentAssignmentNavtabs";
 
-function StudentAssignments() {
 
+function StudentAssignments() {
   return (
     <div>
       <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations"]} TabLinks={["/students/assignments", "/students/evaluations"]} LoginType={"Students"} ActiveTabIndex={0}/>

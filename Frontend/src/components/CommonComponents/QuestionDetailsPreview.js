@@ -47,7 +47,7 @@ function QuestionDetailsPreview({ QuestionName, ProblemStatement, Constraints, I
                 </div>
                 <br />
                 <div>
-                    <Card.Title>OutputFormat Format</Card.Title>
+                    <Card.Title>Output Format</Card.Title>
                     {OutputFormat !== "" ? (
                         <pre>{OutputFormat}</pre>
                     ) : (

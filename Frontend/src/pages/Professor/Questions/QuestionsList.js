@@ -61,7 +61,7 @@ function QuestionsList({ apiRoute }) {
                         ))}
                         <hr />
                     </ListGroup>
-                    <PreviewQuestionModal show={modalShow} onClose={closeModal} title={selectedQuestion?.QuestionName} _id={selectedQuestion?._id} />
+                    <PreviewQuestionModal show={modalShow} onClose={closeModal} _id={selectedQuestion?._id} />
                 </>
 
             )}
