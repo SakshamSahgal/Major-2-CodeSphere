@@ -10,7 +10,7 @@ import { okaidia } from '@uiw/codemirror-theme-okaidia';
 import { githubLight } from '@uiw/codemirror-theme-github'; // GitHub theme
 import { githubDark } from '@uiw/codemirror-theme-github'; // GitHub theme
 
-function CodeEditor({ height, defaultCode, onUpdateCode, defaultTheme = githubDark, isEditable }) {
+function CodeEditor({ height = "500px", defaultCode, onUpdateCode, defaultTheme = githubDark, isEditable }) {
     const [selectedTheme, setSelectedTheme] = useState(defaultTheme);
 
     const handleThemeChange = (theme) => {

@@ -3,8 +3,9 @@ import NavbarWithProfileAndSidebar from '../../../components/Navbar/NavbarWithPr
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import QuestionDetailsPreview from '../../../components/CommonComponents/QuestionDetailsPreview';
-import ProgressBar from 'react-bootstrap/ProgressBar';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import CodeEditor from '../../../components/CodeEditor/CodeEditor';
 
 function SolveAssignment() {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -26,15 +27,19 @@ function SolveAssignment() {
         <>
             <NavbarWithProfileAndSidebar LoginType={"Student"} />
             <div className="container">
-                <div className="row my-3">
-                    <div className="col-6 text-center">
-                        <Button variant="primary" onClick={handlePreviousQuestion} disabled={currentQuestionIndex === 0} className='w-100'>Previous</Button>
+                <div className="row my-3 rounded">
+                    <div className="col-4 text-center">
+                        <Button variant="primary" onClick={handlePreviousQuestion} disabled={currentQuestionIndex === 0} className='w-100'>
+                            <FontAwesomeIcon icon={faChevronLeft} />
+                        </Button>
                     </div>
-                    {/* <div className="col-10 text-center">
-                        <h2 style={{ color: "white" }}>Question {currentQuestionIndex + 1}</h2>
-                    </div> */}
-                    <div className="col-6 text-center">
-                        <Button variant="primary" onClick={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1} className='w-100'>Next</Button>
+                    <div className="col-4 d-flex align-items-center justify-content-center rounded" style={{backgroundColor : "rgba(255, 255, 255, 0.2)"}}>
+                        <span style={{ color: "white" }}>Question {currentQuestionIndex + 1}</span>
+                    </div>
+                    <div className="col-4 text-center">
+                        <Button variant="primary" onClick={handleNextQuestion} disabled={currentQuestionIndex === questions.length - 1} className='w-100'>
+                            <FontAwesomeIcon icon={faChevronRight} />
+                        </Button>
                     </div>
                 </div>
                 <div className="row my-3">
@@ -42,8 +47,10 @@ function SolveAssignment() {
                         <QuestionDetailsPreview />
                     </div>
                 </div>
+                <div className="row my-3">
+                    <CodeEditor />
+                </div>
             </div>
-
         </>
     );
 }
