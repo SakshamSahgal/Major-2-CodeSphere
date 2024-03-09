@@ -1,7 +1,7 @@
 const { readDB } = require("../db/mongoOperations");
-const { assignmentSchema,  } = require("../db/schema");
+const { assignmentSchema } = require("../db/schema");
 const { GetProfessor } = require('../other/Common');
-
+const { GetPublicQuestionDetails } = require("./Question");
 // This function is used to get the Pending assignments for the student, which are not submitted yet and are due
 function getStudentPendingAssignmentsRoute(req, res) {
 
@@ -68,6 +68,7 @@ function getStudentSubmittedAssignmentsRoute(req, res) {
         });
 }
 
+// This function is used to get the missed assignments for the student
 function getStudentMissedAssignmentsRoute(req, res) {
 
     Querry = {
@@ -98,4 +99,57 @@ function getStudentMissedAssignmentsRoute(req, res) {
         });
 }
 
-module.exports = { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute };
+function getThisPendingAssignment(req, res) {
+
+    let Querry = {
+        _id: req.params._id,                     // The assignment id should be the same as the one in the request
+        Year: req.decoded.DB.Year,              // This Student's year should be same as the assignment's year
+        Batches: { $in: req.decoded.DB.Batch },  // This Student's batch should be in the list of batches
+        SubmittedBy: { $nin: req.decoded._id }, // This Student should not be in the list of submitted students
+        DueTimestamp: { $gte: new Date() }      // Due date should be greater than or equal to current date, so that the assignment is still pending
+    }
+
+
+    readDB("Assignments", req.decoded.Institution, Querry, assignmentSchema)
+        .then(async (data) => {
+            console.log(data);
+            if (data.length > 0) {
+                let thisProfessor = await GetProfessor(data[0].PostedBy, req.decoded.Institution);
+                data[0].PostedBy = thisProfessor;
+
+                //iterate through all the question of this assignment and get the public details of each question
+
+                let thisQuestionPublicDetailsArray = [];
+
+                await Promise.all(data[0].Questions.map(async (questionid, index) => {
+                    let thisQuestionPublicDetails = await GetPublicQuestionDetails(questionid, req.decoded.Institution);
+                    thisQuestionPublicDetails.TestCases = thisQuestionPublicDetails.TestCases.filter(testcase => testcase.sampleTestCase); //only send the sample testcases to the student
+                    thisQuestionPublicDetailsArray.push(thisQuestionPublicDetails);
+                }));
+
+                data[0].Questions = thisQuestionPublicDetailsArray;
+
+                res.status(200).json({
+                    success: true,
+                    message: "Assignment fetched successfully",
+                    Assignment: data[0],
+                });
+            }
+            else {
+                res.status(404).json({
+                    success: false,
+                    message: "Assignment not found",
+                });
+            }
+        })
+        .catch((error) => {
+            res.status(500).json({
+                success: false,
+                message: `Failed to fetch Assignment, err : ${error.message}`,
+            });
+        });
+}
+
+
+
+module.exports = { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute, getThisPendingAssignment };

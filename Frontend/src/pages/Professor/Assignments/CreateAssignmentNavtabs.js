@@ -33,7 +33,7 @@ function CreateAssignmentNavtabs({ activeTab, Batches, MyQuestions, OtherQuestio
                 toast.error(response.data.message);
         }
         catch (err) {
-            toast.error(`error while creating assignment, error: ${err.message}`);
+            toast.error(`error while creating assignment, error: ${err.response.data.message}`);
         }
     };
 
