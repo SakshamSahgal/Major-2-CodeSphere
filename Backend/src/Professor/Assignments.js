@@ -148,7 +148,11 @@ async function deleteAssignmentRoute(req, res) {
     console.log(`Received request to delete assignment with id: ${req.params._id}`);
 
     try {
-        const query = { _id: req.params._id, PostedBy: req.decoded._id };
+        const query = {
+            _id: req.params._id,
+            PostedBy: req.decoded._id //checking if the assignment was posted by this professor only
+        };
+
         const deletedAssignment = await deleteIfExistsDB("Assignments", req.decoded.Institution, query, assignmentSchema);
 
         if (!deletedAssignment) {
