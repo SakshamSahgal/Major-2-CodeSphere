@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 //LoginType = 'Students' or 'Professors'
-function ProfileModal({ show, onHide, profileData, LoginType }) {
+function ProfileModal({ show, onHide, profileData }) {
     //show is True or False
     //onHide is a function to close the modal
 

@@ -68,7 +68,7 @@ function NavbarWithProfileAndSidebar({ TabNames = [], TabLinks = [], LoginType, 
                     <FontAwesomeIcon icon={faUser} onClick={handlesShowProfileModal} style={{ cursor: 'pointer', color: 'white', border: '1px solid white', padding: '5px', borderRadius: '50%' }} />
                 </Container>
             </Navbar>
-            <ProfileModal show={showModal} onHide={() => setShowModal(false)} profileData={profileData} LoginType={LoginType} />
+            <ProfileModal show={showModal} onHide={() => setShowModal(false)} profileData={profileData} />
         </>
     );
 }

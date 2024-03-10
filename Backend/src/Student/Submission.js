@@ -11,7 +11,7 @@ async function CheckQuestionInAssignment(ws, req, next) {
         _id: assignmentId,
         Questions: { $in: questionId }
     }
-
+    console.log("Checking Question in Assignment");
     ws.send(JSON.stringify({
         success: true,
         message: "Checking if the question is in the assignment",
@@ -20,7 +20,7 @@ async function CheckQuestionInAssignment(ws, req, next) {
 
     try {
 
-        let response = await readDB("Assignment", req.decoded.Institution, Querry, assignmentSchema);
+        let response = await readDB("Assignments", req.decoded.Institution, Querry, assignmentSchema);
         if (response.length == 0) {
             ws.send(JSON.stringify({
                 success: false,
@@ -45,7 +45,7 @@ async function CheckQuestionInAssignment(ws, req, next) {
 }
 
 async function findQuestion(ws, req, next) {
-
+    console.log("Finding Question");
     ws.send(JSON.stringify({
         success: true,
         message: "Checking if the question exists in the QuestionBank",

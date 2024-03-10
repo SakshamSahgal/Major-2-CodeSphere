@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import CodeEditor from '../../../components/CodeEditor/CodeEditor';
 import { useState } from "react";
-import { convertIsoToNormalTime, getTimeElapsed } from '../../../Scripts/TimeFunctions';
-import { Accordion } from "react-bootstrap";
+import QuestionDetailsAccordion from "../../../components/Accordion/QuestionDetailsAccordion";
+import DryRunModal from "../../../components/Modal/DryRunModal";
 //Questions Array is an array of objects.
 
 let DefaultSolutionCode =
@@ -19,11 +19,12 @@ int main() {
 }`;
 
 
-function SolveQuestion({ Questions }) {
+function SolveQuestion({ Questions, AssignmentId }) {
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [solutionCodes, setSolutionCodes] = useState([]);
+
 
     const handleNextQuestion = () => {
         if (Questions && currentQuestionIndex < Questions.length - 1) {
@@ -45,7 +46,7 @@ function SolveQuestion({ Questions }) {
         updatedSolutionCodes[currentQuestionIndex] = code;
         setSolutionCodes(updatedSolutionCodes);
     };
-    console.log(solutionCodes);
+
     useEffect(() => {
         if (Questions) {
             setCurrentQuestion(Questions[0])
@@ -71,30 +72,7 @@ function SolveQuestion({ Questions }) {
                 </div>
             </div>
             <div className="row" style={{ color: "white" }}>
-                <Accordion flush>
-                    <Accordion.Item eventKey="0">
-                        <Accordion.Header className="text-center my-3" style={{ cursor: 'pointer' }}>
-                            <h5>Question Details</h5>
-                        </Accordion.Header>
-
-                        <Accordion.Body>
-                            <p className="card-text">
-                                <strong>Created By:</strong>
-                                <span className="value">{currentQuestion?.CreatedBy.Name}</span>
-                            </p>
-                            <p className="card-text">
-                                <strong>Created On:</strong>
-                                <span className="value">{convertIsoToNormalTime(currentQuestion?.CreatedOn).date}</span>
-                                <span className="value">{convertIsoToNormalTime(currentQuestion?.CreatedOn).time}</span>
-                            </p>
-                            <p className="card-text">
-                                <strong>Time Elapsed:</strong>
-                                <span className="value">{getTimeElapsed(currentQuestion?.CreatedOn)}</span>
-                            </p>
-                        </Accordion.Body>
-                    </Accordion.Item>
-                </Accordion>
-
+                <QuestionDetailsAccordion Name={currentQuestion?.Name} CreatedOn={currentQuestion?.CreatedOn} />
             </div>
 
             <div className="row my-3">
@@ -107,7 +85,7 @@ function SolveQuestion({ Questions }) {
             </div>
             <div className="row my-3">
                 <div className="col">
-                    <Button variant="primary" className="w-100">Run</Button>
+                    <DryRunModal CodeToRun={solutionCodes[currentQuestionIndex]} AssignmentId={AssignmentId} QuestionId={currentQuestion?._id}/>
                 </div>
                 <div className="col">
                     <Button variant="primary" className="w-100">Submit</Button>
