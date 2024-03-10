@@ -25,7 +25,7 @@ function SolveAssignment() {
                     toast.error(response.data.message);
                 }
             } catch (error) {
-                toast.error(`Error fetching Assignment. Please try again later. err : ${error.response?.data?.message}`);
+                toast.error(`Error fetching Assignment. Please try again later. err : ${error}`);
             }
         }
         FetchAssignment();

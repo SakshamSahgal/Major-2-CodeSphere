@@ -128,7 +128,7 @@ function ValidateRandomTestCaseCode(ws, req) {
                         //get the filename from the response.outputFilePath
                         let fileName = path.basename(response.outputFilePath);
                         let copyFilePath = path.join(__dirname, "..", "..", "public", "TemperoryCodeBase", fileName);
-
+                        
                         // Create read stream from response.outputFilePath
                         const readStream = fs.createReadStream(response.outputFilePath);
 

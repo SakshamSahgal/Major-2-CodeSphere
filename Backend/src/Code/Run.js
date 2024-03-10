@@ -87,11 +87,15 @@ async function RunCpp(code, input, TimeLimit) {
         scriptProcess.stdin.end();
 
         let chunkCounter = 0; // Initialize chunk counter
+
+        //creating the output file
+        fs.writeFileSync(outputFilePath, ''); // Create the output file
+
         scriptProcess.stdout.on('data', (data) => {
 
             if (!Response_sent) {
 
-                //writing the first chunk of the output to the output file, so file can be created and further chunks can be appended
+                //writing the first chunk of the output to the output file, so further chunks can be appended
                 if (chunkCounter === 0) {
                     // Write the output to a text file
                     fs.appendFile(outputFilePath, data, (err) => {

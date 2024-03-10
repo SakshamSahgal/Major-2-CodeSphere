@@ -10,7 +10,7 @@ const { registerCollegeRoute, registeredCollegeRoute } = require("./other/Colleg
 const { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute, getThisPendingAssignment } = require("./Student/Assignments");
 const { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getOtherQuestionsRoute, createAssignmentRoute, deleteAssignmentRoute } = require("./Professor/Assignments.js");
 const { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, FetchQuestionDetailsRoute } = require("./Professor/Question.js");
-const { GetPublicQuestionDetails } = require("./Student/Question.js");
+
 const path = require("path");
 
 const PORT = process.env.PORT || 8080;

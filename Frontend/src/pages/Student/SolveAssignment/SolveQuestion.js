@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { Button } from 'react-bootstrap';
 import QuestionDetailsPreview from '../../../components/CommonComponents/QuestionDetailsPreview';
@@ -6,7 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import CodeEditor from '../../../components/CodeEditor/CodeEditor';
 import { useState } from "react";
-
+import { convertIsoToNormalTime, getTimeElapsed } from '../../../Scripts/TimeFunctions';
+//Questions Array is an array of objects.
 function SolveQuestion({ Questions }) {
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -55,6 +55,22 @@ function SolveQuestion({ Questions }) {
                         </Button>
                     </div>
                 </div>
+                <div className="row" style={{ color: "white" }}>
+                    <div className="col">
+                        <span>Created By:</span>
+                        <span className="value">{currentQuestion?.CreatedBy.Name}</span>
+                    </div>
+                    <div className="col">
+                        <span>Created On:</span>
+                        <span className="value">{convertIsoToNormalTime(currentQuestion?.CreatedOn).date}</span>
+                        <span className="value">{convertIsoToNormalTime(currentQuestion?.CreatedOn).time}</span>
+                    </div>
+                    <div className="col">
+                        <span>Time Elapsed:</span>
+                        <span className="value">{getTimeElapsed(currentQuestion?.CreatedOn)}</span>
+                    </div>
+                </div>
+
                 <div className="row my-3">
                     <div className="col">
                         <QuestionDetailsPreview QuestionName={currentQuestion?.QuestionName} ProblemStatement={currentQuestion?.ProblemStatement} Constraints={currentQuestion?.Constraints} InputFormat={currentQuestion?.InputFormat} OutputFormat={currentQuestion?.OutputFormat} SampleTestCases={currentQuestion?.TestCases} TimeLimitPerTestCase={1} MemoryLimitPerTestCase={30} />
