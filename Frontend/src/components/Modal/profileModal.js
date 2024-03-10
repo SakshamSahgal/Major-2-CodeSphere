@@ -13,7 +13,7 @@ function ProfileModal({ show, onHide, profileData, LoginType }) {
 
     const Logout = async () => {
 
-        localStorage.removeItem(`${LoginType}Login`);
+        localStorage.clear();
         try {
             const response = await axios.delete('/logout', { withCredentials: true }); //this will remove the cookie from the browser
             console.log(response.data);

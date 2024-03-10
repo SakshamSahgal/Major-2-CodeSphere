@@ -2,13 +2,15 @@ const { readDB } = require("../db/mongoOperations");
 const { assignmentSchema } = require("../db/schema");
 const { GetProfessor } = require('../other/Common');
 const { GetPublicQuestionDetails } = require("./Question");
+
 // This function is used to get the Pending assignments for the student, which are not submitted yet and are due
 function getStudentPendingAssignmentsRoute(req, res) {
 
     Querry = {
         Batches: { $in: req.decoded.DB.Batch },     // Batch should be in the list of batches
         Year: req.decoded.DB.Year,                  // Year should be same as the student's year
-        DueTimestamp: { $gte: new Date() }          // Due date should be greater than or equal to current date
+        DueTimestamp: { $gte: new Date() },         // Due date should be greater than or equal to current date
+        SubmittedBy: { $nin: req.decoded._id }      // Student should not be in the list of submitted students
     }
 
     // Query the Assignments collection based on batch, year, and due date
@@ -123,7 +125,6 @@ function getThisPendingAssignment(req, res) {
 
                 await Promise.all(data[0].Questions.map(async (questionid, index) => {
                     let thisQuestionPublicDetails = await GetPublicQuestionDetails(questionid, req.decoded.Institution);
-                    thisQuestionPublicDetails.TestCases = thisQuestionPublicDetails.TestCases.filter(testcase => testcase.sampleTestCase); //only send the sample testcases to the student
                     thisQuestionPublicDetailsArray.push(thisQuestionPublicDetails);
                 }));
 

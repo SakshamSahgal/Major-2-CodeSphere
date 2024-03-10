@@ -12,13 +12,17 @@ async function GetPublicQuestionDetails(_id, Institution) {
         RandomTestCode: 0,
         SolutionCode: 0,
     };
+
     console.log(Institution);
     try {
         let response = await readDB("QuestionBank", Institution, Querry, QuestionSchema, Projection);
         console.log(response);
         if (response.length === 0)
             return {};
-        return response[0];
+        else{
+            response[0].TestCases = response[0].TestCases.filter(testcase => testcase.sampleTestCase); //only send the sample testcases to the student
+            return response[0];
+        }
     }
     catch (error) {
         console.log(`Failed to fetch Question Details, err : ${error.message}`)

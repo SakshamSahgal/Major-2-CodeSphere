@@ -22,24 +22,24 @@ app.listen(PORT, () => {
 });
 
 
-app.post("/login", loginRoute);
-app.delete("/logout", ValidateToken, logoutRoute);
+app.post("/login", loginRoute);                                   //called when any user logs in, this function validates fields and sets a JWT token in the cookies
+app.delete("/logout", ValidateToken, logoutRoute);                //called when any user logs out, clears the JWT token from the cookies
 
-app.post("/registerCollege", registerCollegeRoute);
-app.get("/registeredColleges", registeredCollegeRoute);
-app.get("/getProfile", ValidateToken, getProfileRoute);
+app.post("/registerCollege", registerCollegeRoute);               //called when a new college is registered
+app.get("/registeredColleges", registeredCollegeRoute);           //called when the list of registered colleges is fetched for the dropdown in the login page
+app.get("/getProfile", ValidateToken, getProfileRoute);           //called when any user clicks on the profile button, returns the profile of the user
 
-app.get("/students/assignments/pending", ValidateToken, isStudent, getStudentPendingAssignmentsRoute);
-app.get("/students/assignments/submitted", ValidateToken, isStudent, getStudentSubmittedAssignmentsRoute);
-app.get("/students/assignments/missed", ValidateToken, isStudent, getStudentMissedAssignmentsRoute);
-app.get("/students/getPendingAssignment/:_id", ValidateToken, isStudent, getThisPendingAssignment);                //Fetches the details of a pending assignment with the given id, called when the student clicks on submit, on a pending assignment
+app.get("/students/assignments/pending", ValidateToken, isStudent, getStudentPendingAssignmentsRoute);      //called when the student clicks on the pending assignments tab
+app.get("/students/assignments/submitted", ValidateToken, isStudent, getStudentSubmittedAssignmentsRoute);  //called when the student clicks on the submitted assignments tab
+app.get("/students/assignments/missed", ValidateToken, isStudent, getStudentMissedAssignmentsRoute);        //called when the student clicks on the missed assignments tab
+app.get("/students/getPendingAssignment/:_id", ValidateToken, isStudent, getThisPendingAssignment);          //Fetches the details of a pending assignment with the given id, called when the student clicks on submit, on a pending assignment
 
 
 app.get("/getBatches", ValidateToken, isProfessor, getBatchesRoute);                                        //Sends the Batches to display in Create Assignment Modal
-app.get("/professors/myAssignments", ValidateToken, isProfessor, getProfessorAssignmentsRoute);
-app.get("/professors/getMyQuestions", ValidateToken, isProfessor, getMyQuestionsRoute);
-app.get("/professors/getQuestionDetails/:_id", ValidateToken, isProfessor, FetchQuestionDetailsRoute)        //Fetches the details of a question with the given id (returns all details)
-app.get("/professors/getOtherQuestions", ValidateToken, isProfessor, getOtherQuestionsRoute);
+app.get("/professors/myAssignments", ValidateToken, isProfessor, getProfessorAssignmentsRoute);             //called when the professor clicks on the assignments tab, returns the list of assignments created by the professor
+app.get("/professors/getMyQuestions", ValidateToken, isProfessor, getMyQuestionsRoute);                     //called when the create assignment modal/ Questions Tab is opened, returns the list of questions created by the professor to be used in the assignment
+app.get("/professors/getQuestionDetails/:_id", ValidateToken, isProfessor, FetchQuestionDetailsRoute)       //Fetches the details of a question with the given id (returns all details), used when the professor clicks on a question
+app.get("/professors/getOtherQuestions", ValidateToken, isProfessor, getOtherQuestionsRoute);               //called when the create assignment modal/ Questions Tab is opened, returns the list of questions created by other professors to be used in the assignment  
 app.post("/professors/createAssignment", ValidateToken, isProfessor, createAssignmentRoute);                //Creates an assignment
 app.delete("/professors/deleteAssignment/:_id", ValidateToken, isProfessor, deleteAssignmentRoute);         //Deletes an assignment
 app.post("/professors/createQuestion", ValidateToken, isProfessor, createQuestionRoute);                    //Creates a Question
