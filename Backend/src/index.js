@@ -5,12 +5,12 @@ dotenv.config();
 const { app } = require("./app");
 const { connectDB } = require("./db/mongoOperations");
 const { loginRoute, logoutRoute, getProfileRoute } = require("./Auth/jwt");
-const { ValidateToken, isStudent, isProfessor, ValidateWsToken, isProfessorWs } = require("./Middlewares/Auth");
+const { ValidateToken, isStudent, isProfessor, ValidateWsToken, isProfessorWs, isStudentWs } = require("./Middlewares/Auth");
 const { registerCollegeRoute, registeredCollegeRoute } = require("./other/Colleges");
 const { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute, getThisPendingAssignment } = require("./Student/Assignments");
 const { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getOtherQuestionsRoute, createAssignmentRoute, deleteAssignmentRoute } = require("./Professor/Assignments.js");
 const { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, FetchQuestionDetailsRoute } = require("./Professor/Question.js");
-
+const { CheckQuestionInAssignment, findQuestion } = require("./Student/Submission.js");
 const path = require("path");
 
 const PORT = process.env.PORT || 8080;
@@ -33,7 +33,7 @@ app.get("/students/assignments/pending", ValidateToken, isStudent, getStudentPen
 app.get("/students/assignments/submitted", ValidateToken, isStudent, getStudentSubmittedAssignmentsRoute);  //called when the student clicks on the submitted assignments tab
 app.get("/students/assignments/missed", ValidateToken, isStudent, getStudentMissedAssignmentsRoute);        //called when the student clicks on the missed assignments tab
 app.get("/students/getPendingAssignment/:_id", ValidateToken, isStudent, getThisPendingAssignment);         //Fetches the details of a pending assignment with the given id, called when the student clicks on submit, on a pending assignment
-
+app.ws(`/students/assignments/runCode/:assignmentId/:questionId`, ValidateWsToken, isStudentWs, CheckQuestionInAssignment,findQuestion);  //called when the student clicks on the run button of the solution code while solving an assignment
 
 app.get("/getBatches", ValidateToken, isProfessor, getBatchesRoute);                                        //Sends the Batches to display in Create Assignment Modal, to be used in checkboxes for selecting batches
 app.get("/professors/myAssignments", ValidateToken, isProfessor, getProfessorAssignmentsRoute);             //called when the professor clicks on the assignments tab, returns the list of assignments created by the professor

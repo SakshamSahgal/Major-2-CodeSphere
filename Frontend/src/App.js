@@ -29,7 +29,7 @@ function App() {
           <Route path="/students/assignments" element={<StudentAssignments />} /> {/*This Route is called when a student opens Assignments Page from sidebar */}
           <Route path="/students/evaluations" element={<Evaluations />} /> {/*This Route is called when a student opens Evaluation Page from sidebar */}
           <Route path="/students/solveAssignment/:_id" element={<SolveAssignment />} /> {/*This Route is called when a student clicks solve button on any pending assignment */}
-          <Route path="/registercollege" element={<RegisterCollege />} />
+          <Route path="/registercollewge" element={<RegisterCollege />} />
         </Routes>
       </BrowserRouter>
     </>

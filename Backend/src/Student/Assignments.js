@@ -151,6 +151,4 @@ function getThisPendingAssignment(req, res) {
         });
 }
 
-
-
 module.exports = { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute, getThisPendingAssignment };

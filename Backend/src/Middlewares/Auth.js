@@ -109,5 +109,18 @@ function isProfessorWs(ws, req, next) {
     }
 }
 
-module.exports = { ValidateToken, isStudent, isProfessor, isProfessorWs, ValidateWsToken }
+function isStudentWs(ws, req, next) {
+    if (req.decoded.LoginType === "Students") {
+        next();
+    } else {
+        ws.send(JSON.stringify({
+            success: false,
+            message: "You are not authorized to access this route"
+        }), () => {
+            ws.close(1008);  //1008 is the status code for Policy Violation
+        });
+    }
+}
+
+module.exports = { ValidateToken, isStudent, isProfessor, isProfessorWs, ValidateWsToken, isStudentWs }
 

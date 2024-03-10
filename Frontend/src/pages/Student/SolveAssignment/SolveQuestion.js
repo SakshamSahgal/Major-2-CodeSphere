@@ -8,10 +8,22 @@ import { useState } from "react";
 import { convertIsoToNormalTime, getTimeElapsed } from '../../../Scripts/TimeFunctions';
 import { Accordion } from "react-bootstrap";
 //Questions Array is an array of objects.
+
+let DefaultSolutionCode =
+
+    `#include <iostream>
+using namespace std;
+int main() {
+    cout << "Hello, World!";
+    return 0;
+}`;
+
+
 function SolveQuestion({ Questions }) {
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(null);
+    const [solutionCodes, setSolutionCodes] = useState([]);
 
     const handleNextQuestion = () => {
         if (Questions && currentQuestionIndex < Questions.length - 1) {
@@ -27,9 +39,18 @@ function SolveQuestion({ Questions }) {
         }
     };
 
+    const handleUpdateCode = (code) => {
+        // Update the corresponding solution code in the state
+        const updatedSolutionCodes = [...solutionCodes];
+        updatedSolutionCodes[currentQuestionIndex] = code;
+        setSolutionCodes(updatedSolutionCodes);
+    };
+    console.log(solutionCodes);
     useEffect(() => {
-        if (Questions)
+        if (Questions) {
             setCurrentQuestion(Questions[0])
+            setSolutionCodes(Array(Questions.length).fill(DefaultSolutionCode));  //Generate an array of default solution codes for each question
+        }
     }, [Questions])
 
     return (
@@ -82,7 +103,7 @@ function SolveQuestion({ Questions }) {
                 </div>
             </div>
             <div className="row my-3">
-                <CodeEditor />
+                <CodeEditor defaultCode={solutionCodes[currentQuestionIndex]} onUpdateCode={handleUpdateCode} />
             </div>
             <div className="row my-3">
                 <div className="col">
