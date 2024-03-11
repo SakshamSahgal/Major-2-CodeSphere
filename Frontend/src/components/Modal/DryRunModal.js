@@ -23,10 +23,13 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
             socket.onopen = () => {
                 try {
                     console.log('WebSocket connection opened');
-                    socket.send(JSON.stringify({
-                        type: 'DryRunCode',
-                        CodeToRun: CodeToRun
-                    }));
+                    //send after 1 sec
+                    setTimeout(() => {
+                        socket.send(JSON.stringify({
+                            type: 'DryRunCode',
+                            CodeToRun: CodeToRun
+                        }));
+                    }, 1000);
                 }
                 catch (error) {
                     toast.error(error.message);
