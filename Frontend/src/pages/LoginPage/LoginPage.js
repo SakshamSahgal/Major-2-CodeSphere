@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import PlainNavbar from '../../components/Navbar/PlainNavbar';
 import RightsReservedFooter from '../../components/Footer/RightsReservedFooter';
 import LoginForm from './LoginForm';
+import LoadingSpinner from '../../components/Spinners/Spinners';
 
 //LoginType = 'Students' or 'Professors'
 function LoginPage({ LoginType }) {
@@ -15,7 +16,7 @@ function LoginPage({ LoginType }) {
         LoginType: LoginType
     });
 
-    const [Institutions, setInstitutions] = useState([]);
+    const [Institutions, setInstitutions] = useState(null);
 
 
     // Handle Form Submission
@@ -69,20 +70,28 @@ function LoginPage({ LoginType }) {
         window.location.href = `/${LoginType.toLowerCase()}/assignments`;
     }
 
-    return (
-        <>
-            <PlainNavbar />
-            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
-                <div className="card align-items-center" style={{ backgroundColor: 'black', color: 'white' }}>
-                    <div className="card-body">
-                        <h5 className="card-title mb-4 text-center" style={{ fontFamily: 'Arial, sans-serif' }}>{LoginType} LOGIN</h5>
-                        <LoginForm handleSubmit={handleSubmit} handleInputChange={handleInputChange} Institutions={Institutions} />
+    if (Institutions) {
+        return (
+            <>
+                <PlainNavbar />
+                <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
+                    <div className="card align-items-center" style={{ backgroundColor: 'black', color: 'white' }}>
+                        <div className="card-body">
+                            <h5 className="card-title mb-4 text-center" style={{ fontFamily: 'Arial, sans-serif' }}>{LoginType} LOGIN</h5>
+                            <LoginForm handleSubmit={handleSubmit} handleInputChange={handleInputChange} Institutions={Institutions} />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <RightsReservedFooter />
-        </>
-    );
+                <RightsReservedFooter />
+            </>
+        );
+    }
+    else {
+        return (
+            <LoadingSpinner />
+        )
+    }
+
 }
 
 export default LoginPage;

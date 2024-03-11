@@ -1,5 +1,5 @@
 
-function LoginForm({ handleSubmit, handleInputChange, Institutions, LoginType }) {
+function LoginForm({ handleSubmit, handleInputChange, Institutions }) {
     return (
         <form onSubmit={handleSubmit}>
             <div className="mb-3">

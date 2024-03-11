@@ -31,9 +31,10 @@ function DeleteAfterExecution(...filePaths) {
 //{ success: false, message: `Error occurred while writing the ${scriptPath} file`, verdict: "Runtime Error" }
 //{ success: false, message: `Error occurred while appending data to the ${outputFilePath} file`, verdict: "Runtime Error" }
 //{ success: false, message: `Error occured while running the script ${executablePath}`, verdict: "Compilation Error" }
+//{ success: false, message: `File size exceeds ${(process.env.MemoryLimitForCodeInBytes / (1024 * 1024))} MB`, verdict: "Memory Limit Exceeded" }
 //{ success: true, outputFilePath: outputFilePath, verdict: "Run Successful" }
 
-async function RunCpp(code, input, TimeLimit) {
+async function RunCpp(code, input, TimeLimit = 5000) {
     return new Promise((resolve, reject) => {
         let Response_sent = false;
 
