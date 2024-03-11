@@ -1,8 +1,9 @@
 const { readDB } = require("../db/mongoOperations");
 const { assignmentSchema } = require("../db/schema");
-const { RunCpp, DeleteAfterExecution } = require("../Code/Run");
+const { RunCpp } = require("../Code/Run");
 const readline = require('readline');
 const fs = require('fs');
+const { compareTextFilesLineByLine } = require("../Code/StreamComparison");
 
 async function ValidateInputs(ws, req, next) {
     if (req.params.assignmentId == undefined || req.params.questionId == undefined) {
@@ -121,84 +122,6 @@ async function ValidateTestCases(ws, req, next) {
 // { success: true, different: false }
 // { success: false,  error: err }
 
-function compareTextFilesLineByLine(file1Path, file2Path) {
-    return new Promise((resolve, reject) => {
-        console.log(`Recieved ${file1Path} ${file2Path}`)
-        const file1Stream = fs.createReadStream(file1Path);
-        const file2Stream = fs.createReadStream(file2Path);
-
-        const file1LineReader = readline.createInterface({
-            input: file1Stream
-        });
-
-        const file2LineReader = readline.createInterface({
-            input: file2Stream
-        });
-
-        let lineCounter = 1;
-        let filesDifferent = false;
-
-        const file1Buffer = [];
-        const file2Buffer = [];
-
-        file1LineReader.on('line', (line1) => {
-            file1Buffer.push(line1);
-            checkBuffers();
-        });
-
-        file2LineReader.on('line', (line2) => {
-            file2Buffer.push(line2);
-            checkBuffers();
-        });
-
-        function checkBuffers() {
-            while (file1Buffer.length > 0 && file2Buffer.length > 0) {
-                const line1 = file1Buffer.shift();
-                const line2 = file2Buffer.shift();
-                console.log("comparing ", line1, line2)
-                if (line1 !== line2) {
-                    filesDifferent = true;
-                    file1LineReader.close();
-                    file2LineReader.close();
-                    DeleteAfterExecution(file1Path, file2Path)
-                    resolve({
-                        success: true,
-                        different: true,
-                        line: lineCounter
-                    });
-                    return;
-                }
-                lineCounter++;
-            }
-        }
-
-        file1LineReader.on('close', () => {
-            if (!filesDifferent) {
-                DeleteAfterExecution(file1Path, file2Path)
-                resolve({
-                    success: true,
-                    different: false
-                });
-            }
-        });
-
-        file1LineReader.on('error', (err) => {
-            DeleteAfterExecution(file1Path, file2Path)
-            reject({
-                success: false,
-                error: err
-            });
-        });
-
-        file2LineReader.on('error', (err) => {
-            DeleteAfterExecution(file1Path, file2Path)
-            reject({
-                success: false,
-                error: err
-            });
-        });
-    });
-}
 
 async function RunOutputComparison(ws, req) {
 
@@ -231,14 +154,7 @@ async function RunOutputComparison(ws, req) {
 
                         let solutionCodeResponse;
                         let studentCodeResponse;
-                        // console.log("---")
-                        // console.log("Solution CODE : ")
-                        // console.log(req.ThisQuestion.SolutionCode)
-                        // console.log("User code ")
-                        // console.log(data.CodeToRun)
-                        // console.log("Input")
-                        // console.log(req.ThisQuestion.TestCases[i].input)
-                        // console.log("---")
+
                         try {
                             solutionCodeResponse = await RunCpp(req.ThisQuestion.SolutionCode, req.ThisQuestion.TestCases[i].input, 5000);
                         } catch (err) {
@@ -305,7 +221,7 @@ async function RunOutputComparison(ws, req) {
                         if (Comparison.success === false) {
                             ws.send(JSON.stringify({
                                 success: false,
-                                message: `Internal Server Error while comparing outputs of Testcase ${i + 1}: ${Comparison.error}`
+                                message: `Unable to compare outputs of Testcase ${i + 1}: ${Comparison.error}`
                             }), () => {
                                 ws.close(1011);  //1011 is the status code for Internal Error
                             });
@@ -315,7 +231,7 @@ async function RunOutputComparison(ws, req) {
                             if (Comparison.different === true) {
                                 ws.send(JSON.stringify({
                                     success: false,
-                                    message: `Output Mismatch in Testcase ${i + 1} at line ${Comparison.line}`
+                                    message: `Output Mismatch in Testcase ${i + 1}`
                                 }), () => {
                                     ws.close(1008);  //1008 is the status code for Policy Violation
                                 });
