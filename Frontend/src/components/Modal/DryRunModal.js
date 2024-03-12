@@ -15,12 +15,7 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
     }
     const HandleDryRun = () => {
         //Send the current solution code to the server for dry run
-        console.log(CodeToRun);
         try {
-            console.log("Code to run:", CodeToRun);
-            console.log("AssignmentId:", AssignmentId);
-            console.log("QuestionId:", QuestionId);
-
             const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_WS_LOCALHOST}/students/assignments/runCode/${AssignmentId}/${QuestionId}`); //Create a new WebSocket connection
 
             socket.onopen = () => {
@@ -72,7 +67,7 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
         <>
             <Button variant="primary" onClick={handleShow} className='w-100'> Run </Button>
 
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Dry Run</Modal.Title>
                 </Modal.Header>
