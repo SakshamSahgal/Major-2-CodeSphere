@@ -12,36 +12,39 @@ const StepsList = ({ results }) => {
         return acc;
     }, {});
 
-
     return (
         <div>
             {Object.keys(groupedResults).map((phase, index) => (
                 <div key={index}>
-                    <h3>{phase}</h3>
-                    <ListGroup>
-                        {groupedResults[phase].map((result, idx) => (
-                            (result.phase === "Verdict") ? (
-                                <ListGroup.Item key={idx} >
-                                    {<>
-                                        <span>Testcase {result.testcase}  : </span>
-                                        <VerdictBadge verdict={result.verdict} />
-                                    </>
-                                    }
-                                </ListGroup.Item>
-                            ) : (
-                                <ListGroup.Item key={idx} >
-                                    {
-                                        result.success ? (
-                                            <FontAwesomeIcon icon={faForward} style={{ color: 'green' }} />
-                                        ) : (
-                                            <FontAwesomeIcon icon={faTimesCircle} style={{ color: 'red' }} />
-                                        )
-                                    }
-                                    {` ${result.message}`}
-                                </ListGroup.Item>
-                            )
-                        ))}
-                    </ListGroup>
+                    <hr />
+                    <div>
+                        <h3>{phase}</h3>
+                        <ListGroup>
+                            {groupedResults[phase].map((result, idx) => (
+                                (result.phase === "Verdict") ? (
+                                    <ListGroup.Item key={idx} >
+                                        {<>
+                                            <span>Testcase {result.testcase}  : </span>
+                                            <VerdictBadge verdict={result.verdict} />
+                                        </>
+                                        }
+                                    </ListGroup.Item>
+                                ) : (
+                                    <ListGroup.Item key={idx} >
+                                        {
+                                            result.success ? (
+                                                <FontAwesomeIcon icon={faForward} style={{ color: 'green' }} />
+                                            ) : (
+                                                <FontAwesomeIcon icon={faTimesCircle} style={{ color: 'red' }} />
+                                            )
+                                        }
+                                        {` ${result.message}`}
+                                    </ListGroup.Item>
+                                )
+                            ))}
+                        </ListGroup>
+                    </div>
+                    <hr />
                 </div>
             ))
             }
