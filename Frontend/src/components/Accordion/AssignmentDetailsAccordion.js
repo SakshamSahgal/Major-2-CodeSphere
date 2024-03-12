@@ -3,7 +3,7 @@ import { Accordion } from 'react-bootstrap';
 import { convertIsoToNormalTime, getTimeElapsed } from '../../Scripts/TimeFunctions';
 
 
-function AssignmentDetailsAccordion({ PostedOn, DueTimestamp, Batches = [], Year, NumberOfQuestions }) {
+function AssignmentDetailsAccordion({ PostedBy = "", PostedOn, DueTimestamp, Batches = [], Year, NumberOfQuestions }) {
     return (
 
         <Accordion flush>
@@ -13,6 +13,10 @@ function AssignmentDetailsAccordion({ PostedOn, DueTimestamp, Batches = [], Year
                 </Accordion.Header>
 
                 <Accordion.Body>
+                    <p className="card-text">
+                        <strong>Posted By:</strong>{" "}
+                        {PostedBy}{" "}
+                    </p>
                     <p className="card-text">
                         <strong>Posted On:</strong>{" "}
                         {convertIsoToNormalTime(PostedOn).date}{" "}

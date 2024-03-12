@@ -72,7 +72,7 @@ function SolveQuestion({ Questions, AssignmentId }) {
                 </div>
             </div>
             <div className="row" style={{ color: "white" }}>
-                <QuestionDetailsAccordion Name={currentQuestion?.Name} CreatedOn={currentQuestion?.CreatedOn} />
+                <QuestionDetailsAccordion Name={currentQuestion?.CreatedBy.Name} CreatedOn={currentQuestion?.CreatedOn} />
             </div>
 
             <div className="row my-3">

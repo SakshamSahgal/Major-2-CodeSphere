@@ -5,6 +5,7 @@ function compareTextFilesLineByLine(filePath1, filePath2) {
     console.log(`Comparing ${filePath1} and ${filePath2}`)
     return new Promise((resolve, reject) => {
         exec(`cmp ${filePath1} ${filePath2}`, (error, stdout, stderr) => {
+            console.log('stdout:', stdout);
             if (stderr) {
                 reject({
                     success: false,
