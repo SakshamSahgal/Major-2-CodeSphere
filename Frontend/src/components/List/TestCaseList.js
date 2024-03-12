@@ -1,28 +1,43 @@
 import React from 'react';
-import { ListGroup, Badge } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { ListGroup, Badge } from 'react-bootstrap';
 
-function TestCaseList({ testCases }) {
-    console.log(testCases);
+const TestcaseList = ({ data }) => {
+    const groupedData = {};
+
+    // Group data by testcase number
+    data.forEach(item => {
+        const { testcase, verdict } = item;
+        if (!groupedData[testcase]) {
+            groupedData[testcase] = [];
+        }
+        groupedData[testcase].push(verdict === 'Failed' ? false : true);
+    });
+
+    // Render testcases with pass/fail indication
+    const renderTestcases = () => {
+        return Object.keys(groupedData).map(testcase => (
+            <ListGroup.Item key={testcase}>
+                Testcase {testcase}:
+                {groupedData[testcase].every(result => result) ? (
+                    <Badge variant="success" className="ml-2">
+                        <FontAwesomeIcon icon={faCheckCircle} /> Passed
+                    </Badge>
+                ) : (
+                    <Badge variant="danger" className="ml-2">
+                        <FontAwesomeIcon icon={faTimesCircle} /> Failed
+                    </Badge>
+                )}
+            </ListGroup.Item>
+        ));
+    };
+
     return (
-        <div>
-            <ListGroup>
-                {testCases.map((testCase, index) => (
-                    <ListGroup.Item key={index}>
-                        Testcase : {testCase.testcase}{' '}
-                        <Badge variant={testCase.verdict === 'Passed' ? 'success' : 'danger'}>
-                            {testCase.verdict === 'Passed' ? (
-                                <FontAwesomeIcon icon={faCheck} />
-                            ) : (
-                                <FontAwesomeIcon icon={faTimes} />
-                            )}
-                        </Badge>
-                    </ListGroup.Item>
-                ))}
-            </ListGroup>
-        </div>
+        <ListGroup>
+            {renderTestcases()}
+        </ListGroup>
     );
-}
+};
 
-export default TestCaseList;
+export default TestcaseList;

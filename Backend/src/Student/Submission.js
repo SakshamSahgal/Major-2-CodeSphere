@@ -5,11 +5,14 @@ const readline = require('readline');
 const fs = require('fs');
 const { compareTextFilesLineByLine } = require("../Code/StreamComparison");
 
+
+//validation phase
 async function ValidateInputs(ws, req, next) {
     if (req.params.assignmentId == undefined || req.params.questionId == undefined) {
         ws.send(JSON.stringify({
             success: false,
-            message: `Invalid Inputs`
+            message: `Invalid Inputs`,
+            phase: `Validation`
         }), () => {
             ws.close(1008);  //1008 is the status code for Policy Violation
         });
@@ -20,6 +23,7 @@ async function ValidateInputs(ws, req, next) {
     }
 }
 
+//validation phase
 async function CheckQuestionInAssignment(ws, req, next) {
     //check if assignmentId exists
     //check if questionId exists in that assignment
@@ -30,20 +34,20 @@ async function CheckQuestionInAssignment(ws, req, next) {
         _id: assignmentId,
         Questions: { $in: questionId }
     }
-    console.log("Checking Question in Assignment");
+
     ws.send(JSON.stringify({
         success: true,
-        message: "Checking if the question is in the assignment",
-        verdict: "Checking.."
+        message: `Checking if the question is in the assignment`,
+        phase: `Validation`
     }));
 
     try {
-
         let response = await readDB("Assignments", req.decoded.Institution, Querry, assignmentSchema);
         if (response.length == 0) {
             ws.send(JSON.stringify({
                 success: false,
-                message: "Invalid assignmentId or questionId"
+                message: "Invalid assignmentId or questionId",
+                phase: `Validation`
             }), () => {
                 ws.close(1008);  //1008 is the status code for Policy Violation
             });
@@ -55,7 +59,8 @@ async function CheckQuestionInAssignment(ws, req, next) {
     } catch (err) {
         ws.send(JSON.stringify({
             success: false,
-            message: `Internal Server Error : ${err.message}`
+            message: `Internal Server Error : ${err.message}`,
+            phase: `Validation`
         }), () => {
             ws.close(1011);  //1011 is the status code for Internal Error
         });
@@ -63,12 +68,13 @@ async function CheckQuestionInAssignment(ws, req, next) {
     }
 }
 
+//searching phase
 async function findQuestion(ws, req, next) {
-    console.log("Finding Question");
+
     ws.send(JSON.stringify({
         success: true,
         message: "Checking if the question exists in the QuestionBank",
-        verdict: "Checking.."
+        phase: `Searching`
     }));
 
     try {
@@ -76,7 +82,8 @@ async function findQuestion(ws, req, next) {
         if (response.length == 0) {
             ws.send(JSON.stringify({
                 success: false,
-                message: "Question not found in the QuestionBank"
+                message: `Question not found in the QuestionBank`,
+                phase: `Searching`
             }), () => {
                 ws.close(1008);  //1008 is the status code for Policy Violation
             });
@@ -89,7 +96,8 @@ async function findQuestion(ws, req, next) {
     } catch (err) {
         ws.send(JSON.stringify({
             success: false,
-            message: `Internal Server Error : ${err.message}`
+            message: `Internal Server Error : ${err.message}`,
+            phase: `Searching`
         }), () => {
             ws.close(1011);  //1011 is the status code for Internal Error
         });
@@ -97,17 +105,19 @@ async function findQuestion(ws, req, next) {
     }
 }
 
+//searching phase
 async function ValidateTestCases(ws, req, next) {
     console.log("Validating TestCases");
     ws.send(JSON.stringify({
         success: true,
         message: "Validating TestCases for the question",
-        verdict: "Validating.."
+        phase: `Searching`
     }));
     if (req.ThisQuestion.TestCases.length == 0) {
         ws.send(JSON.stringify({
             success: false,
-            message: "No TestCases found for the question"
+            message: "No TestCases found for the question",
+            phase: `Searching`
         }), () => {
             ws.close(1008);  //1008 is the status code for Policy Violation
         });
@@ -117,12 +127,8 @@ async function ValidateTestCases(ws, req, next) {
     }
 }
 
-//Outputs - 
-//{ success: false, message: "Invalid Code" } - if CodeToRun is empty
-
+//running phase and comparison and verdict
 async function RunOutputComparison(ws, req) {
-
-    console.log("Running Output Comparison");
 
     ws.on('message', async (message) => {
         try {
@@ -133,6 +139,7 @@ async function RunOutputComparison(ws, req) {
                     ws.send(JSON.stringify({
                         success: false,
                         message: "Invalid Code",
+                        phase: `Running`
                     }), () => {
                         ws.close(1008);  //1008 is the status code for Policy Violation
                     });
@@ -146,7 +153,7 @@ async function RunOutputComparison(ws, req) {
                         ws.send(JSON.stringify({
                             success: true,
                             message: `Running Solution Code on Testcase ${i + 1}`,
-                            verdict: "Running.."
+                            phase: `Running`
                         }));
 
                         let solutionCodeResponse;
@@ -157,19 +164,27 @@ async function RunOutputComparison(ws, req) {
                         } catch (err) {
                             ws.send(JSON.stringify({
                                 success: false,
-                                message: `Internal Server Error while running Solution Code on Testcase ${i + 1} : ${err.message}`
+                                message: `Internal Server Error while running Solution Code on Testcase ${i + 1} : ${err.message}`,
+                                phase: `Running`
                             }), () => {
                                 ws.close(1011);  //1011 is the status code for Internal Error
                             });
                             return;
                         }
 
+                        ws.send(JSON.stringify({
+                            success: true,
+                            message: `Running Student Code on Testcase ${i + 1}`,
+                            phase: `Running`
+                        }));
+
                         try {
                             studentCodeResponse = await RunCpp(data.CodeToRun, req.ThisQuestion.TestCases[i].input, 5000);
                         } catch (err) {
                             ws.send(JSON.stringify({
                                 success: false,
-                                message: `Internal Server Error while running Student Code on Testcase ${i + 1}: ${err.message}`
+                                message: `Internal Server Error while running Student Code on Testcase ${i + 1}: ${err.message}`,
+                                phase: `Running`
                             }), () => {
                                 ws.close(1011);  //1011 is the status code for Internal Error
                             });
@@ -178,6 +193,7 @@ async function RunOutputComparison(ws, req) {
                         //if Solution Code fails to run
                         if (solutionCodeResponse.success === false) {
                             solutionCodeResponse.message += `[Solution Code failed to run on Testcase ${i + 1}]`
+                            solutionCodeResponse.phase = `Running`
                             ws.send(JSON.stringify(solutionCodeResponse), () => {
                                 ws.close(1011);  //1011 is the status code for Internal Error
                             });
@@ -186,6 +202,7 @@ async function RunOutputComparison(ws, req) {
                         //if Student Code fails to run
                         if (studentCodeResponse.success === false) {
                             studentCodeResponse.message += `[Student Code failed to run on Testcase ${i + 1}]`
+                            solutionCodeResponse.phase = `Running`
                             ws.send(JSON.stringify(studentCodeResponse), () => {
                                 ws.close(1011);  //1011 is the status code for Internal Error
                             });
@@ -197,7 +214,8 @@ async function RunOutputComparison(ws, req) {
                         ws.send(JSON.stringify({
                             success: true,
                             message: `Comparing Output Streams of Testcase ${i + 1}`,
-                            verdict: "Comparing.."
+                            phase: `Comparison`,
+                            testcase: i + 1,
                         }));
 
                         let Comparison;
@@ -206,9 +224,12 @@ async function RunOutputComparison(ws, req) {
                             Comparison = await compareTextFilesLineByLine(solutionCodeResponse.outputFilePath, studentCodeResponse.outputFilePath);
                         }
                         catch (e) {
+                            console.log(e)
                             ws.send(JSON.stringify({
                                 success: false,
-                                message: `Internal Server Error while comparing outputs of Testcase ${i + 1}: ${e.message}`
+                                message: `Internal Server Error while comparing outputs of Testcase ${i + 1}: ${e.error}`,
+                                phase: `Comparison`,
+                                testcase: i + 1,
                             }), () => {
                                 ws.close(1011);  //1011 is the status code for Internal Error
                             });
@@ -218,7 +239,9 @@ async function RunOutputComparison(ws, req) {
                         if (Comparison.success === false) {
                             ws.send(JSON.stringify({
                                 success: false,
-                                message: `Unable to compare outputs of Testcase ${i + 1}: ${Comparison.error}`
+                                message: `Unable to compare outputs of Testcase ${i + 1}: ${Comparison.error}`,
+                                phase: `Comparison`,
+                                testcase: i + 1,
                             }), () => {
                                 ws.close(1011);  //1011 is the status code for Internal Error
                             });
@@ -231,6 +254,7 @@ async function RunOutputComparison(ws, req) {
                                     success: true,
                                     message: `Output Mismatch in Testcase ${i + 1}`,
                                     verdict: "Failed",
+                                    phase: `Verdict`,
                                     testcase: i + 1
                                 }));
                                 PassedAllTestCases = false;
@@ -240,6 +264,7 @@ async function RunOutputComparison(ws, req) {
                                     success: true,
                                     message: `Testcase ${i + 1} Passed`,
                                     verdict: "Passed",
+                                    phase: `Verdict`,
                                     testcase: i + 1
                                 }));
                             }
@@ -250,13 +275,15 @@ async function RunOutputComparison(ws, req) {
                         ws.send(JSON.stringify({
                             success: true,
                             message: `All Testcases Passed`,
-                            verdict: "AC"
+                            verdict: "AC",
+                            phase: `Decision`
                         }));
                     } else {
                         ws.send(JSON.stringify({
                             success: false,
                             message: `Some Testcases Failed`,
-                            verdict: "WA"
+                            verdict: "WA",
+                            phase: `Decision`
                         }), () => {
                             ws.close(1008);  //1008 is the status code for Policy Violation
                         });

@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import TestCaseList from '../List/TestCaseList';
+import StepsList from '../List/StepsList';
 
 function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
-    const [show, setShow] = useState(false);
-    const [ResponseMessage, setResponseMessage] = useState(null);
-    const handleClose = () => setShow(false);
-    const [testcase, setTestcase] = useState([]);
+    const [show, setShow] = useState(false);                        //this state stores whether the modal is open or not
+    const [ResponseMessage, setResponseMessage] = useState([]);     //this state stores the response message from the server websockets
+    const handleClose = () => setShow(false);                       //this function is called when the modal is closed
 
     const handleShow = () => {
-        setTestcase([]);
+        setResponseMessage([]);
         setShow(true);
         HandleDryRun();
     }
@@ -46,16 +45,9 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
                 try {
                     const response = JSON.parse(event.data);
                     console.log(response);
-
-                    if (response.testcase) {
-                        //    append to the testcase array
-                        setTestcase(testcase => [...testcase, response]);
+                    if (response.phase) {
+                        setResponseMessage((prev) => [...prev, response]);
                     }
-                    setResponseMessage({
-                        message: (response.message) ? response.message : '',
-                        verdict: (response.verdict) ? response.verdict : '',
-                        testcase: (response.testcase) ? response.testcase : null
-                    });
                     if (response.success === false) {
                         socket.close();
                     }
@@ -85,21 +77,7 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
                     <Modal.Title>Dry Run</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {/* only show this if it is not null */}
-                    {
-                        ResponseMessage &&
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-12">
-                                    <div className="alert alert-primary mt-3 text-center" role="alert">
-                                        <p>{ResponseMessage.message}</p>
-                                        <p>{ResponseMessage.verdict}</p>
-                                        <TestCaseList testCases={testcase} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    }
+                    {ResponseMessage.length > 0 ? <StepsList results={ResponseMessage} /> : <p>Running...</p>}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose} >
