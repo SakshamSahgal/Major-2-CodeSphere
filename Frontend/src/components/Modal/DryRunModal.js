@@ -3,6 +3,7 @@ import { Modal, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import StepsList from '../List/StepsList';
 import LogsAccordion from '../Accordion/LogsAccordion';
+import { Spinner } from 'react-bootstrap';
 
 function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
 
@@ -11,7 +12,7 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
     const [logsMessage, setLogsMessage] = useState([]);             //this state stores the logs of the dry run
     const [ResponseMessage, setResponseMessage] = useState([]);     //this state stores the response of the dry run [success, failure, verdict, etc.
     const [isOpen, setIsOpen] = useState(true);                     // State to manage logs accordion open/close
-
+    const [isLoading, setIsLoading] = useState(true);              //this state stores whether to display spinner or not
     //this function is called when the modal is closed
     const handleClose = () => {
         if (socketRef.current) {
@@ -26,6 +27,7 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
         setResponseMessage([]);
         setIsOpen(true);
         setShow(true);
+        setIsLoading(true);
         HandleDryRun();
     }
     //this function is called to handle the dry run ws connection
@@ -77,6 +79,7 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
             socket.onclose = () => {
                 console.log('WebSocket connection closed');
                 setIsOpen(false);
+                setIsLoading(false);
             };
         }
         catch (error) {
@@ -90,7 +93,11 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
 
             <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>Dry Run</Modal.Title>
+                    <Modal.Title>{isLoading ? (
+                        <Spinner animation="border" role="status" />
+                    ) : (
+                        'Dry Run'
+                    )}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <StepsList results={ResponseMessage} />

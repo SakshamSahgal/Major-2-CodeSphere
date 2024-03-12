@@ -282,21 +282,20 @@ async function RunOutputComparison(ws, req) {
                         }
                     }
                 }
-                console.log("All Testcases Passed : ", PassedAllTestCases);
-                if (PassedAllTestCases === true) {
+                if (PassedAllTestCases) {
                     ws.send(JSON.stringify({
                         success: true,
                         message: `All Testcases Passed`,
-                        verdict: "AC",
+                        verdict: "Accepted",
                         phase: `Decision`
-                    }, () => {
+                    }), () => {
                         ws.close(1000);  //1000 is the status code for Normal Closure
-                    }));
+                    });
                 } else {
                     ws.send(JSON.stringify({
                         success: false,
                         message: `Some Testcases Failed`,
-                        verdict: "WA",
+                        verdict: "Wrong Answer",
                         phase: `Decision`
                     }), () => {
                         ws.close(1008);  //1008 is the status code for Policy Violation

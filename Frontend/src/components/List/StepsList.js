@@ -1,6 +1,4 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faForward, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { ListGroup } from 'react-bootstrap';
 import VerdictBadge from '../CommonComponents/VerdictBadge';
 //results is an array of objects, each object has a phase and a message
@@ -31,14 +29,8 @@ const StepsList = ({ results }) => {
                                     </ListGroup.Item>
                                 ) : (
                                     <ListGroup.Item key={idx} >
-                                        {
-                                            result.success ? (
-                                                <FontAwesomeIcon icon={faForward} style={{ color: 'green' }} />
-                                            ) : (
-                                                <FontAwesomeIcon icon={faTimesCircle} style={{ color: 'red' }} />
-                                            )
-                                        }
-                                        {` ${result.message}`}
+                                        {` ${result.message}`} {" "}
+                                        <VerdictBadge verdict={result.verdict} />
                                     </ListGroup.Item>
                                 )
                             ))}
