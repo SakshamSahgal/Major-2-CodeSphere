@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import TestCaseList from '../List/TestCaseList';
 
 function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
     const [show, setShow] = useState(false);
     const [ResponseMessage, setResponseMessage] = useState(null);
     const handleClose = () => setShow(false);
+    const [testcase, setTestcase] = useState([]);
+
     const handleShow = () => {
+        setTestcase([]);
         setShow(true);
         HandleDryRun();
     }
@@ -17,7 +21,7 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
             console.log("Code to run:", CodeToRun);
             console.log("AssignmentId:", AssignmentId);
             console.log("QuestionId:", QuestionId);
-            
+
             const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_WS_LOCALHOST}/students/assignments/runCode/${AssignmentId}/${QuestionId}`); //Create a new WebSocket connection
 
             socket.onopen = () => {
@@ -42,9 +46,15 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
                 try {
                     const response = JSON.parse(event.data);
                     console.log(response);
+
+                    if (response.testcase) {
+                        //    append to the testcase array
+                        setTestcase(testcase => [...testcase, response]);
+                    }
                     setResponseMessage({
                         message: (response.message) ? response.message : '',
-                        verdict: (response.verdict) ? response.verdict : ''
+                        verdict: (response.verdict) ? response.verdict : '',
+                        testcase: (response.testcase) ? response.testcase : null
                     });
                     if (response.success === false) {
                         socket.close();
@@ -84,6 +94,7 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
                                     <div className="alert alert-primary mt-3 text-center" role="alert">
                                         <p>{ResponseMessage.message}</p>
                                         <p>{ResponseMessage.verdict}</p>
+                                        <TestCaseList testCases={testcase} />
                                     </div>
                                 </div>
                             </div>

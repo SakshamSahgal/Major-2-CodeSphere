@@ -116,12 +116,9 @@ async function ValidateTestCases(ws, req, next) {
         next();
     }
 }
-//This function compares two text files line by line and returns the line number where they differ, this is useful for large outputs as we can't load the entire file in memory
-//Possible Outputs - 
-// { success: true, different: true, line: lineCounter }
-// { success: true, different: false }
-// { success: false,  error: err }
 
+//Outputs - 
+//{ success: false, message: "Invalid Code" } - if CodeToRun is empty
 
 async function RunOutputComparison(ws, req) {
 
@@ -228,20 +225,22 @@ async function RunOutputComparison(ws, req) {
                             return;
                         }
                         else {
+
                             if (Comparison.different === true) {
                                 ws.send(JSON.stringify({
-                                    success: false,
-                                    message: `Output Mismatch in Testcase ${i + 1}`
-                                }), () => {
-                                    ws.close(1008);  //1008 is the status code for Policy Violation
-                                });
-                                return;
+                                    success: true,
+                                    message: `Output Mismatch in Testcase ${i + 1}`,
+                                    verdict: "Failed",
+                                    testcase: i + 1
+                                }));
+                                PassedAllTestCases = false;
                             }
                             else {
                                 ws.send(JSON.stringify({
                                     success: true,
                                     message: `Testcase ${i + 1} Passed`,
-                                    verdict: "Passed"
+                                    verdict: "Passed",
+                                    testcase: i + 1
                                 }));
                             }
                         }
@@ -251,13 +250,13 @@ async function RunOutputComparison(ws, req) {
                         ws.send(JSON.stringify({
                             success: true,
                             message: `All Testcases Passed`,
-                            verdict: "Passed"
+                            verdict: "AC"
                         }));
                     } else {
                         ws.send(JSON.stringify({
                             success: false,
                             message: `Some Testcases Failed`,
-                            verdict: "Failed"
+                            verdict: "WA"
                         }), () => {
                             ws.close(1008);  //1008 is the status code for Policy Violation
                         });
