@@ -1,12 +1,22 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import StepsList from '../List/StepsList';
 
 function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
+
+
+    const socketRef = useRef(null);
     const [show, setShow] = useState(false);                        //this state stores whether the modal is open or not
     const [ResponseMessage, setResponseMessage] = useState([]);     //this state stores the response message from the server websockets
-    const handleClose = () => setShow(false);                       //this function is called when the modal is closed
+    const handleClose = () => {
+        if (socketRef.current) {
+            console.log('Closing the socket');
+            socketRef.current.close();
+        }
+        setShow(false);
+    }
+
 
     const handleShow = () => {
         setResponseMessage([]);
@@ -17,7 +27,7 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
         //Send the current solution code to the server for dry run
         try {
             const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_WS_LOCALHOST}/students/assignments/runCode/${AssignmentId}/${QuestionId}`); //Create a new WebSocket connection
-
+            socketRef.current = socket;
             socket.onopen = () => {
                 try {
                     console.log('WebSocket connection opened');
