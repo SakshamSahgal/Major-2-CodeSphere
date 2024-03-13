@@ -1,5 +1,6 @@
 const { exec } = require('child_process');
 const { DeleteAfterExecution } = require('./Run');
+const fs = require('fs');
 
 //function outputs - 
 //{ success: false, error: stderr } - if there is an error
@@ -41,4 +42,18 @@ function compareTextFilesLineByLine(filePath1, filePath2) {
     });
 }
 
-module.exports = { compareTextFilesLineByLine };
+// Asynchronous file reading function
+function readFileAsync(filePath) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(filePath, 'utf8', (err, data) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data);
+            }
+        });
+    });
+}
+
+
+module.exports = { compareTextFilesLineByLine, readFileAsync };

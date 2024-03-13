@@ -1,9 +1,7 @@
 const { readDB } = require("../db/mongoOperations");
 const { assignmentSchema } = require("../db/schema");
-const { RunCpp } = require("../Code/Run");
-const readline = require('readline');
-const fs = require('fs');
-const { compareTextFilesLineByLine } = require("../Code/StreamComparison");
+const { RunCpp, DeleteAfterExecution } = require("../Code/Run");
+const { compareTextFilesLineByLine, readFileAsync } = require("../Code/StreamComparison");
 
 
 //validation phase
@@ -127,11 +125,11 @@ async function ValidateTestCases(ws, req, next) {
     }
 }
 
-async function RunCode(ws, Code, TestCase, i, Type) {
+async function RunCode(ws, Code, TestCase, Type, RunOn) {
 
     ws.send(JSON.stringify({
         success: true,
-        message: `Running ${Type} Code on Testcase ${i + 1}`,
+        message: `Running ${Type} Code [${RunOn}]`,
         phase: `Running`
     }));
 
@@ -141,7 +139,7 @@ async function RunCode(ws, Code, TestCase, i, Type) {
     } catch (err) {
         ws.send(JSON.stringify({
             success: false,
-            message: `Internal Server Error while running ${Type}  Code on Testcase ${i + 1} : ${err.message}`,
+            message: `Internal Server Error while running ${Type} Code [${RunOn}] : ${err.message}`,
             phase: `Running`
         }), () => {
             ws.close(1011);  //1011 is the status code for Internal Error
@@ -150,10 +148,10 @@ async function RunCode(ws, Code, TestCase, i, Type) {
     }
 }
 
-async function CompareOutputs(ws, i, solutionCodeResponse, studentCodeResponse) {
+async function CompareOutputs(ws, solutionCodeResponse, studentCodeResponse, RunOn) {
     ws.send(JSON.stringify({
         success: true,
-        message: `Comparing Output Streams of Testcase ${i + 1}`,
+        message: `Comparing Output Streams of ${RunOn}`,
         phase: `Comparison`
     }));
 
@@ -162,7 +160,7 @@ async function CompareOutputs(ws, i, solutionCodeResponse, studentCodeResponse) 
         if (Comparison.success === false) {
             ws.send(JSON.stringify({
                 success: false,
-                message: `Unable to compare outputs of Testcase ${i + 1}: ${Comparison.error}`,
+                message: `Unable to compare outputs of ${RunOn}: ${Comparison.error}`,
                 phase: `Comparison`,
             }), () => {
                 ws.close(1011);  //1011 is the status code for Internal Error
@@ -177,7 +175,7 @@ async function CompareOutputs(ws, i, solutionCodeResponse, studentCodeResponse) 
         console.log(e)
         ws.send(JSON.stringify({
             success: false,
-            message: `Internal Server Error while comparing outputs of Testcase ${i + 1}: ${e.error}`,
+            message: `Internal Server Error while comparing outputs of ${RunOn}: ${e.error}`,
             phase: `Comparison`,
         }), () => {
             ws.close(1011);  //1011 is the status code for Internal Error
@@ -193,9 +191,8 @@ async function RunOutputComparison(ws, req) {
 
     ws.on('message', async (message) => {
         try {
-
             const data = JSON.parse(message);
-
+            console.log(data);
             if (data.CodeToRun === undefined || data.CodeToRun === "") {
                 ws.send(JSON.stringify({
                     success: false,
@@ -211,11 +208,11 @@ async function RunOutputComparison(ws, req) {
 
                 for (let i = 0; i < req.ThisQuestion.TestCases.length; i++) {
 
-                    let solutionCodeResponse = await RunCode(ws, req.ThisQuestion.SolutionCode, req.ThisQuestion.TestCases[i].input, i, "Solution");
+                    let solutionCodeResponse = await RunCode(ws, req.ThisQuestion.SolutionCode, req.ThisQuestion.TestCases[i].input, "Solution", `TestCase ${i + 1}`);
 
                     if (solutionCodeResponse === undefined) return;
 
-                    let studentCodeResponse = await RunCode(ws, data.CodeToRun, req.ThisQuestion.TestCases[i].input, i, "Student");
+                    let studentCodeResponse = await RunCode(ws, data.CodeToRun, req.ThisQuestion.TestCases[i].input, i, "Student", `TestCase ${i + 1}`);
 
                     if (studentCodeResponse === undefined) return;
 
@@ -232,10 +229,6 @@ async function RunOutputComparison(ws, req) {
                     //if Student Code fails to run
                     if (studentCodeResponse.success === false) {
                         PassedAllTestCases = false;
-                        studentCodeResponse.message += ` [Student Code, Testcase ${i + 1}]`
-                        studentCodeResponse.phase = `Running`
-                        studentCodeResponse.success = true; //because we don't want to close the connection and test for other testcases as well
-                        ws.send(JSON.stringify(studentCodeResponse));
                         ws.send(JSON.stringify({
                             success: true,
                             message: studentCodeResponse.message,
@@ -244,52 +237,156 @@ async function RunOutputComparison(ws, req) {
                             testcase: i + 1,
                             Score: 0
                         }));
+                        continue;  //continue to next testcase as this testcase failed
+                    }
+
+                    //if both run successfully
+                    let Comparison = await CompareOutputs(ws, solutionCodeResponse, studentCodeResponse, `TestCase ${i + 1}`);
+                    if (Comparison === undefined) return;
+
+                    if (Comparison.different === true) {
+                        ws.send(JSON.stringify({
+                            success: true,
+                            message: `Output Mismatch in Testcase ${i + 1}`,
+                            verdict: "Wrong Answer",
+                            phase: `Verdict`,
+                            testcase: i + 1,
+                            Score: 0
+                        }));
+                        PassedAllTestCases = false;
                     }
                     else {
-
-                        //if both run successfully
-                        let Comparison = await CompareOutputs(ws, i, solutionCodeResponse, studentCodeResponse);
-                        if (Comparison === undefined) return;
-
-                        if (Comparison.different === true) {
-                            ws.send(JSON.stringify({
-                                success: true,
-                                message: `Output Mismatch in Testcase ${i + 1}`,
-                                verdict: "Wrong Answer",
-                                phase: `Verdict`,
-                                testcase: i + 1,
-                                Score: 0
-                            }));
-                            PassedAllTestCases = false;
-                        }
-                        else {
-                            ws.send(JSON.stringify({
-                                success: true,
-                                message: `Testcase ${i + 1} Passed`,
-                                verdict: "Accepted",
-                                phase: `Verdict`,
-                                testcase: i + 1,
-                                Score: 1
-                            }));
-                        }
+                        ws.send(JSON.stringify({
+                            success: true,
+                            message: `Testcase ${i + 1} Passed`,
+                            verdict: "Accepted",
+                            phase: `Verdict`,
+                            testcase: i + 1,
+                            Score: 1
+                        }));
                     }
                 }
 
-                // //If random test cases are checked
-                // if (ThisQuestion.RandomTestChecked) {
+                if (req.ThisQuestion.RandomTestChecked) {
 
-                //     ws.send(JSON.stringify({
-                //         success: true,
-                //         message: `Running Random Test Case`,
-                //         phase: `Running`
-                //     }));
+                    ws.send(JSON.stringify({
+                        success: true,
+                        message: `Running Random TestCode`,
+                        phase: `Running`
+                    }));
 
-                //     let RandomTestCase
-                //     try {
 
-                //     }
+                    let RandomTestCodeResponse = await RunCode(ws, req.ThisQuestion.RandomTestCode, "", "Random TestCase Generator", "");
 
-                // }
+                    if (RandomTestCodeResponse === undefined) return;
+
+                    if (RandomTestCodeResponse.success === false) {
+                        ws.send(JSON.stringify({
+                            success: false,
+                            message: RandomTestCodeResponse.message + ` Random TestCode failed to run`,
+                            verdict: RandomTestCodeResponse.verdict,
+                            phase: `Running`
+                        }), () => {
+                            ws.close(1011);  //1011 is the status code for Internal Error
+                        });
+                        return;
+                    }
+
+                    ws.send(JSON.stringify({
+                        success: true,
+                        message: `Random TestCode ran successfully`,
+                        phase: `Running`
+                    }));
+
+                    let RandomInput;
+
+                    //use the output file of RandomTestCode as input for the student code asynchronously
+                    try {
+                        RandomInput = await readFileAsync(RandomTestCodeResponse.outputFilePath);
+                    }
+                    catch (e) {
+                        ws.send(JSON.stringify({
+                            success: false,
+                            message: `Internal Server Error while reading RandomTestCode output: ${e.message}`,
+                            phase: `Running`
+                        }), () => {
+                            ws.close(1011);  //1011 is the status code for Internal Error
+                        });
+                        return;
+                    }
+
+
+                    ws.send(JSON.stringify({
+                        success: true,
+                        message: `Random Input Generated: ${RandomInput}`,
+                        phase: `Running`
+                    }));
+
+                    solutionCodeResponse = await RunCode(ws, req.ThisQuestion.SolutionCode, RandomInput, "Solution", "Random Input");
+
+                    if (solutionCodeResponse === undefined) return;
+
+                    studentCodeResponse = await RunCode(ws, data.CodeToRun, RandomInput, "Student", "Random Input");
+
+                    if (studentCodeResponse === undefined) return;
+
+                    //if Solution Code fails to run
+                    if (solutionCodeResponse.success === false) {
+                        solutionCodeResponse.message += ` [Solution Code, Random Input]`
+                        solutionCodeResponse.phase = `Running`
+                        ws.send(JSON.stringify(solutionCodeResponse), () => {
+                            ws.close(1011);  //1011 is the status code for Internal Error
+                        });
+                        return;
+                    }
+
+                    //if Student Code fails to run
+                    if (studentCodeResponse.success === false) {
+                        PassedAllTestCases = false;
+                        studentCodeResponse.message += ` [Student Code, Random Input]`
+                        studentCodeResponse.phase = `Running`
+                        studentCodeResponse.success = true; //because we don't want to close the connection and test for other testcases as well
+                        ws.send(JSON.stringify(studentCodeResponse));
+                        ws.send(JSON.stringify({
+                            success: true,
+                            message: studentCodeResponse.message,
+                            verdict: studentCodeResponse.verdict,
+                            phase: `Verdict`,
+                            testcase: "Random Input",
+                            Score: 0
+                        }));
+                    }
+
+                    // read the input 
+                    DeleteAfterExecution(RandomTestCodeResponse.outputFilePath);
+
+                    //if both run successfully
+
+                    let Comparison = await CompareOutputs(ws, solutionCodeResponse, studentCodeResponse, `Random Input`);
+                    if (Comparison === undefined) return;
+
+                    if (Comparison.different === true) {
+                        ws.send(JSON.stringify({
+                            success: true,
+                            message: `Output Mismatch in Random Input`,
+                            verdict: "Wrong Answer",
+                            phase: `Verdict`,
+                            testcase: "Random Input",
+                            Score: 0
+                        }));
+                        PassedAllTestCases = false;
+                    }
+                    else {
+                        ws.send(JSON.stringify({
+                            success: true,
+                            message: `Random Input Passed`,
+                            verdict: "Accepted",
+                            phase: `Verdict`,
+                            testcase: "Random Input",
+                            Score: 1
+                        }));
+                    }
+                }
 
                 if (PassedAllTestCases) {
                     ws.send(JSON.stringify({
@@ -316,7 +413,8 @@ async function RunOutputComparison(ws, req) {
         } catch (e) {
             ws.send(JSON.stringify({
                 success: false,
-                message: "Invalid JSON format recieved from client",
+                message: `Internal Server Error : ${e.message}`,
+                phase: `Running`
             }), () => {
                 ws.close(1008);  //1008 is the status code for Policy Violation
             });
