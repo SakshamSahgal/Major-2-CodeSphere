@@ -3,23 +3,23 @@ import { ListGroup } from 'react-bootstrap';
 import VerdictBadge from '../CommonComponents/VerdictBadge';
 //results is an array of objects, each object has a phase and a message
 const StepsList = ({ results }) => {
-    // Group results by phase
+    // Group results by type
     const groupedResults = results.reduce((acc, curr) => {
-        acc[curr.phase] = acc[curr.phase] || [];
-        acc[curr.phase].push(curr);
+        acc[curr.type] = acc[curr.type] || [];
+        acc[curr.type].push(curr);
         return acc;
     }, {});
 
     return (
         <div>
-            {Object.keys(groupedResults).map((phase, index) => (
+            {Object.keys(groupedResults).map((type, index) => (
                 <div key={index}>
                     <hr />
                     <div>
-                        <h3>{phase}</h3>
+                        <h3>{type}</h3>
                         <ListGroup>
-                            {groupedResults[phase].map((result, idx) => (
-                                (result.phase === "Verdict") ? (
+                            {groupedResults[type].map((result, idx) => (
+                                (result.type === "Verdict") ? (
                                     <ListGroup.Item key={idx} >
                                         {<>
                                             <span>Testcase {result.testcase}  : </span>

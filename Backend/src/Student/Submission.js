@@ -4,13 +4,12 @@ const { RunCpp, DeleteAfterExecution } = require("../Code/Run");
 const { compareTextFilesLineByLine, readFileAsync } = require("../Code/StreamComparison");
 
 
-//validation phase
 async function ValidateInputs(ws, req, next) {
     if (req.params.assignmentId == undefined || req.params.questionId == undefined) {
         ws.send(JSON.stringify({
             success: false,
             message: `Invalid Inputs`,
-            phase: `Validation`
+            type: `Logs`
         }), () => {
             ws.close(1008);  //1008 is the status code for Policy Violation
         });
@@ -21,7 +20,6 @@ async function ValidateInputs(ws, req, next) {
     }
 }
 
-//validation phase
 async function CheckQuestionInAssignment(ws, req, next) {
     //check if assignmentId exists
     //check if questionId exists in that assignment
@@ -36,7 +34,7 @@ async function CheckQuestionInAssignment(ws, req, next) {
     ws.send(JSON.stringify({
         success: true,
         message: `Checking if the question is in the assignment`,
-        phase: `Validation`
+        type: `logs`
     }));
 
     try {
@@ -45,7 +43,7 @@ async function CheckQuestionInAssignment(ws, req, next) {
             ws.send(JSON.stringify({
                 success: false,
                 message: "Invalid assignmentId or questionId",
-                phase: `Validation`
+                type: `logs`
             }), () => {
                 ws.close(1008);  //1008 is the status code for Policy Violation
             });
@@ -58,7 +56,7 @@ async function CheckQuestionInAssignment(ws, req, next) {
         ws.send(JSON.stringify({
             success: false,
             message: `Internal Server Error : ${err.message}`,
-            phase: `Validation`
+            type: `logs`
         }), () => {
             ws.close(1011);  //1011 is the status code for Internal Error
         });
@@ -66,13 +64,12 @@ async function CheckQuestionInAssignment(ws, req, next) {
     }
 }
 
-//searching phase
 async function findQuestion(ws, req, next) {
 
     ws.send(JSON.stringify({
         success: true,
         message: "Checking if the question exists in the QuestionBank",
-        phase: `Searching`
+        type: `logs`
     }));
 
     try {
@@ -81,7 +78,7 @@ async function findQuestion(ws, req, next) {
             ws.send(JSON.stringify({
                 success: false,
                 message: `Question not found in the QuestionBank`,
-                phase: `Searching`
+                type: `logs`
             }), () => {
                 ws.close(1008);  //1008 is the status code for Policy Violation
             });
@@ -95,7 +92,7 @@ async function findQuestion(ws, req, next) {
         ws.send(JSON.stringify({
             success: false,
             message: `Internal Server Error : ${err.message}`,
-            phase: `Searching`
+            type: `logs`
         }), () => {
             ws.close(1011);  //1011 is the status code for Internal Error
         });
@@ -103,19 +100,18 @@ async function findQuestion(ws, req, next) {
     }
 }
 
-//searching phase
 async function ValidateTestCases(ws, req, next) {
     console.log("Validating TestCases");
     ws.send(JSON.stringify({
         success: true,
         message: "Validating TestCases for the question",
-        phase: `Searching`
+        type: `logs`
     }));
     if (req.ThisQuestion.TestCases.length == 0) {
         ws.send(JSON.stringify({
             success: false,
             message: "No TestCases found for the question",
-            phase: `Searching`
+            type: `logs`
         }), () => {
             ws.close(1008);  //1008 is the status code for Policy Violation
         });
@@ -130,7 +126,7 @@ async function RunCode(ws, Code, TestCase, Type, RunOn) {
     ws.send(JSON.stringify({
         success: true,
         message: `Running ${Type} Code [${RunOn}]`,
-        phase: `Running`
+        type: `logs`
     }));
 
     try {
@@ -140,7 +136,7 @@ async function RunCode(ws, Code, TestCase, Type, RunOn) {
         ws.send(JSON.stringify({
             success: false,
             message: `Internal Server Error while running ${Type} Code [${RunOn}] : ${err.message}`,
-            phase: `Running`
+            type: `logs`
         }), () => {
             ws.close(1011);  //1011 is the status code for Internal Error
         });
@@ -152,7 +148,7 @@ async function CompareOutputs(ws, solutionCodeResponse, studentCodeResponse, Run
     ws.send(JSON.stringify({
         success: true,
         message: `Comparing Output Streams of ${RunOn}`,
-        phase: `Comparison`
+        type: `logs`
     }));
 
     try {
@@ -161,7 +157,7 @@ async function CompareOutputs(ws, solutionCodeResponse, studentCodeResponse, Run
             ws.send(JSON.stringify({
                 success: false,
                 message: `Unable to compare outputs of ${RunOn}: ${Comparison.error}`,
-                phase: `Comparison`,
+                type: `logs`
             }), () => {
                 ws.close(1011);  //1011 is the status code for Internal Error
             });
@@ -176,7 +172,7 @@ async function CompareOutputs(ws, solutionCodeResponse, studentCodeResponse, Run
         ws.send(JSON.stringify({
             success: false,
             message: `Internal Server Error while comparing outputs of ${RunOn}: ${e.error}`,
-            phase: `Comparison`,
+            type: `logs`
         }), () => {
             ws.close(1011);  //1011 is the status code for Internal Error
         });
@@ -184,7 +180,6 @@ async function CompareOutputs(ws, solutionCodeResponse, studentCodeResponse, Run
     }
 }
 
-//running phase and comparison and verdict
 async function RunOutputComparison(ws, req) {
 
     ws.send("start");
@@ -197,7 +192,7 @@ async function RunOutputComparison(ws, req) {
                 ws.send(JSON.stringify({
                     success: false,
                     message: "Invalid Code",
-                    phase: `Running`
+                    type: `logs`
                 }), () => {
                     ws.close(1008);  //1008 is the status code for Policy Violation
                 });
@@ -219,7 +214,7 @@ async function RunOutputComparison(ws, req) {
                     //if Solution Code fails to run
                     if (solutionCodeResponse.success === false) {
                         solutionCodeResponse.message += ` [Solution Code, Testcase ${i + 1}]`
-                        solutionCodeResponse.phase = `Running`
+                        solutionCodeResponse.type = `logs`
                         ws.send(JSON.stringify(solutionCodeResponse), () => {
                             ws.close(1011);  //1011 is the status code for Internal Error
                         });
@@ -227,13 +222,14 @@ async function RunOutputComparison(ws, req) {
                     }
 
                     //if Student Code fails to run
+                    //output file will automatically be deleted by RunCpp funciton if the code fails
                     if (studentCodeResponse.success === false) {
                         PassedAllTestCases = false;
                         ws.send(JSON.stringify({
                             success: true,
                             message: studentCodeResponse.message,
                             verdict: studentCodeResponse.verdict,
-                            phase: `Verdict`,
+                            type: `Verdict`,
                             testcase: i + 1,
                             Score: 0
                         }));
@@ -249,7 +245,7 @@ async function RunOutputComparison(ws, req) {
                             success: true,
                             message: `Output Mismatch in Testcase ${i + 1}`,
                             verdict: "Wrong Answer",
-                            phase: `Verdict`,
+                            type: `Verdict`,
                             testcase: i + 1,
                             Score: 0
                         }));
@@ -260,7 +256,7 @@ async function RunOutputComparison(ws, req) {
                             success: true,
                             message: `Testcase ${i + 1} Passed`,
                             verdict: "Accepted",
-                            phase: `Verdict`,
+                            type: `Verdict`,
                             testcase: i + 1,
                             Score: 1
                         }));
@@ -272,7 +268,7 @@ async function RunOutputComparison(ws, req) {
                     ws.send(JSON.stringify({
                         success: true,
                         message: `Running Random TestCode`,
-                        phase: `Running`
+                        type: `logs`
                     }));
 
 
@@ -285,7 +281,7 @@ async function RunOutputComparison(ws, req) {
                             success: false,
                             message: RandomTestCodeResponse.message + ` Random TestCode failed to run`,
                             verdict: RandomTestCodeResponse.verdict,
-                            phase: `Running`
+                            type: `logs`
                         }), () => {
                             ws.close(1011);  //1011 is the status code for Internal Error
                         });
@@ -295,7 +291,7 @@ async function RunOutputComparison(ws, req) {
                     ws.send(JSON.stringify({
                         success: true,
                         message: `Random TestCode ran successfully`,
-                        phase: `Running`
+                        type: `logs`
                     }));
 
                     let RandomInput;
@@ -308,7 +304,7 @@ async function RunOutputComparison(ws, req) {
                         ws.send(JSON.stringify({
                             success: false,
                             message: `Internal Server Error while reading RandomTestCode output: ${e.message}`,
-                            phase: `Running`
+                            type: `logs`
                         }), () => {
                             ws.close(1011);  //1011 is the status code for Internal Error
                         });
@@ -319,7 +315,7 @@ async function RunOutputComparison(ws, req) {
                     ws.send(JSON.stringify({
                         success: true,
                         message: `Random Input Generated: ${RandomInput}`,
-                        phase: `Running`
+                        type: `logs`
                     }));
 
                     solutionCodeResponse = await RunCode(ws, req.ThisQuestion.SolutionCode, RandomInput, "Solution", "Random Input");
@@ -333,7 +329,7 @@ async function RunOutputComparison(ws, req) {
                     //if Solution Code fails to run
                     if (solutionCodeResponse.success === false) {
                         solutionCodeResponse.message += ` [Solution Code, Random Input]`
-                        solutionCodeResponse.phase = `Running`
+                        solutionCodeResponse.type = `Logs`
                         ws.send(JSON.stringify(solutionCodeResponse), () => {
                             ws.close(1011);  //1011 is the status code for Internal Error
                         });
@@ -344,14 +340,14 @@ async function RunOutputComparison(ws, req) {
                     if (studentCodeResponse.success === false) {
                         PassedAllTestCases = false;
                         studentCodeResponse.message += ` [Student Code, Random Input]`
-                        studentCodeResponse.phase = `Running`
+                        studentCodeResponse.type = `Logs`
                         studentCodeResponse.success = true; //because we don't want to close the connection and test for other testcases as well
                         ws.send(JSON.stringify(studentCodeResponse));
                         ws.send(JSON.stringify({
                             success: true,
                             message: studentCodeResponse.message,
                             verdict: studentCodeResponse.verdict,
-                            phase: `Verdict`,
+                            type: `Verdict`,
                             testcase: "Random Input",
                             Score: 0
                         }));
@@ -370,7 +366,7 @@ async function RunOutputComparison(ws, req) {
                             success: true,
                             message: `Output Mismatch in Random Input`,
                             verdict: "Wrong Answer",
-                            phase: `Verdict`,
+                            type: `Verdict`,
                             testcase: "Random Input",
                             Score: 0
                         }));
@@ -381,7 +377,7 @@ async function RunOutputComparison(ws, req) {
                             success: true,
                             message: `Random Input Passed`,
                             verdict: "Accepted",
-                            phase: `Verdict`,
+                            type: `Verdict`,
                             testcase: "Random Input",
                             Score: 1
                         }));
@@ -393,7 +389,7 @@ async function RunOutputComparison(ws, req) {
                         success: true,
                         message: `All Testcases Passed`,
                         verdict: "Accepted",
-                        phase: `Decision`
+                        type: `Decision`
                     }), () => {
                         ws.close(1000);  //1000 is the status code for Normal Closure
                     });
@@ -402,7 +398,7 @@ async function RunOutputComparison(ws, req) {
                         success: false,
                         message: `Some Testcases Failed`,
                         verdict: "Wrong Answer",
-                        phase: `Decision`
+                        type: `Decision`
                     }), () => {
                         ws.close(1008);  //1008 is the status code for Policy Violation
                     });
@@ -414,7 +410,7 @@ async function RunOutputComparison(ws, req) {
             ws.send(JSON.stringify({
                 success: false,
                 message: `Internal Server Error : ${e.message}`,
-                phase: `Running`
+                type: `logs`
             }), () => {
                 ws.close(1008);  //1008 is the status code for Policy Violation
             });

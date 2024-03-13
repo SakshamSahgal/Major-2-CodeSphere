@@ -59,12 +59,11 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
                     try {
                         const response = JSON.parse(event.data);
                         console.log(response);
-                        if (response.phase) {
-                            if ((response.phase === "Verdict") || (response.phase === "Decision")) {
-                                setResponseMessage((prev) => [...prev, response]);
-                            }
-                            else
+                        if (response.type) {
+                            if (response.type === "logs")
                                 setLogsMessage((prev) => [...prev, response]);
+                            else
+                                setResponseMessage((prev) => [...prev, response]);
                         }
                         if (response.success === false) {
                             socket.close();
