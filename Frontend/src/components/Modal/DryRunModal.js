@@ -4,6 +4,8 @@ import { toast } from 'react-toastify';
 import StepsList from '../List/StepsList';
 import LogsAccordion from '../Accordion/LogsAccordion';
 import { Spinner } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCode } from '@fortawesome/free-solid-svg-icons';
 
 function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
 
@@ -89,7 +91,9 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
 
     return (
         <>
-            <Button variant="primary" onClick={handleShow} className='w-100'> Run </Button>
+            <Button variant="primary" onClick={handleShow} className='w-100'>
+                <FontAwesomeIcon icon={faCode} style={{ cursor: 'pointer', color: 'white' }} /> Run
+            </Button>
 
             <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header closeButton>

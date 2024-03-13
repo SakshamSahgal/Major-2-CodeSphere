@@ -87,9 +87,7 @@ function SolveQuestion({ Questions, AssignmentId }) {
                 <div className="col">
                     <DryRunModal CodeToRun={solutionCodes[currentQuestionIndex]} AssignmentId={AssignmentId} QuestionId={currentQuestion?._id}/>
                 </div>
-                <div className="col">
-                    <Button variant="primary" className="w-100">Submit</Button>
-                </div>
+
             </div>
         </>
     );
