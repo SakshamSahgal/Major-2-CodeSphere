@@ -345,7 +345,7 @@ async function RunOutputComparison(ws, req) {
                         ScoreObtained += 1;
                     }
                 }
-
+                
                 if (PassedAllTestCases) {
                     ws.send(JSON.stringify({
                         success: true,
