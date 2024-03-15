@@ -10,7 +10,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 
-function NavbarWithProfileAndSidebar({ TabNames = [], TabLinks = [], LoginType, ActiveTabIndex = 0 }) {
+function NavbarWithProfileAndSidebar({ TabNames = [], TabLinks = [], ActiveTabIndex = 0 }) {
     const [showModal, setShowModal] = useState(false);
     const [profileData, setProfileData] = useState({});
     const [show, setShow] = useState(false);

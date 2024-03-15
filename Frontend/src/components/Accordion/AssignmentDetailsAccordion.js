@@ -2,7 +2,6 @@ import React from 'react';
 import { Accordion } from 'react-bootstrap';
 import { convertIsoToNormalTime, getTimeElapsed } from '../../Scripts/TimeFunctions';
 
-
 function AssignmentDetailsAccordion({ PostedBy = "", PostedOn, DueTimestamp, Batches = [], Year, NumberOfQuestions }) {
     return (
 

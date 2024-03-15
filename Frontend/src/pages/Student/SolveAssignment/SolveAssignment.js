@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 import LoadingSpinner from '../../../components/Spinners/Spinners';
 import SolveQuestion from './SolveQuestion';
-import NavbarWithProfileAndSidebar from '../../../components/Navbar/NavbarWithProfileAndSidebar';
+import SubmitEvaluationNavbar from '../../../components/Navbar/SubmitEvaluationNavbar';
 import AssignmentDetailsAccordion from '../../../components/Accordion/AssignmentDetailsAccordion';
 
 function SolveAssignment() {
@@ -38,8 +38,9 @@ function SolveAssignment() {
 
     return (
         <>
-            <NavbarWithProfileAndSidebar LoginType={"Student"} />
+            <SubmitEvaluationNavbar  />
             <div className="container">
+
                 <div className="row">
                     <div className="col">
                         <AssignmentDetailsAccordion PostedBy={AssignmentDetails?.PostedBy.Name} PostedOn={AssignmentDetails?.PostedOn} DueTimestamp={AssignmentDetails?.DueTimestamp} Batches={AssignmentDetails?.Batches} Year={AssignmentDetails?.Year} NumberOfQuestions={AssignmentDetails?.Questions.length} />

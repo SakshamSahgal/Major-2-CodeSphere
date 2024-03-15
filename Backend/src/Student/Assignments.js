@@ -151,4 +151,66 @@ function getThisPendingAssignment(req, res) {
         });
 }
 
-module.exports = { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute, getThisPendingAssignment };
+// This function is used to check if the assignmentId is provided in the request
+function ValidateAssignmentId(ws, req, next) {
+
+    ws.send(JSON.stringify({
+        success: true,
+        message: `Validating assignmentId ${req.params.assignmentId}`,
+        type: `logs`
+    }));
+
+    if (req.params.assignmentId == undefined) {
+        ws.send(JSON.stringify({
+            success: false,
+            message: `assignmentId Not provided`,
+            type: `logs`
+        }), () => {
+            ws.close(1008);  //1008 is the status code for Policy Violation
+        });
+        return;
+    }
+    else {
+        next();
+    }
+}
+
+// This function is used to find the assignment with the given assignmentId from the database
+async function FindAssignment() {
+
+    ws.send(JSON.stringify({
+        success: true,
+        message: `Fetching Assignment`,
+        type: `logs`
+    }));
+
+    let Querry = {
+        _id: req.params.assignmentId
+    }
+    try {
+        let data = await readDB("Assignments", req.decoded.Institution, Querry, assignmentSchema);
+        if (data.length > 0) {
+            req.Assignment = data[0];
+            next();
+        }
+        else {
+            ws.send(JSON.stringify({
+                success: false,
+                message: `Assignment not found`,
+                type: `logs`
+            }), () => {
+                ws.close(1008);  //1008 is the status code for Policy Violation
+            });
+        }
+    } catch (error) {
+        ws.send(JSON.stringify({
+            success: false,
+            message: `Failed to fetch Assignment, err : ${error.message}`,
+            type: `logs`
+        }), () => {
+            ws.close(1008);  //1008 is the status code for Policy Violation
+        });
+    }
+}
+
+module.exports = { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute, getThisPendingAssignment, ValidateAssignmentId, FindAssignment };

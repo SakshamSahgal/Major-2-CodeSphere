@@ -7,7 +7,7 @@ function ProfessorQuestions() {
 
     return (
         <>
-            <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations", "AddQuestion", "Questions"]} TabLinks={["/professors/assignments", "/professors/evaluations", "/professors/addQuestion", "/professors/questions"]} LoginType={"Professors"} ActiveTabIndex={3} />
+            <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations", "AddQuestion", "Questions"]} TabLinks={["/professors/assignments", "/professors/evaluations", "/professors/addQuestion", "/professors/questions"]} ActiveTabIndex={3} />
             <div className="container my-3">
                 <div className="row">
                     <div className="col">

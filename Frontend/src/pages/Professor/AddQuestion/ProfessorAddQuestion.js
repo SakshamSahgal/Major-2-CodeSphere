@@ -69,7 +69,7 @@ function ProfessorAddQuestion({ activeTab }) {
 
   return (
     <>
-      <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations", "AddQuestion", "Questions"]} TabLinks={["/professors/assignments", "/professors/evaluations", "/professors/addQuestion", "/professors/questions"]} LoginType={"Professors"} ActiveTabIndex={2} />
+      <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations", "AddQuestion", "Questions"]} TabLinks={["/professors/assignments", "/professors/evaluations", "/professors/addQuestion", "/professors/questions"]} ActiveTabIndex={2} />
       <div className="container my-3">
         <div className="row">
           <div className="col text-center my-3">
