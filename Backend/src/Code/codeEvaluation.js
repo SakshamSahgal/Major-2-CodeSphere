@@ -67,7 +67,8 @@ async function CompareOutputs(ws, solutionCodeResponse, studentCodeResponse, Run
 
 //This function runs the solution code and student code for each testcase and compares the outputs
 //RunOn is the name of the testcase (used as a label in the logs)
-async function RunAndCompare(ws, SolutionCode, StudentCode, TestCase, RunOn) {
+//QuestionPlaceHolder is the name of the question (used as a label in the verdict logs)
+async function RunAndCompare(ws, SolutionCode, StudentCode, TestCase, RunOn, QuestionPlaceHolder = "") {
 
     let solutionCodeResponse = await RunCode(ws, SolutionCode, TestCase, "Solution", RunOn);
     if (solutionCodeResponse === undefined) return;
@@ -94,6 +95,7 @@ async function RunAndCompare(ws, SolutionCode, StudentCode, TestCase, RunOn) {
             verdict: studentCodeResponse.verdict,
             type: `Verdict`,
             testcase: RunOn,
+            Question: QuestionPlaceHolder,
             score: 0
         }));
         return false; //continue to next testcase as this testcase failed
@@ -110,6 +112,7 @@ async function RunAndCompare(ws, SolutionCode, StudentCode, TestCase, RunOn) {
             verdict: "Wrong Answer",
             type: `Verdict`,
             testcase: RunOn,
+            Question: QuestionPlaceHolder,
             score: 0
         }));
         return false; //continue to next testcase as this testcase failed
@@ -121,6 +124,7 @@ async function RunAndCompare(ws, SolutionCode, StudentCode, TestCase, RunOn) {
             verdict: "Accepted",
             type: `Verdict`,
             testcase: RunOn,
+            Question: QuestionPlaceHolder,
             score: 1
         }));
         return true; //continue to next testcase as this testcase passed
@@ -129,7 +133,7 @@ async function RunAndCompare(ws, SolutionCode, StudentCode, TestCase, RunOn) {
 
 //This function evaluates the question by running and comparing the solution code and student code for each testcase
 //It return undefined if there is an error, else it returns an object with TotalScore and ScoreObtained
-async function EvaluateQuestion(ws, Question, CodeToRun) {
+async function EvaluateQuestion(ws, Question, CodeToRun, QuestionPlaceHolder) {
 
     ws.send(JSON.stringify({
         success: true,
@@ -145,7 +149,7 @@ async function EvaluateQuestion(ws, Question, CodeToRun) {
     //iterating over all testcases of this question
     for (let i = 0; i < Question.TestCases.length; i++) {
 
-        let RunResponse = await RunAndCompare(ws, Question.SolutionCode, CodeToRun, Question.TestCases[i].input, `Testcase ${i + 1}`);
+        let RunResponse = await RunAndCompare(ws, Question.SolutionCode, CodeToRun, Question.TestCases[i].input, `Testcase ${i + 1}`, QuestionPlaceHolder);
         if (RunResponse === undefined) return;
         if (RunResponse === false) {
             TotalScore += 1;
@@ -210,7 +214,7 @@ async function EvaluateQuestion(ws, Question, CodeToRun) {
             type: `logs`
         }));
 
-        RunResponse = await RunAndCompare(ws, Question.SolutionCode, CodeToRun, RandomInput, `Random Input`);
+        RunResponse = await RunAndCompare(ws, Question.SolutionCode, CodeToRun, RandomInput, `Random Input`, QuestionPlaceHolder);
 
         DeleteAfterExecution(RandomTestCodeResponse.outputFilePath) //Delete the random Input after running and comparing
 
@@ -231,7 +235,7 @@ async function EvaluateQuestion(ws, Question, CodeToRun) {
             verdict: "Accepted",
             type: `Decision`,
             TotalScore: TotalScore,
-            ScoreObtained: ScoreObtained
+            ScoreObtained: ScoreObtained,
         }), () => {
             return {
                 TotalScore: TotalScore,

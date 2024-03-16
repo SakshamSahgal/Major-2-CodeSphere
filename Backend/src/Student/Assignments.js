@@ -302,14 +302,12 @@ async function EvaluateAssignment(ws, req) {
     ws.on("message", async (msg) => {
         try {
             let data = JSON.parse(msg);
-            console.log(data);
             //data.solutionCodes is an array of code written by the student for each question
-            if (data.solutionCodes.length === req.Assignment.Questions.length) {
-                console.log(req.Assignment);
+            if ((data.solutionCodes.length === req.Assignment.Questions.length) && (req.Assignment.Questions.length === data.QuestionNames.length)) {
                 let results = [];
+                //iterate through each question and evaluate the student's code for each question
                 for (let i = 0; i < req.Assignment.Questions.length; i++) {
-                    // console.log(req.Assignment.Questions[i])
-                    let result = await EvaluateQuestion(ws, req.Assignment.Questions[i], data.solutionCodes[i]);
+                    let result = await EvaluateQuestion(ws, req.Assignment.Questions[i], data.solutionCodes[i], data.QuestionNames[i]);
                     if (result === undefined) {
                         results.push({
                             SubmittedCode: data.solutionCodes[i],
@@ -333,6 +331,14 @@ async function EvaluateAssignment(ws, req) {
                         results: results
                     }));
                 }
+                ws.send(JSON.stringify({
+                    success: true,
+                    message: `Assignment Evaluated`,
+                    type: `logs`,
+                    results: results
+                }), () => {
+                    ws.close(1000);  //1000 is the status code for Normal Closure
+                });
             }
             else {
                 ws.send(JSON.stringify({
@@ -354,7 +360,6 @@ async function EvaluateAssignment(ws, req) {
             });
         }
     });
-
 }
 
 

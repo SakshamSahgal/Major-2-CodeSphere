@@ -1,16 +1,33 @@
 import { useState, useRef } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import LogsAccordion from '../Accordion/LogsAccordion';
+import { Spinner } from 'react-bootstrap';
+import GroupedResults from '../List/EvaluateAssignmentDisplay';
 
-
-function SubmitAssignmentModal({ _id, solutionCodes }) {
-    const [showModal, setShowModal] = useState(false);
-    const handleCloseModal = () => setShowModal(false);
-    const handleShowModal = () => {
+function SubmitAssignmentModal({ _id, solutionCodes, QuestionNames }) {
+    const [showModal, setShowModal] = useState(false);              //This state stores whether the modal is open or not
+    const [logsMessage, setLogsMessage] = useState([]);             //this state stores the logs of the dry run
+    const [CurMessage, setCurMessage] = useState("");               //this state stores the current message of the Evaluation of the assignment
+    const [isOpen, setIsOpen] = useState(true);                     // State to manage logs accordion open/close
+    const [isLoading, setIsLoading] = useState(true);              //this state stores whether to display spinner or not
+    const [verdict, setVerdict] = useState([]);                    //This stores verdict logs of each question
+    // console.log(verdict);
+    const handleShowModal = () => {                                 //this function is called when the modal is opened
         handleSubmitAssignment();
         setShowModal(true);
     }
-    const socketRef = useRef(null);
+    //this function is called when the modal is closed
+    const handleCloseModal = () => {
+        if (socketRef.current) {
+            console.log('Closing the socket');
+            socketRef.current.close();
+        }
+        setShowModal(false);
+        setLogsMessage([]);
+        setCurMessage("");
+    }
+    const socketRef = useRef(null);                                 //this ref is used to store the socket connection, so that it can be closed when the modal is closed
 
     const handleSubmitAssignment = async () => {
 
@@ -28,7 +45,8 @@ function SubmitAssignmentModal({ _id, solutionCodes }) {
                 if (event.data === "start") {  //if the server sends "start" message, send the data to the server
                     try {
                         socket.send(JSON.stringify({
-                            solutionCodes: solutionCodes
+                            solutionCodes: solutionCodes,
+                            QuestionNames: QuestionNames
                         }));
                     }
                     catch (error) {
@@ -39,9 +57,15 @@ function SubmitAssignmentModal({ _id, solutionCodes }) {
                     try {
                         const response = JSON.parse(event.data);
                         console.log(response);
-
                         if (response.success === false) {
                             socket.close();
+                        }
+                        if (response.type === "logs") {
+                            setLogsMessage((prev) => [...prev, response]); //Append the logs to the logsMessage state, to be displayed
+                            setCurMessage(response); //Set the current message to the message received from the server
+                        }
+                        if (response.type === "Verdict") {
+                            setVerdict((prev) => [...prev, response]); //Append the verdict to the verdict state, to be displayed
                         }
                     }
                     catch (error) {
@@ -53,6 +77,7 @@ function SubmitAssignmentModal({ _id, solutionCodes }) {
 
             socket.onclose = () => {
                 console.log('WebSocket connection closed');
+                setIsLoading(false);
             };
 
         } catch (error) {
@@ -63,15 +88,23 @@ function SubmitAssignmentModal({ _id, solutionCodes }) {
     return (
         <>
             <Button variant="primary" onClick={handleShowModal}>
-                Submit Evaluation
+                Submit Assignment
             </Button>
 
             <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Submit Evaluation</Modal.Title>
+                    <Modal.Title>
+                        Submit Assignment
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>This is the modal body. You can put any content here.</p>
+                    <p>{CurMessage.message}
+                    </p>
+                    {isLoading &&
+                        <Spinner animation="border" role="status" />
+                    }
+                    <GroupedResults results={verdict} />
+                    <LogsAccordion results={logsMessage} isOpen={isOpen} setIsOpen={setIsOpen} />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseModal}>

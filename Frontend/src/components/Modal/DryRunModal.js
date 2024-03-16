@@ -15,6 +15,7 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
     const [ResponseMessage, setResponseMessage] = useState([]);     //this state stores the response of the dry run [success, failure, verdict, etc.
     const [isOpen, setIsOpen] = useState(true);                     // State to manage logs accordion open/close
     const [isLoading, setIsLoading] = useState(true);              //this state stores whether to display spinner or not
+    
     //this function is called when the modal is closed
     const handleClose = () => {
         if (socketRef.current) {

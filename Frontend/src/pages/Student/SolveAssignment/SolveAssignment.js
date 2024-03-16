@@ -13,7 +13,8 @@ function SolveAssignment() {
     const { _id } = useParams();
     const [AssignmentDetails, setAssignmentDetails] = useState(null);
     const [solutionCodes, setSolutionCodes] = useState([]);
-    console.log(solutionCodes);
+    const [QuestionNames, setQuestionNames] = useState([]);
+    console.log(QuestionNames);
     useEffect(() => {
         const FetchAssignment = async () => {
             try {
@@ -23,6 +24,12 @@ function SolveAssignment() {
                 if (response.data.success) {
                     toast.success(response.data.message);
                     setAssignmentDetails(response.data.Assignment);
+                    //filter and set the question names from response.data.Assignment.Questions
+                    const questionNames = response.data.Assignment.Questions.map((question) => {
+                        return question.QuestionName;
+                    });
+                    setQuestionNames(questionNames);
+
                 } else {
                     toast.error(response.data.message);
                 }
@@ -39,7 +46,7 @@ function SolveAssignment() {
 
     return (
         <>
-            <SubmitAssignmentNavbar _id={_id} solutionCodes={solutionCodes}/>
+            <SubmitAssignmentNavbar _id={_id} solutionCodes={solutionCodes} QuestionNames={QuestionNames} />
             <div className="container">
                 <div className="row">
                     <div className="col">
