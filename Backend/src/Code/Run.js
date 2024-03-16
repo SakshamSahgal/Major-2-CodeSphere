@@ -98,18 +98,16 @@ async function RunCpp(code, input, TimeLimit = 5000) {
 
                 //writing the first chunk of the output to the output file, so further chunks can be appended
                 if (chunkCounter === 0) {
-                    // Write the output to a text file
-                    fs.appendFile(outputFilePath, data, (err) => {
-                        if (err) {
-                            console.log(`error while appending stdout to the output to ${outputFilePath}, err : ${err}`);
-                            Response_sent = true; // Set Response_sent to true to indicate response is sent
-                            clearTimeout(timeoutId); // Clear the TLE timeout
-                            DeleteAfterExecution(scriptPath, executablePath, outputFilePath);
-                            resolve({ success: false, message: `Error occurred while appending data to the ${outputFilePath} file`, verdict: "Runtime Error" });
-                        } else {
-                            console.log(`appending chunk ${++chunkCounter} stdout to the output to ${outputFilePath}`);
-                        }
-                    });
+                    try {
+                        fs.appendFileSync(outputFilePath, data);
+                        console.log(`appending chunk ${++chunkCounter} stdout to the output to ${outputFilePath}`);
+                    } catch (err) {
+                        console.log(`error while appending stdout to the output to ${outputFilePath}, err : ${err}`);
+                        Response_sent = true; // Set Response_sent to true to indicate response is sent
+                        clearTimeout(timeoutId); // Clear the TLE timeout
+                        DeleteAfterExecution(scriptPath, executablePath, outputFilePath);
+                        return { success: false, message: `Error occurred while appending data to the ${outputFilePath} file`, verdict: "Runtime Error" };
+                    }
                 } else {
                     fs.stat(outputFilePath, (err, stats) => {
                         if (err) {
