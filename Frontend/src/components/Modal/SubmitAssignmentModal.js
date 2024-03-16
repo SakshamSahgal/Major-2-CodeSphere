@@ -11,11 +11,13 @@ function SubmitAssignmentModal({ _id, solutionCodes, QuestionNames }) {
     const [CurMessage, setCurMessage] = useState("");               //this state stores the current message of the Evaluation of the assignment
     const [isOpen, setIsOpen] = useState(true);                     // State to manage logs accordion open/close
     const [isLoading, setIsLoading] = useState(true);              //this state stores whether to display spinner or not
-    const [verdict, setVerdict] = useState([]);                    //This stores verdict logs of each question
+    const [verdictAndDecision, setverdictAndDecision] = useState([]);    //this state stores the verdict and decision of the questions of the assignment
     // console.log(verdict);
     const handleShowModal = () => {                                 //this function is called when the modal is opened
         handleSubmitAssignment();
         setShowModal(true);
+        setIsOpen(true);
+        setIsLoading(true);
     }
     //this function is called when the modal is closed
     const handleCloseModal = () => {
@@ -26,6 +28,7 @@ function SubmitAssignmentModal({ _id, solutionCodes, QuestionNames }) {
         setShowModal(false);
         setLogsMessage([]);
         setCurMessage("");
+        setverdictAndDecision([]);
     }
     const socketRef = useRef(null);                                 //this ref is used to store the socket connection, so that it can be closed when the modal is closed
 
@@ -64,8 +67,8 @@ function SubmitAssignmentModal({ _id, solutionCodes, QuestionNames }) {
                             setLogsMessage((prev) => [...prev, response]); //Append the logs to the logsMessage state, to be displayed
                             setCurMessage(response); //Set the current message to the message received from the server
                         }
-                        if (response.type === "Verdict") {
-                            setVerdict((prev) => [...prev, response]); //Append the verdict to the verdict state, to be displayed
+                        if (response.type === "Verdict" || response.type === "Decision") {
+                            setverdictAndDecision((prev) => [...prev, response]); //Append the verdict to the verdict state, to be displayed
                         }
                     }
                     catch (error) {
@@ -103,7 +106,7 @@ function SubmitAssignmentModal({ _id, solutionCodes, QuestionNames }) {
                     {isLoading &&
                         <Spinner animation="border" role="status" />
                     }
-                    <GroupedResults results={verdict} />
+                    <GroupedResults results={verdictAndDecision} />
                     <LogsAccordion results={logsMessage} isOpen={isOpen} setIsOpen={setIsOpen} />
                 </Modal.Body>
                 <Modal.Footer>

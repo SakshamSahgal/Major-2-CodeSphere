@@ -1,8 +1,10 @@
 import React from 'react';
-import { Card } from 'react-bootstrap';
+import { ListGroup } from 'react-bootstrap';
+import VerdictBadge from '../CommonComponents/VerdictBadge';
 
 function GroupedResults({ results }) {
     // Grouping the results by Question
+    console.log(results);
     const groupedResults = results.reduce((acc, obj) => {
         const key = obj.Question;
         if (!acc[key]) {
@@ -17,30 +19,36 @@ function GroupedResults({ results }) {
         return Object.entries(groupedResults).map(([question, subResults], index) => (
             <div key={index}>
                 <h2>{question}</h2>
-                <ul>
+                <ListGroup>
                     {renderSubResults(subResults)}
-                </ul>
+                </ListGroup>
             </div>
         ));
     };
-
+    console.log(groupedResults);
     // Rendering the sub-results (testcases)
     const renderSubResults = (subResults) => {
         return subResults.map((result, index) => (
-            <li key={index}>
-                <Card bg="light" text="dark" style={{ marginBottom: '10px' }}>
-                    <Card.Body>
-                        <Card.Title>{result.testcase}</Card.Title>
-                        <Card.Text>
-                            <strong>Verdict:</strong> {result.verdict}<br />
-                            <strong>Message:</strong> {result.message}<br />
-                            <strong>Score:</strong> {result.score}
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
-            </li>
+            (result.type === "Verdict") ? (
+                <ListGroup.Item key={index}>
+                    <span>{result.testcase}</span> &nbsp;
+                    <VerdictBadge verdict={result.verdict} />  &nbsp;
+                    <span className="badge bg-dark" style={{ fontSize: '15px' }}>Score: {result.score}</span>
+                </ListGroup.Item>
+            ) : (
+                <>
+                    <hr />
+                    <ListGroup.Item key={index} >
+                        {result.message} {" "}
+                        <VerdictBadge verdict={result.verdict} /> &nbsp;
+                        <span className="badge  bg-primary" style={{ fontSize: '15px' }}>{" ["}{result.ScoreObtained}{"/"}{result.TotalScore}{"] "}</span>
+                    </ListGroup.Item>
+                    <hr />
+                </>
+            )
         ));
     };
+
 
     return (
         <div>

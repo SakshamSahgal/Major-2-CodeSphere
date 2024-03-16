@@ -236,6 +236,7 @@ async function EvaluateQuestion(ws, Question, CodeToRun, QuestionPlaceHolder) {
             type: `Decision`,
             TotalScore: TotalScore,
             ScoreObtained: ScoreObtained,
+            Question: QuestionPlaceHolder
         }), () => {
             return {
                 TotalScore: TotalScore,
@@ -249,7 +250,8 @@ async function EvaluateQuestion(ws, Question, CodeToRun, QuestionPlaceHolder) {
             verdict: "Wrong Answer",
             TotalScore: TotalScore,
             ScoreObtained: ScoreObtained,
-            type: `Decision`
+            type: `Decision`,
+            Question: QuestionPlaceHolder
         }), () => {
             return {
                 TotalScore: TotalScore,
