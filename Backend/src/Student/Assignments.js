@@ -306,26 +306,32 @@ async function EvaluateAssignment(ws, req) {
             //data.solutionCodes is an array of code written by the student for each question
             if (data.solutionCodes.length === req.Assignment.Questions.length) {
                 console.log(req.Assignment);
-                let result = [];
+                let results = [];
                 for (let i = 0; i < req.Assignment.Questions.length; i++) {
-                    console.log(req.Assignment.Questions[i])
+                    // console.log(req.Assignment.Questions[i])
                     let result = await EvaluateQuestion(ws, req.Assignment.Questions[i], data.solutionCodes[i]);
                     if (result === undefined) {
-                        result.push({
+                        results.push({
                             SubmittedCode: data.solutionCodes[i],
                             QuestionId: req.Assignment.Questions[i]._id,
                             ScoreObtained: 0,
-                            TotalScore: req.Assignment.Questions[i].TestCases.length + (req.Assignment.Questions[i].RandomTestChecked ? 1 : 0),
+                            TotalScore: (req.Assignment.Questions[i].TestCases.length) + (req.Assignment.Questions[i].RandomTestChecked ? 1 : 0),
                         })
                     }
                     else {
-                        result.push({
+                        results.push({
                             SubmittedCode: data.solutionCodes[i],
                             QuestionId: req.Assignment.Questions[i]._id,
                             ScoreObtained: result.ScoreObtained,
                             TotalScore: result.TotalScore,
                         })
                     }
+                    ws.send(JSON.stringify({
+                        success: true,
+                        message: `Question ${i + 1} evaluated`,
+                        type: `logs`,
+                        results: results
+                    }));
                 }
             }
             else {

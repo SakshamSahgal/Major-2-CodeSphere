@@ -128,6 +128,7 @@ async function RunAndCompare(ws, SolutionCode, StudentCode, TestCase, RunOn) {
 }
 
 //This function evaluates the question by running and comparing the solution code and student code for each testcase
+//It return undefined if there is an error, else it returns an object with TotalScore and ScoreObtained
 async function EvaluateQuestion(ws, Question, CodeToRun) {
 
     ws.send(JSON.stringify({
@@ -232,7 +233,6 @@ async function EvaluateQuestion(ws, Question, CodeToRun) {
             TotalScore: TotalScore,
             ScoreObtained: ScoreObtained
         }), () => {
-            ws.close(1000);  //1000 is the status code for Normal Closure
             return {
                 TotalScore: TotalScore,
                 ScoreObtained: ScoreObtained
@@ -240,14 +240,13 @@ async function EvaluateQuestion(ws, Question, CodeToRun) {
         });
     } else {
         ws.send(JSON.stringify({
-            success: false,
+            success: true,
             message: `Some Testcases Failed`,
             verdict: "Wrong Answer",
             TotalScore: TotalScore,
             ScoreObtained: ScoreObtained,
             type: `Decision`
         }), () => {
-            ws.close(1008);  //1008 is the status code for Policy Violation
             return {
                 TotalScore: TotalScore,
                 ScoreObtained: ScoreObtained
