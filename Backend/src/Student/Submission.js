@@ -1,7 +1,8 @@
 const { readDB } = require("../db/mongoOperations");
 const { assignmentSchema } = require("../db/schema");
-const { RunCpp, DeleteAfterExecution } = require("../Code/Run");
-const { compareTextFilesLineByLine, readFileAsync } = require("../Code/StreamComparison");
+const { DeleteAfterExecution } = require("../Code/Run");
+const { readFileAsync } = require("../Code/StreamComparison");
+const { RunAndCompare, RunCode } = require("../Code/codeEvaluation");
 
 
 async function ValidateInputs(ws, req, next) {
@@ -64,6 +65,7 @@ async function CheckQuestionInAssignment(ws, req, next) {
     }
 }
 
+//this function fetches the question from the QuestionBank
 async function findQuestion(ws, req, next) {
 
     ws.send(JSON.stringify({
@@ -100,6 +102,7 @@ async function findQuestion(ws, req, next) {
     }
 }
 
+//this function checks if the question has any testcases
 async function ValidateTestCases(ws, req, next) {
     ws.send(JSON.stringify({
         success: true,
@@ -120,127 +123,6 @@ async function ValidateTestCases(ws, req, next) {
     }
 }
 
-async function RunCode(ws, Code, TestCase, Type, RunOn) {
-
-    ws.send(JSON.stringify({
-        success: true,
-        message: `Running ${Type} Code [${RunOn}]`,
-        type: `logs`
-    }));
-
-    try {
-        let CodeResponse = await RunCpp(Code, TestCase, 5000);
-        return CodeResponse;
-    } catch (err) {
-        ws.send(JSON.stringify({
-            success: false,
-            message: `Internal Server Error while running ${Type} Code [${RunOn}] : ${err.message}`,
-            type: `logs`
-        }), () => {
-            ws.close(1011);  //1011 is the status code for Internal Error
-        });
-        return;
-    }
-}
-
-//this function takes the response of RunCode function and compares the output files
-async function CompareOutputs(ws, solutionCodeResponse, studentCodeResponse, RunOn) {
-    ws.send(JSON.stringify({
-        success: true,
-        message: `Comparing Output Streams of ${RunOn}`,
-        type: `logs`
-    }));
-
-    try {
-        let Comparison = await compareTextFilesLineByLine(solutionCodeResponse.outputFilePath, studentCodeResponse.outputFilePath); //this function automatically deletes the files after comparison
-        if (Comparison.success === false) {
-            ws.send(JSON.stringify({
-                success: false,
-                message: `Unable to compare outputs of ${RunOn}: ${Comparison.error}`,
-                type: `logs`
-            }), () => {
-                ws.close(1011);  //1011 is the status code for Internal Error
-            });
-            return;
-        }
-        else {
-            return Comparison;
-        }
-    }
-    catch (e) {
-        console.log(e)
-        ws.send(JSON.stringify({
-            success: false,
-            message: `Internal Server Error while comparing outputs of ${RunOn}: ${e.error}`,
-            type: `logs`
-        }), () => {
-            ws.close(1011);  //1011 is the status code for Internal Error
-        });
-        return;
-    }
-}
-
-//This function runs the solution code and student code for each testcase and compares the outputs
-//RunOn is the name of the testcase (used as a label in the logs)
-async function RunAndCompare(ws, SolutionCode, StudentCode, TestCase, RunOn) {
-
-    let solutionCodeResponse = await RunCode(ws, SolutionCode, TestCase, "Solution", RunOn);
-    if (solutionCodeResponse === undefined) return;
-    let studentCodeResponse = await RunCode(ws, StudentCode, TestCase, "Student", RunOn);
-    if (studentCodeResponse === undefined) return;
-
-    //if Solution Code fails to run
-    //output file will automatically be deleted by RunCpp funciton if the code fails
-    if (solutionCodeResponse.success === false) {
-        solutionCodeResponse.message += ` [Solution Code, ${RunOn}]`
-        solutionCodeResponse.type = `logs`
-        ws.send(JSON.stringify(solutionCodeResponse), () => {
-            ws.close(1011);  //1011 is the status code for Internal Error
-        });
-        return;
-    }
-
-    //if Student Code fails to run
-    //output file will automatically be deleted by RunCpp funciton if the code fails
-    if (studentCodeResponse.success === false) {
-        ws.send(JSON.stringify({
-            success: true,
-            message: studentCodeResponse.message,
-            verdict: studentCodeResponse.verdict,
-            type: `Verdict`,
-            testcase: RunOn,
-            score: 0
-        }));
-        return false; //continue to next testcase as this testcase failed
-    }
-
-    //if both run successfully, then compare the outputs
-    let Comparison = await CompareOutputs(ws, solutionCodeResponse, studentCodeResponse, RunOn); //this function automatically deletes the files after comparison
-    if (Comparison === undefined) return; //this means there was an error while comparing the outputs
-
-    if (Comparison.different === true) {
-        ws.send(JSON.stringify({
-            success: true,
-            message: `Output Mismatch in ${RunOn}`,
-            verdict: "Wrong Answer",
-            type: `Verdict`,
-            testcase: RunOn,
-            score: 0
-        }));
-        return false; //continue to next testcase as this testcase failed
-    }
-    else {
-        ws.send(JSON.stringify({
-            success: true,
-            message: `${RunOn} Passed`,
-            verdict: "Accepted",
-            type: `Verdict`,
-            testcase: RunOn,
-            score: 1
-        }));
-        return true; //continue to next testcase as this testcase passed
-    }
-}
 
 async function RunOutputComparison(ws, req) {
 
@@ -345,7 +227,7 @@ async function RunOutputComparison(ws, req) {
                         ScoreObtained += 1;
                     }
                 }
-                
+
                 if (PassedAllTestCases) {
                     ws.send(JSON.stringify({
                         success: true,

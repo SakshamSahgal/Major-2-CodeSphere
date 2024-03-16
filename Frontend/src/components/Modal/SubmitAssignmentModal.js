@@ -3,15 +3,20 @@ import { Button, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 
-function SubmitEvaluationModal() {
+function SubmitAssignmentModal({ _id, solutionCodes }) {
     const [showModal, setShowModal] = useState(false);
     const handleCloseModal = () => setShowModal(false);
-    const handleShowModal = () => setShowModal(true);
+    const handleShowModal = () => {
+        handleSubmitAssignment();
+        setShowModal(true);
+    }
     const socketRef = useRef(null);
 
-    const handleSubmitEvaluation = async () => {
+    const handleSubmitAssignment = async () => {
+
         try {
-            const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_WS_LOCALHOST}/students/assignments/evaluateAssignment/:${123}`); //Create a new WebSocket connection
+            console.log(_id)
+            const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_WS_LOCALHOST}/students/assignments/evaluateAssignment/${_id}`); //Create a new WebSocket connection
             socketRef.current = socket;
 
             socket.onopen = () => {
@@ -20,11 +25,11 @@ function SubmitEvaluationModal() {
 
             // Event listener for incoming messages
             socket.onmessage = (event) => {
-                if (event.data === "start") {
+                if (event.data === "start") {  //if the server sends "start" message, send the data to the server
                     try {
-                        // socket.send(JSON.stringify({
-                        //     CodeToRun: CodeToRun
-                        // }));
+                        socket.send(JSON.stringify({
+                            solutionCodes: solutionCodes
+                        }));
                     }
                     catch (error) {
                         toast.error(error.message);
@@ -45,6 +50,11 @@ function SubmitEvaluationModal() {
                     }
                 }
             }
+
+            socket.onclose = () => {
+                console.log('WebSocket connection closed');
+            };
+
         } catch (error) {
             toast.error(error.message);
         }
@@ -73,4 +83,4 @@ function SubmitEvaluationModal() {
     );
 }
 
-export default SubmitEvaluationModal;
+export default SubmitAssignmentModal;

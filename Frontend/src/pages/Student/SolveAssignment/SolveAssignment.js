@@ -5,14 +5,15 @@ import { toast } from 'react-toastify';
 
 import LoadingSpinner from '../../../components/Spinners/Spinners';
 import SolveQuestion from './SolveQuestion';
-import SubmitEvaluationNavbar from '../../../components/Navbar/SubmitEvaluationNavbar';
+import SubmitAssignmentNavbar from '../../../components/Navbar/SubmitAssignmentNavbar';
 import AssignmentDetailsAccordion from '../../../components/Accordion/AssignmentDetailsAccordion';
 
 function SolveAssignment() {
 
     const { _id } = useParams();
     const [AssignmentDetails, setAssignmentDetails] = useState(null);
-
+    const [solutionCodes, setSolutionCodes] = useState([]);
+    console.log(solutionCodes);
     useEffect(() => {
         const FetchAssignment = async () => {
             try {
@@ -38,15 +39,14 @@ function SolveAssignment() {
 
     return (
         <>
-            <SubmitEvaluationNavbar  />
+            <SubmitAssignmentNavbar _id={_id} solutionCodes={solutionCodes}/>
             <div className="container">
-
                 <div className="row">
                     <div className="col">
                         <AssignmentDetailsAccordion PostedBy={AssignmentDetails?.PostedBy.Name} PostedOn={AssignmentDetails?.PostedOn} DueTimestamp={AssignmentDetails?.DueTimestamp} Batches={AssignmentDetails?.Batches} Year={AssignmentDetails?.Year} NumberOfQuestions={AssignmentDetails?.Questions.length} />
                     </div>
                 </div>
-                <SolveQuestion Questions={AssignmentDetails?.Questions} AssignmentId={AssignmentDetails?._id} />
+                <SolveQuestion Questions={AssignmentDetails?.Questions} AssignmentId={AssignmentDetails?._id} solutionCodes={solutionCodes} setSolutionCodes={setSolutionCodes} />
             </div>
         </>
     );

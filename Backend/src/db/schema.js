@@ -112,7 +112,8 @@ const SubmitAssignmentsSchema = new mongoose.Schema({
     Submission: [{
         SubmittedCode: { type: String, required: true },
         QuestionId: { type: mongoose.Schema.Types.ObjectId, required: true },
-        Score: { type: Number, default: 0 }, // Default score set to 0
+        ScoreObtained: { type: Number, default: 0 }, // Default score set to 0
+        TotalScore: { type: Number, required: true },
     }],
     SubmittedOn: { type: Date, required: true },
 });

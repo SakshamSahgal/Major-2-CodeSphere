@@ -11,7 +11,7 @@ const { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, 
 const { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getOtherQuestionsRoute, createAssignmentRoute, deleteAssignmentRoute } = require("./Professor/Assignments.js");
 const { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, FetchQuestionDetailsRoute } = require("./Professor/Question.js");
 const { ValidateInputs, CheckQuestionInAssignment, findQuestion, ValidateTestCases, RunOutputComparison } = require("./Student/Submission.js");
-const { ValidateAssignmentId, FindAssignment } = require("./Student/Assignments.js");
+const { ValidateAssignmentId, FindAssignment, ValidateQuestionsInAssignment, CheckIfAllowedToSubmit, EvaluateAssignment } = require("./Student/Assignments.js");
 const path = require("path");
 
 const PORT = process.env.PORT || 8080;
@@ -35,7 +35,7 @@ app.get("/students/assignments/submitted", ValidateToken, isStudent, getStudentS
 app.get("/students/assignments/missed", ValidateToken, isStudent, getStudentMissedAssignmentsRoute);        //called when the student clicks on the missed assignments tab
 app.get("/students/getPendingAssignment/:_id", ValidateToken, isStudent, getThisPendingAssignment);         //Fetches the details of a pending assignment with the given id, called when the student clicks on submit, on a pending assignment
 app.ws(`/students/assignments/runCode/:assignmentId/:questionId`, ValidateWsToken, isStudentWs, ValidateInputs, CheckQuestionInAssignment, findQuestion, ValidateTestCases, RunOutputComparison);  //called when the student clicks on the run button of the solution code while solving an assignment
-app.ws("/students/assignments/evaluateAssignment/:assignmentId", ValidateWsToken, isStudentWs, ValidateAssignmentId, FindAssignment);  //called when the student clicks on the submit button of an assignment
+app.ws("/students/assignments/evaluateAssignment/:assignmentId", ValidateWsToken, isStudentWs, ValidateAssignmentId, FindAssignment, ValidateQuestionsInAssignment, CheckIfAllowedToSubmit, EvaluateAssignment);  //called when the student clicks on the submit button of an assignment
 
 app.get("/getBatches", ValidateToken, isProfessor, getBatchesRoute);                                        //Sends the Batches to display in Create Assignment Modal, to be used in checkboxes for selecting batches
 app.get("/professors/myAssignments", ValidateToken, isProfessor, getProfessorAssignmentsRoute);             //called when the professor clicks on the assignments tab, returns the list of assignments created by the professor

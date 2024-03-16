@@ -7,9 +7,9 @@ import ProfileModal from '../Modal/profileModal';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
-import SubmitEvaluation from '../Modal/SubmitEvaluation';
+import SubmitAssignmentModal from '../Modal/SubmitAssignmentModal';
 
-function SubmitEvaluationNavbar() {
+function SubmitAssignmentNavbar({ _id, solutionCodes }) {
     const [showModal, setShowModal] = useState(false);
     const [profileData, setProfileData] = useState({});
     const [show, setShow] = useState(false);
@@ -41,7 +41,7 @@ function SubmitEvaluationNavbar() {
                             <FontAwesomeIcon icon={faCode} style={{ color: 'white' }} />
                         </Navbar.Brand>
                     }
-                    <SubmitEvaluation />
+                    <SubmitAssignmentModal _id={_id} solutionCodes={solutionCodes} />
                     <FontAwesomeIcon icon={faUser} onClick={handlesShowProfileModal} style={{ cursor: 'pointer', color: 'white', border: '1px solid white', padding: '5px', borderRadius: '50%' }} />
                 </Container>
             </Navbar>
@@ -50,4 +50,4 @@ function SubmitEvaluationNavbar() {
     );
 }
 
-export default SubmitEvaluationNavbar;
+export default SubmitAssignmentNavbar;

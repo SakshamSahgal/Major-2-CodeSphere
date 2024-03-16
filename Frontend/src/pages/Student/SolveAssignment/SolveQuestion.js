@@ -19,13 +19,11 @@ int main() {
 }`;
 
 
-function SolveQuestion({ Questions, AssignmentId }) {
+function SolveQuestion({ Questions, AssignmentId, solutionCodes, setSolutionCodes }) {
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(null);
-    const [solutionCodes, setSolutionCodes] = useState([]);
-
-
+    
     const handleNextQuestion = () => {
         if (Questions && currentQuestionIndex < Questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -85,7 +83,7 @@ function SolveQuestion({ Questions, AssignmentId }) {
             </div>
             <div className="row my-3">
                 <div className="col">
-                    <DryRunModal CodeToRun={solutionCodes[currentQuestionIndex]} AssignmentId={AssignmentId} QuestionId={currentQuestion?._id}/>
+                    <DryRunModal CodeToRun={solutionCodes[currentQuestionIndex]} AssignmentId={AssignmentId} QuestionId={currentQuestion?._id} />
                 </div>
 
             </div>

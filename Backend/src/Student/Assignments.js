@@ -2,7 +2,8 @@ const { readDB } = require("../db/mongoOperations");
 const { assignmentSchema } = require("../db/schema");
 const { GetProfessor } = require('../other/Common');
 const { GetPublicQuestionDetails } = require("./Question");
-
+const { EvaluateQuestion } = require("../Code/codeEvaluation");
+const e = require("express");
 // This function is used to get the Pending assignments for the student, which are not submitted yet and are due
 function getStudentPendingAssignmentsRoute(req, res) {
 
@@ -176,17 +177,18 @@ function ValidateAssignmentId(ws, req, next) {
 }
 
 // This function is used to find the assignment with the given assignmentId from the database
-async function FindAssignment() {
+async function FindAssignment(ws, req, next) {
 
     ws.send(JSON.stringify({
         success: true,
-        message: `Fetching Assignment`,
+        message: `Fetching Assignment with id ${req.params.assignmentId}`,
         type: `logs`
     }));
 
     let Querry = {
         _id: req.params.assignmentId
     }
+
     try {
         let data = await readDB("Assignments", req.decoded.Institution, Querry, assignmentSchema);
         if (data.length > 0) {
@@ -213,4 +215,142 @@ async function FindAssignment() {
     }
 }
 
-module.exports = { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute, getThisPendingAssignment, ValidateAssignmentId, FindAssignment };
+//This function is used to check if the questions are present in the assignment
+async function ValidateQuestionsInAssignment(ws, req, next) {
+
+    ws.send(JSON.stringify({
+        success: true,
+        message: `Checking if questions are present in the assignment`,
+        type: `logs`
+    }));
+
+    if (req.Assignment.Questions.length === 0) {
+        ws.send(JSON.stringify({
+            success: false,
+            message: `No questions present in the assignment`,
+            type: `logs`
+        }), () => {
+            ws.close(1008);  //1008 is the status code for Policy Violation
+        });
+        return;
+    }
+    else {
+        let Questions = []
+        for (let i = 0; i < req.Assignment.Questions.length; i++) {
+            try {
+                let thisQuestion = await readDB("QuestionBank", req.decoded.Institution, { _id: req.Assignment.Questions[i] });
+                if (thisQuestion.length === 0) {
+                    Questions.push({});
+                } else {
+                    Questions.push(thisQuestion[0]);
+                }
+            } catch (err) {
+                console.log(err);
+                Questions.push({});
+            }
+        }
+        req.Assignment.Questions = Questions;
+        next();
+    }
+}
+//This function is used to check if the student is allowed to submit the assignment
+async function CheckIfAllowedToSubmit(ws, req, next) {
+    ws.send(JSON.stringify({
+        success: true,
+        message: `Checking if allowed to submit assignment`,
+        type: `logs`
+    }));
+    console.log(req.Assignment)
+    if (req.Assignment.SubmittedBy.includes(req.decoded._id)) {
+        ws.send(JSON.stringify({
+            success: false,
+            message: `You have already submitted this assignment`,
+            type: `logs`
+        }), () => {
+            ws.close(1008);  //1008 is the status code for Policy Violation
+        });
+        return;
+    }
+    if (req.Assignment.DueTimestamp < new Date()) {
+        ws.send(JSON.stringify({
+            success: false,
+            message: `Assignment is already over`,
+            type: `logs`
+        }), () => {
+            ws.close(1008);  //1008 is the status code for Policy Violation
+        });
+        return;
+    }
+    if (!(req.Assignment.Batches.includes(req.decoded.DB.Batch) && req.Assignment.Year == req.decoded.DB.Year)) {
+        ws.send(JSON.stringify({
+            success: false,
+            message: `This Asignment is not assigned to you.`,
+            type: `logs`
+        }), () => {
+            ws.close(1008);  //1008 is the status code for Policy Violation
+        });
+        return;
+    }
+    next();
+}
+
+
+async function EvaluateAssignment(ws, req) {
+
+    ws.send("start");
+
+    ws.on("message", async (msg) => {
+        try {
+            let data = JSON.parse(msg);
+            console.log(data);
+            //data.solutionCodes is an array of code written by the student for each question
+            if (data.solutionCodes.length === req.Assignment.Questions.length) {
+                console.log(req.Assignment);
+                let result = [];
+                for (let i = 0; i < req.Assignment.Questions.length; i++) {
+                    console.log(req.Assignment.Questions[i])
+                    let result = await EvaluateQuestion(ws, req.Assignment.Questions[i], data.solutionCodes[i]);
+                    if (result === undefined) {
+                        result.push({
+                            SubmittedCode: data.solutionCodes[i],
+                            QuestionId: req.Assignment.Questions[i]._id,
+                            ScoreObtained: 0,
+                            TotalScore: req.Assignment.Questions[i].TestCases.length + (req.Assignment.Questions[i].RandomTestChecked ? 1 : 0),
+                        })
+                    }
+                    else {
+                        result.push({
+                            SubmittedCode: data.solutionCodes[i],
+                            QuestionId: req.Assignment.Questions[i]._id,
+                            ScoreObtained: result.ScoreObtained,
+                            TotalScore: result.TotalScore,
+                        })
+                    }
+                }
+            }
+            else {
+                ws.send(JSON.stringify({
+                    success: false,
+                    message: `Question count mismatch, expected ${req.Assignment.Questions.length}, got ${data.solutionCodes.length}`,
+                    type: `logs`
+                }), () => {
+                    ws.close(1008);  //1008 is the status code for Policy Violation
+                });
+            }
+        } catch (err) {
+            console.log(err);
+            ws.send(JSON.stringify({
+                success: false,
+                message: `Failed to parse message, err : ${err.message}`,
+                type: `logs`
+            }), () => {
+                ws.close(1008);  //1008 is the status code for Policy Violation
+            });
+        }
+    });
+
+}
+
+
+
+module.exports = { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute, getThisPendingAssignment, ValidateAssignmentId, FindAssignment, CheckIfAllowedToSubmit, ValidateQuestionsInAssignment, EvaluateAssignment };
