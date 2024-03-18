@@ -17,6 +17,8 @@ RUN npm install
 # Copy the rest of the Backend folder content (except dockerignore contents) to the working directory
 COPY Backend .
 
+RUN chmod +x src/Code/script.sh
+
 # Expose the port your app runs on
 EXPOSE 8080
 

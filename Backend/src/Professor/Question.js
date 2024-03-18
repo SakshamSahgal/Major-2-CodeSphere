@@ -1,5 +1,5 @@
 const path = require('path');
-const { RunCpp, DeleteAfterExecution } = require('../Code/Run');
+const { RunCpp, DeleteAfterExecution } = require("../Code/Run")
 const fs = require('fs');
 const { writeDB, readDB } = require('../db/mongoOperations');
 const { QuestionSchema } = require('../db/schema');
@@ -20,7 +20,7 @@ function ValidateSolutionCode(ws, req) {
 
                 ws.send(JSON.stringify({ success: true, message: "Running the code...", verdict: "Processing.." }));
 
-                let response = await RunCpp(data.SolutionCodeToTest, data.validationTestCaseValue, 5000)
+                let response = await RunCpp(data.SolutionCodeToTest, data.validationTestCaseValue, 5)
 
                 //if the code is not executed successfully, send the error message as response and close the connection
                 if (!response.success) {
@@ -112,7 +112,7 @@ function ValidateRandomTestCaseCode(ws, req) {
 
                 ws.send(JSON.stringify({ success: true, message: "Running the code...", verdict: "Processing.." }));
 
-                let response = await RunCpp(data.RandomTestCaseCode, "", 5000)
+                let response = await RunCpp(data.RandomTestCaseCode, "", 5)
                 
                 //if the code is not executed successfully, send the error message as response and close the connection
                 if (!response.success) {

@@ -1,188 +1,139 @@
 const fs = require('fs');
-const { spawn } = require("child_process");
 const path = require('path');
+const { spawn } = require('child_process');
+const { execFile } = require('child_process');
 
-
-function DeleteAfterExecution(...filePaths) {
+function DeleteAfterExecution(JobId, ...filePaths) {
     filePaths.forEach(filePath => {
-        if (fs.existsSync(filePath)) {
-            fs.unlink(filePath, (err) => {
-                if (err) {
-                    console.log(`Error occured while deleting the ${filePath} file, err : ${err}`)
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                if (err.code === 'ENOENT') {
+                    console.log(`File ${filePath} does not exist`);
+                    WriteLogsToFile(`File ${filePath} does not exist`, JobId);
+                } else {
+                    console.log(`Error occurred while deleting the ${filePath} file, err : ${err}`);
+                    WriteLogsToFile(`Error occurred while deleting the ${filePath} file, err : ${err}`, JobId);
                 }
-                else {
-                    console.log(`Successfully deleted the ${filePath} file`)
-                }
-            });
+            } else {
+                console.log(`Successfully deleted the ${filePath} file`);
+                WriteLogsToFile(`Successfully deleted the ${filePath} file`, JobId);
+            }
+        });
+    });
+}
+
+async function WriteLogsToFile(logs, JobId) {
+    logs += "\n";
+    let logFilePath = path.join(__dirname, "..", "..", "public", "RunLogs", `${JobId}Logs.txt`)
+    //append the logs to the logs file
+    fs.appendFile(logFilePath, logs, (err) => {
+        if (err) {
+            console.log(`error while appending logs to the logs file, err : ${err}`);
         }
     });
 }
 
-
-//this route will be used to run the c++ code
-//it first takes the code and input in body of the request
-//Then it writes the code to a .cpp file
-//Then it compiles and runs the .cpp file
-//Then it passes the input to the stdin of the running script
-//Then it writes the output to a .txt file
+async function writeCppToFile(code, scriptPath, JobId) {
+    return new Promise((resolve, reject) => {
+        fs.writeFile(scriptPath, code, (err) => {
+            if (err) {
+                console.log(`Error occurred while writing the ${filename} file, err : ${err}`);
+                WriteLogsToFile(`Error occurred while writing the ${filename} file, err : ${err}`, JobId);
+                reject(err);
+            } else {
+                console.log(`Successfully written the ${scriptPath} file`);
+                WriteLogsToFile(`Successfully written the ${scriptPath} file`, JobId);
+                resolve();
+            }
+        });
+    });
+}
 
 //Possible Responses - 
 //{ success: false, message: `script took too long to execute.`, verdict: "Time Limit Exceeded" }
 //{ success: false, message: `Error occurred while writing the ${scriptPath} file`, verdict: "Runtime Error" }
 //{ success: false, message: `Error occurred while appending data to the ${outputFilePath} file`, verdict: "Runtime Error" }
 //{ success: false, message: `Error occured while running the script ${executablePath}`, verdict: "Compilation Error" }
-//{ success: false, message: `File size exceeds ${(process.env.MemoryLimitForCodeInBytes / (1024 * 1024))} MB`, verdict: "Memory Limit Exceeded" }
+//{ success: false, message: `Output File size exceeds ${(process.env.MemoryLimitForCodeInBytes / (1024 * 1024))} MB`, verdict: "Memory Limit Exceeded" }
 //{ success: true, outputFilePath: outputFilePath, verdict: "Run Successful" }
 
-async function RunCpp(code, input, TimeLimit = 5000) {
-    return new Promise((resolve, reject) => {
-        let Response_sent = false;
+async function RunCpp(code, input, TimeLimit = 5) {
+    return new Promise(async (resolve, reject) => {
 
         let scriptName = Date.now();
+        let JobId = scriptName;
         let scriptPath = path.join(__dirname, `${scriptName}.cpp`)
-        let executablePath = path.join(__dirname, `${scriptName}.exe`)
+        let executablePath = path.join(__dirname, `${scriptName}.out`)
         let outputFilePath = path.join(__dirname, `${scriptName}.txt`)
-        let scriptProcess = null;
-        let executionTimeout = TimeLimit; //Timeout for the script execution to prevent infinite loops and detect TLEs
-        let ProcessKillingStarted = false;
 
-        //this will be used to kill the process if it takes too long to execute and it will run after the executionTimeout time
-        const timeoutId = setTimeout(() => {
 
-            if (scriptProcess) {
-                scriptProcess.kill();
-                if (!ProcessKillingStarted)
-                    console.log('Killling the process because of timeout...');
-                ProcessKillingStarted = true;
-            }
-            else
-                console.log("Process Killed Successfully...")
-
-            if (!Response_sent) {
-                Response_sent = true;
-                DeleteAfterExecution(scriptPath, executablePath, outputFilePath);
-                resolve({ success: false, message: `script took too long to execute.`, verdict: "Time Limit Exceeded" });
-            }
-        }, executionTimeout);
-
-        //write the code to a .cpp file synchronously
+        //write the code to a .cpp file asychronously
         try {
-            fs.writeFileSync(scriptPath, code);
-            console.log(`successfully written the code to ${scriptPath}`);
-        } catch (err) {
-            console.log(`error while writing the code to ${scriptPath}, err : ${err}`);
-            if (!Response_sent) {
-                Response_sent = true;
-                clearTimeout(timeoutId);
-                DeleteAfterExecution(scriptPath, executablePath, outputFilePath);
-                resolve({ success: false, message: `Error occurred while writing the ${scriptPath} file`, verdict: "Runtime Error" });
-            }
-        }
-
-        //compile and run the .cpp file
-        const compileAndRunCommand = `g++ -o ${executablePath} ${scriptPath} && ${executablePath}`;
-        scriptProcess = spawn('sh', ['-c', compileAndRunCommand], { stdio: ['pipe', 'pipe', 'pipe'] }); // piping the stdin, stdout and stderr of the child process
-
-        //writing the input to the stdin of the child process
-        scriptProcess.stdin.write(input); // Write input to stdin
-        scriptProcess.stdin.end();
-
-        let chunkCounter = 0; // Initialize chunk counter
-
-        //creating the output file
-        fs.writeFileSync(outputFilePath, ''); // Create the output file
-
-        scriptProcess.stdout.on('data', (data) => {
-
-            if (!Response_sent) {
-
-                //writing the first chunk of the output to the output file, so further chunks can be appended
-                if (chunkCounter === 0) {
-                    try {
-                        fs.appendFileSync(outputFilePath, data);
-                        console.log(`appending chunk ${++chunkCounter} stdout to the output to ${outputFilePath}`);
-                    } catch (err) {
-                        console.log(`error while appending stdout to the output to ${outputFilePath}, err : ${err}`);
-                        Response_sent = true; // Set Response_sent to true to indicate response is sent
-                        clearTimeout(timeoutId); // Clear the TLE timeout
-                        DeleteAfterExecution(scriptPath, executablePath, outputFilePath);
-                        return { success: false, message: `Error occurred while appending data to the ${outputFilePath} file`, verdict: "Runtime Error" };
+            await writeCppToFile(code, scriptPath, JobId);
+            try {
+                scriptArguments = [scriptPath, executablePath, outputFilePath, TimeLimit, process.env.MemoryLimitForOutputFileInBytes, input];
+                const child = execFile('/bin/bash', [path.join(__dirname, "script.sh"), ...scriptArguments], (error, stdout, stderr) => {
+                    if (error) {
+                        console.log(`Error occurred while running the script ${executablePath}, error : ${error}`);
+                        console.log(`Exit code: ${error.code}`); // Log the exit code
+                        if (error.code === 1) {
+                            resolve({
+                                success: false,
+                                message: `script took too long to execute.`,
+                                verdict: "Time Limit Exceeded"
+                            });
+                        }
+                        else if (error.code === 2) {
+                            resolve({
+                                success: false,
+                                message: `Output File size exceeds ${(process.env.MemoryLimitForOutputFileInBytes / (1024 * 1024))} MB`,
+                                verdict: "Memory Limit Exceeded"
+                            });
+                        }
+                        else if (error.code === 3) {
+                            resolve({
+                                success: false,
+                                message: `Error occurred while Compiling the code`,
+                                verdict: "Compilation Error"
+                            });
+                        }
+                        else{
+                            resolve({
+                                success: false,
+                                message: `Error occured while running the script ${executablePath}`,
+                                verdict: "Runtime Error"
+                            });
+                        }
+                        DeleteAfterExecution(JobId, scriptPath, executablePath);
                     }
-                } else {
-                    fs.stat(outputFilePath, (err, stats) => {
-                        if (err) {
-                            console.log(`Error while getting ${outputFilePath} file stats: ${err}`);
-                        }
-                        else {
-                            const fileSizeInBytes = stats.size;
-                            const fileSizeInMB = fileSizeInBytes / (1024 * 1024); // Convert bytes to MB
-                            console.log(`File Size in MB : ${fileSizeInMB}`);
-                            if (fileSizeInBytes >= process.env.MemoryLimitForCodeInBytes) {
-                                console.log(`File size exceeds ${(process.env.MemoryLimitForCodeInBytes / (1024 * 1024))} MB. Stopping further writing.`);
-                                Response_sent = true; // Set Response_sent to true to indicate response is sent
-                                clearTimeout(timeoutId); // Clear the TLE timeout
-                                DeleteAfterExecution(scriptPath, executablePath, outputFilePath);
-                                resolve({ success: false, message: `File size exceeds ${(process.env.MemoryLimitForCodeInBytes / (1024 * 1024))} MB`, verdict: "Memory Limit Exceeded" });
-                            }
-                            else {
-                                // Write the output to a text file
-                                fs.appendFile(outputFilePath, data, (err) => {
-                                    if (err) {
-                                        console.log(`error while appending stdout to the output to ${outputFilePath}, err : ${err}`);
-                                        Response_sent = true; // Set Response_sent to true to indicate response is sent
-                                        clearTimeout(timeoutId); // Clear the TLE timeout
-                                        DeleteAfterExecution(scriptPath, executablePath, outputFilePath);
-                                        resolve({ success: false, message: `Error occurred while appending data to the ${outputFilePath} file`, verdict: "Runtime Error" });
-                                    } else {
-                                        console.log(`appending chunk ${++chunkCounter} stdout to the output to ${outputFilePath}`);
-                                    }
-                                });
-                            }
-                        }
-                    })
-                }
-
-
-
-            } else {
-                // If response is already sent, stop further writing
-                //kill the process if not already killed
-                if (scriptProcess) {
-                    scriptProcess.kill();
-                    if (!ProcessKillingStarted)
-                        console.log('Killing the process while writing to the output file, because response is already sent.');
-                    ProcessKillingStarted = true;
-                }
-                else
-                    console.log("Process Killed Successfully, because the response is already sent...")
-
-                console.log('Response already sent. Stopping further writing.');
-                scriptProcess.stdout.removeAllListeners('data'); // Stop listening for further data
-                DeleteAfterExecution(scriptPath, executablePath, outputFilePath);
+                    else {
+                        resolve({
+                            success: true,
+                            outputFilePath: outputFilePath,
+                            verdict: "Run Successful"
+                        });
+                        DeleteAfterExecution(JobId, scriptPath, executablePath);
+                    }
+                });
             }
-        });
-
-        //if any error occurs while running the script, send the error message as response
-        scriptProcess.stderr.on('data', (data) => {
-            console.log(`error while executing script, stderr: ${data}`);
-            if (!Response_sent) {
-                Response_sent = true;
-                clearTimeout(timeoutId);
-                DeleteAfterExecution(scriptPath, executablePath, outputFilePath);
-                resolve({ success: false, message: `stderr: ${data}`, verdict: "Compilation Error" });
+            catch (err) {
+                reject({
+                    success: false,
+                    message: `Error occurred, err : ${err}`,
+                    verdict: "Compilation Error"
+                });
+                DeleteAfterExecution(JobId, scriptPath, executablePath);
+                return;
             }
-        });
-
-        //when the script is finished running, read the output file and send it as response
-        scriptProcess.on('close', (code) => {
-            console.log(`child process exited with code ${code}`);
-            if (!Response_sent) {
-                Response_sent = true;
-                clearTimeout(timeoutId);
-                DeleteAfterExecution(scriptPath, executablePath);
-                resolve({ success: true, outputFilePath: outputFilePath, verdict: "Run Successful" });
-            }
-        });
+        } catch (err) {
+            reject({
+                success: false,
+                message: `Error occurred while writing the ${scriptPath} file`,
+                verdict: "Compilation Error"
+            });
+            DeleteAfterExecution(JobId, executablePath, scriptPath);
+            return;
+        }
     });
 }
 

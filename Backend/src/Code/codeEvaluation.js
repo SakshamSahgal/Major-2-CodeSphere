@@ -14,7 +14,10 @@ async function RunCode(ws, Code, TestCase, Type, RunOn) {
     }));
 
     try {
-        let CodeResponse = await RunCpp(Code, TestCase, 5000);
+        console.log(`Running code : ${Code}`);
+        console.log(`On TestCase : ${TestCase}`);
+        
+        let CodeResponse = await RunCpp(Code, TestCase, 5);
         return CodeResponse;
     } catch (err) {
         ws.send(JSON.stringify({
