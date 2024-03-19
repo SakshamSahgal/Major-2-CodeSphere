@@ -14,9 +14,6 @@ async function RunCode(ws, Code, TestCase, Type, RunOn) {
     }));
 
     try {
-        console.log(`Running code : ${Code}`);
-        console.log(`On TestCase : ${TestCase}`);
-        
         let CodeResponse = await RunCpp(Code, TestCase, 5);
         return CodeResponse;
     } catch (err) {
@@ -70,7 +67,7 @@ async function CompareOutputs(ws, solutionCodeResponse, studentCodeResponse, Run
 
 //This function runs the solution code and student code for each testcase and compares the outputs
 //RunOn is the name of the testcase (used as a label in the logs)
-//QuestionPlaceHolder is the name of the question (used as a label in the verdict logs)
+
 async function RunAndCompare(ws, SolutionCode, StudentCode, TestCase, RunOn, QuestionPlaceHolder = "") {
 
     let solutionCodeResponse = await RunCode(ws, SolutionCode, TestCase, "Solution", RunOn);
@@ -135,12 +132,13 @@ async function RunAndCompare(ws, SolutionCode, StudentCode, TestCase, RunOn, Que
 }
 
 //This function evaluates the question by running and comparing the solution code and student code for each testcase
-//It return undefined if there is an error, else it returns an object with TotalScore and ScoreObtained
-async function EvaluateQuestion(ws, Question, CodeToRun, QuestionPlaceHolder) {
+//It return undefined if there is an error, else it returns true
+//Question is an object containing SolutionCode, TestCases, RandomTestChecked, RandomTestCode, QuestionName
+async function EvaluateQuestion(ws, Question, CodeToRun) {
 
     ws.send(JSON.stringify({
         success: true,
-        message: `Evaluating Question ${Question._id}`,
+        message: `Evaluating Question ${Question.QuestionName}`,
         type: `logs`
     }));
 
@@ -152,12 +150,12 @@ async function EvaluateQuestion(ws, Question, CodeToRun, QuestionPlaceHolder) {
     //iterating over all testcases of this question
     for (let i = 0; i < Question.TestCases.length; i++) {
 
-        let RunResponse = await RunAndCompare(ws, Question.SolutionCode, CodeToRun, Question.TestCases[i].input, `Testcase ${i + 1}`, QuestionPlaceHolder);
+        let RunResponse = await RunAndCompare(ws, Question.SolutionCode, CodeToRun, Question.TestCases[i].input, `Testcase ${i + 1}`, Question.QuestionName);
         if (RunResponse === undefined) return;
-        if (RunResponse === false) {
+        if (RunResponse === false) {    //if this testcase failed
             TotalScore += 1;
             PassedAllTestCases = false;
-        } else {
+        } else {                        //if this testcase passed
             TotalScore += 1;
             ScoreObtained += 1;
         }
@@ -217,7 +215,7 @@ async function EvaluateQuestion(ws, Question, CodeToRun, QuestionPlaceHolder) {
             type: `logs`
         }));
 
-        RunResponse = await RunAndCompare(ws, Question.SolutionCode, CodeToRun, RandomInput, `Random Input`, QuestionPlaceHolder);
+        RunResponse = await RunAndCompare(ws, Question.SolutionCode, CodeToRun, RandomInput, `Random Input`, Question.QuestionName);
 
         DeleteAfterExecution(RandomTestCodeResponse.outputFilePath) //Delete the random Input after running and comparing
 
@@ -239,13 +237,9 @@ async function EvaluateQuestion(ws, Question, CodeToRun, QuestionPlaceHolder) {
             type: `Decision`,
             TotalScore: TotalScore,
             ScoreObtained: ScoreObtained,
-            Question: QuestionPlaceHolder
-        }), () => {
-            return {
-                TotalScore: TotalScore,
-                ScoreObtained: ScoreObtained
-            }; //all testcases passed
-        });
+            Question: Question.QuestionName
+        }));
+        return true;
     } else {
         ws.send(JSON.stringify({
             success: true,
@@ -254,13 +248,9 @@ async function EvaluateQuestion(ws, Question, CodeToRun, QuestionPlaceHolder) {
             TotalScore: TotalScore,
             ScoreObtained: ScoreObtained,
             type: `Decision`,
-            Question: QuestionPlaceHolder
-        }), () => {
-            return {
-                TotalScore: TotalScore,
-                ScoreObtained: ScoreObtained
-            }; //some testcases failed
-        });
+            Question: Question.QuestionName
+        }));
+        return true;
     }
 }
 

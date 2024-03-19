@@ -307,7 +307,7 @@ async function EvaluateAssignment(ws, req) {
                 let results = [];
                 //iterate through each question and evaluate the student's code for each question
                 for (let i = 0; i < req.Assignment.Questions.length; i++) {
-                    let result = await EvaluateQuestion(ws, req.Assignment.Questions[i], data.solutionCodes[i], data.QuestionNames[i]);
+                    let result = await EvaluateQuestion(ws, req.Assignment.Questions[i], data.solutionCodes[i]);
                     if (result === undefined) {
                         results.push({
                             SubmittedCode: data.solutionCodes[i],

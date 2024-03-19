@@ -5,7 +5,7 @@ import LogsAccordion from '../Accordion/LogsAccordion';
 import { Spinner } from 'react-bootstrap';
 import GroupedResults from '../List/EvaluateAssignmentDisplay';
 
-function SubmitAssignmentModal({ _id, solutionCodes, QuestionNames }) {
+function SubmitAssignmentModal({ _id, UserCodes, QuestionNames }) {
     const [showModal, setShowModal] = useState(false);              //This state stores whether the modal is open or not
     const [logsMessage, setLogsMessage] = useState([]);             //this state stores the logs of the dry run
     const [CurMessage, setCurMessage] = useState("");               //this state stores the current message of the Evaluation of the assignment
@@ -34,58 +34,58 @@ function SubmitAssignmentModal({ _id, solutionCodes, QuestionNames }) {
 
     const handleSubmitAssignment = async () => {
 
-        try {
-            console.log(_id)
-            const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_WS_LOCALHOST}/students/assignments/evaluateAssignment/${_id}`); //Create a new WebSocket connection
-            socketRef.current = socket;
+        // try {
+        //     console.log(_id)
+        //     const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_WS_LOCALHOST}/students/assignments/evaluateAssignment/${_id}`); //Create a new WebSocket connection
+        //     socketRef.current = socket;
 
-            socket.onopen = () => {
-                console.log('WebSocket connection opened');
-            };
+        //     socket.onopen = () => {
+        //         console.log('WebSocket connection opened');
+        //     };
 
-            // Event listener for incoming messages
-            socket.onmessage = (event) => {
-                if (event.data === "start") {  //if the server sends "start" message, send the data to the server
-                    try {
-                        socket.send(JSON.stringify({
-                            solutionCodes: solutionCodes,
-                            QuestionNames: QuestionNames
-                        }));
-                    }
-                    catch (error) {
-                        toast.error(error.message);
-                        socket.close();
-                    }
-                } else {
-                    try {
-                        const response = JSON.parse(event.data);
-                        console.log(response);
-                        if (response.success === false) {
-                            socket.close();
-                        }
-                        if (response.type === "logs") {
-                            setLogsMessage((prev) => [...prev, response]); //Append the logs to the logsMessage state, to be displayed
-                            setCurMessage(response); //Set the current message to the message received from the server
-                        }
-                        if (response.type === "Verdict" || response.type === "Decision") {
-                            setverdictAndDecision((prev) => [...prev, response]); //Append the verdict to the verdict state, to be displayed
-                        }
-                    }
-                    catch (error) {
-                        toast.error(error.message);
-                        socket.close();
-                    }
-                }
-            }
+        //     // Event listener for incoming messages
+        //     socket.onmessage = (event) => {
+        //         if (event.data === "start") {  //if the server sends "start" message, send the data to the server
+        //             try {
+        //                 socket.send(JSON.stringify({
+        //                     solutionCodes: solutionCodes,
+        //                     QuestionNames: QuestionNames
+        //                 }));
+        //             }
+        //             catch (error) {
+        //                 toast.error(error.message);
+        //                 socket.close();
+        //             }
+        //         } else {
+        //             try {
+        //                 const response = JSON.parse(event.data);
+        //                 console.log(response);
+        //                 if (response.success === false) {
+        //                     socket.close();
+        //                 }
+        //                 if (response.type === "logs") {
+        //                     setLogsMessage((prev) => [...prev, response]); //Append the logs to the logsMessage state, to be displayed
+        //                     setCurMessage(response); //Set the current message to the message received from the server
+        //                 }
+        //                 if (response.type === "Verdict" || response.type === "Decision") {
+        //                     setverdictAndDecision((prev) => [...prev, response]); //Append the verdict to the verdict state, to be displayed
+        //                 }
+        //             }
+        //             catch (error) {
+        //                 toast.error(error.message);
+        //                 socket.close();
+        //             }
+        //         }
+        //     }
 
-            socket.onclose = () => {
-                console.log('WebSocket connection closed');
-                setIsLoading(false);
-            };
+        //     socket.onclose = () => {
+        //         console.log('WebSocket connection closed');
+        //         setIsLoading(false);
+        //     };
 
-        } catch (error) {
-            toast.error(error.message);
-        }
+        // } catch (error) {
+        //     toast.error(error.message);
+        // }
     }
 
     return (

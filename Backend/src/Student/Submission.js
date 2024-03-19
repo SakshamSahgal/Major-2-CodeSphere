@@ -1,8 +1,6 @@
 const { readDB } = require("../db/mongoOperations");
 const { assignmentSchema } = require("../db/schema");
-const { DeleteAfterExecution } = require("../Code/Run");
-const { readFileAsync } = require("../Code/StreamComparison");
-const { RunAndCompare, RunCode } = require("../Code/codeEvaluation");
+const { EvaluateQuestion } = require("../Code/codeEvaluation");
 
 
 async function ValidateInputs(ws, req, next) {
@@ -142,117 +140,14 @@ async function RunOutputComparison(ws, req) {
                 });
             }
             else {
-                //iterating over all testcases of this question
-                let PassedAllTestCases = true;
-                let TotalScore = 0;
-                let ScoreObtained = 0;
-
-                for (let i = 0; i < req.ThisQuestion.TestCases.length; i++) {
-                    
-                    let RunResponse = await RunAndCompare(ws, req.ThisQuestion.SolutionCode, data.CodeToRun, req.ThisQuestion.TestCases[i].input, `Testcase ${i + 1}`);
-                    if (RunResponse === undefined) return;
-                    if (RunResponse === false) {
-                        TotalScore += 1;
-                        PassedAllTestCases = false;
-                    } else {
-                        TotalScore += 1;
-                        ScoreObtained += 1;
-                    }
-                }
-
-                if (req.ThisQuestion.RandomTestChecked) {
-
-                    ws.send(JSON.stringify({
-                        success: true,
-                        message: `Running Random TestCode`,
-                        type: `logs`
-                    }))
-
-                    let RandomTestCodeResponse = await RunCode(ws, req.ThisQuestion.RandomTestCode, "", "Random TestCase Generator", "");
-
-                    if (RandomTestCodeResponse === undefined) return;
-
-                    if (RandomTestCodeResponse.success === false) {
-                        ws.send(JSON.stringify({
-                            success: false,
-                            message: RandomTestCodeResponse.message + ` Random TestCode failed to run`,
-                            verdict: RandomTestCodeResponse.verdict,
-                            type: `logs`
-                        }), () => {
-                            ws.close(1011);  //1011 is the status code for Internal Error
-                        });
-                        return;
-                    }
-
-                    ws.send(JSON.stringify({
-                        success: true,
-                        message: `Random TestCode ran successfully`,
-                        type: `logs`
-                    }));
-
-                    let RandomInput;
-
-                    //use the output file of RandomTestCode as input for the student code asynchronously
-                    try {
-                        RandomInput = await readFileAsync(RandomTestCodeResponse.outputFilePath);
-                    }
-                    catch (e) {
-                        ws.send(JSON.stringify({
-                            success: false,
-                            message: `Internal Server Error while reading RandomTestCode output: ${e.message}`,
-                            type: `logs`
-                        }), () => {
-                            ws.close(1011);  //1011 is the status code for Internal Error
-                        });
-                        return;
-                    }
-
-
-                    ws.send(JSON.stringify({
-                        success: true,
-                        message: `Random Input Generated: ${RandomInput}`,
-                        type: `logs`
-                    }));
-
-                    RunResponse = await RunAndCompare(ws, req.ThisQuestion.SolutionCode, data.CodeToRun, RandomInput, `Random Input`);
-
-                    DeleteAfterExecution(RandomTestCodeResponse.outputFilePath) //Delete the random Input after running and comparing
-
-                    if (RunResponse === undefined) return;
-                    if (RunResponse === false) {
-                        TotalScore += 1;
-                        PassedAllTestCases = false;
-                    } else {
-                        TotalScore += 1;
-                        ScoreObtained += 1;
-                    }
-                }
-
-                if (PassedAllTestCases) {
-                    ws.send(JSON.stringify({
-                        success: true,
-                        message: `All Testcases Passed`,
-                        verdict: "Accepted",
-                        type: `Decision`,
-                        TotalScore: TotalScore,
-                        ScoreObtained: ScoreObtained
-                    }), () => {
-                        ws.close(1000);  //1000 is the status code for Normal Closure
-                    });
-                } else {
-                    ws.send(JSON.stringify({
-                        success: false,
-                        message: `Some Testcases Failed`,
-                        verdict: "Wrong Answer",
-                        TotalScore: TotalScore,
-                        ScoreObtained: ScoreObtained,
-                        type: `Decision`
-                    }), () => {
-                        ws.close(1008);  //1008 is the status code for Policy Violation
-                    });
+                //It return undefined if there is an error (and closes connection), else it returns true
+                const response = await EvaluateQuestion(ws, req.ThisQuestion, data.CodeToRun);
+                console.log(response)
+                if (response === undefined) return;
+                else {
+                    ws.close(1000); //1000 is the status code for Normal Closure
                 }
             }
-
         } catch (e) {
             ws.send(JSON.stringify({
                 success: false,

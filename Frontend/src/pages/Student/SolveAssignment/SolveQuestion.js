@@ -9,21 +9,31 @@ import QuestionDetailsAccordion from "../../../components/Accordion/QuestionDeta
 import DryRunModal from "../../../components/Modal/DryRunModal";
 //Questions Array is an array of objects.
 
-let DefaultSolutionCode =
-
-    `#include <iostream>
-using namespace std;
-int main() {
-    cout << "Hello, World!";
-    return 0;
-}`;
 
 
-function SolveQuestion({ Questions, AssignmentId, solutionCodes, setSolutionCodes }) {
+//Questions is an array of objects with each object having the following structure
+// const QuestionSchema = new mongoose.Schema({
+//     Constraints: { type: String, required: true, maxlength: 500 },
+//     InputFormat: { type: String, required: true, maxlength: 500 },
+//     OutputFormat: { type: String, required: true, maxlength: 500 },
+//     ProblemStatement: { type: String, required: true, maxlength: 1800 },
+//     QuestionName: { type: String, required: true, unique: true, maxlength: 50 },
+//     RandomTestCode: { type: String, required: false },
+//     SolutionCode: { type: String, required: true },
+//     TestCases: [{
+//         input: { type: String, required: true },
+//         sampleTestCase: { type: Boolean, required: true },
+//     }],
+//     RandomTestChecked: { type: Boolean, required: true },
+//     CreatedBy: { type: mongoose.Schema.Types.ObjectId, required: true },
+//     CreatedOn: { type: Date, required: true },
+// });
+
+function SolveQuestion({ Questions, AssignmentId, UserCodes, setUserCodes }) {
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(null);
-    
+
     const handleNextQuestion = () => {
         if (Questions && currentQuestionIndex < Questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -40,15 +50,14 @@ function SolveQuestion({ Questions, AssignmentId, solutionCodes, setSolutionCode
 
     const handleUpdateCode = (code) => {
         // Update the corresponding solution code in the state
-        const updatedSolutionCodes = [...solutionCodes];
-        updatedSolutionCodes[currentQuestionIndex] = code;
-        setSolutionCodes(updatedSolutionCodes);
+        const updatedUserCodes = [...UserCodes];
+        updatedUserCodes[currentQuestionIndex].UserCode = code;
+        setUserCodes(updatedUserCodes);
     };
 
     useEffect(() => {
         if (Questions) {
             setCurrentQuestion(Questions[0])
-            setSolutionCodes(Array(Questions.length).fill(DefaultSolutionCode));  //Generate an array of default solution codes for each question
         }
     }, [Questions])
 
@@ -79,11 +88,11 @@ function SolveQuestion({ Questions, AssignmentId, solutionCodes, setSolutionCode
                 </div>
             </div>
             <div className="row my-3">
-                <CodeEditor defaultCode={solutionCodes[currentQuestionIndex]} onUpdateCode={handleUpdateCode} />
+                <CodeEditor defaultCode={UserCodes[currentQuestionIndex].UserCode} onUpdateCode={handleUpdateCode} />
             </div>
             <div className="row my-3">
                 <div className="col">
-                    <DryRunModal CodeToRun={solutionCodes[currentQuestionIndex]} AssignmentId={AssignmentId} QuestionId={currentQuestion?._id} />
+                    <DryRunModal CodeToRun={UserCodes[currentQuestionIndex].UserCode} AssignmentId={AssignmentId} QuestionId={currentQuestion?._id} />
                 </div>
 
             </div>

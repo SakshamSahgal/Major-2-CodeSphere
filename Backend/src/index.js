@@ -33,8 +33,8 @@ app.get("/getProfile", ValidateToken, getProfileRoute);           //called when 
 app.get("/students/assignments/pending", ValidateToken, isStudent, getStudentPendingAssignmentsRoute);      //called when the student clicks on the pending assignments tab
 app.get("/students/assignments/submitted", ValidateToken, isStudent, getStudentSubmittedAssignmentsRoute);  //called when the student clicks on the submitted assignments tab
 app.get("/students/assignments/missed", ValidateToken, isStudent, getStudentMissedAssignmentsRoute);        //called when the student clicks on the missed assignments tab
-app.get("/students/getPendingAssignment/:_id", ValidateToken, isStudent, getThisPendingAssignment);         //Fetches the details of a pending assignment with the given id, called when the student clicks on submit, on a pending assignment
-app.ws(`/students/assignments/runCode/:assignmentId/:questionId`, ValidateWsToken, isStudentWs, ValidateInputs, CheckQuestionInAssignment, findQuestion, ValidateTestCases, RunOutputComparison);  //called when the student clicks on the run button of the solution code while solving an assignment
+app.get("/students/getPendingAssignment/:_id", ValidateToken, isStudent, getThisPendingAssignment);         //Fetches the details of a pending assignment with the given id, called when the student clicks on solve, on a pending assignment
+app.ws(`/students/assignments/runCode/:assignmentId/:questionId`, ValidateWsToken, isStudentWs, ValidateInputs, CheckQuestionInAssignment, findQuestion, ValidateTestCases, RunOutputComparison);  //called when the student clicks on the run button of any question while solving an assignment
 app.ws("/students/assignments/evaluateAssignment/:assignmentId", ValidateWsToken, isStudentWs, ValidateAssignmentId, FindAssignment, ValidateQuestionsInAssignment, CheckIfAllowedToSubmit, EvaluateAssignment);  //called when the student clicks on the submit button of an assignment
 
 app.get("/getBatches", ValidateToken, isProfessor, getBatchesRoute);                                        //Sends the Batches to display in Create Assignment Modal, to be used in checkboxes for selecting batches
