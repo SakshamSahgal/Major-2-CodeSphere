@@ -5,6 +5,12 @@ import LogsAccordion from '../Accordion/LogsAccordion';
 import { Spinner } from 'react-bootstrap';
 import GroupedResults from '../List/EvaluateAssignmentDisplay';
 
+//_id is the assignment id and UserCodes is an array of objects with the following structure
+// {
+//     QuestionName: String,
+//     UserCode: String,
+//     QuestionId: String
+// }
 function SubmitAssignmentModal({ _id, UserCodes }) {
     const [showModal, setShowModal] = useState(false);              //This state stores whether the modal is open or not
     const [logsMessage, setLogsMessage] = useState([]);             //this state stores the logs of the dry run
@@ -80,6 +86,7 @@ function SubmitAssignmentModal({ _id, UserCodes }) {
             socket.onclose = () => {
                 console.log('WebSocket connection closed');
                 setIsLoading(false);
+                setIsOpen(false);
             };
 
         } catch (error) {

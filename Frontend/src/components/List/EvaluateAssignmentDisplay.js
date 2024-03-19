@@ -4,7 +4,7 @@ import VerdictBadge from '../CommonComponents/VerdictBadge';
 
 function GroupedResults({ results }) {
     // Grouping the results by Question
-    console.log(results);
+
     const groupedResults = results.reduce((acc, obj) => {
         const key = obj.Question;
         if (!acc[key]) {
@@ -35,16 +35,16 @@ function GroupedResults({ results }) {
                     <VerdictBadge verdict={result.verdict} />  &nbsp;
                     <span className="badge bg-dark" style={{ fontSize: '15px' }}>Score: {result.score}</span>
                 </ListGroup.Item>
-            ) : (
-                <>
+            ) : (  //Decision 
+                <div key={index}>
                     <hr />
-                    <ListGroup.Item key={index} >
+                    <ListGroup.Item >
                         {result.message} {" "}
                         <VerdictBadge verdict={result.verdict} /> &nbsp;
                         <span className="badge  bg-primary" style={{ fontSize: '15px' }}>{" ["}{result.ScoreObtained}{"/"}{result.TotalScore}{"] "}</span>
                     </ListGroup.Item>
                     <hr />
-                </>
+                </div>
             )
         ));
     };

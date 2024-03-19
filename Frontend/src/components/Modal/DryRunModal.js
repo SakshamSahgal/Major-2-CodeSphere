@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import StepsList from '../List/StepsList';
+import GroupedResults from '../List/EvaluateAssignmentDisplay';
 import LogsAccordion from '../Accordion/LogsAccordion';
 import { Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,10 +12,10 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
     const socketRef = useRef(null);
     const [show, setShow] = useState(false);                        //this state stores whether the modal is open or not
     const [logsMessage, setLogsMessage] = useState([]);             //this state stores the logs of the dry run
-    const [ResponseMessage, setResponseMessage] = useState([]);     //this state stores the response of the dry run [success, failure, verdict, etc.
+    const [verdictAndDecision, setverdictAndDecision] = useState([]);     //this state stores the response of the dry run [success, failure, verdict, etc.
     const [isOpen, setIsOpen] = useState(true);                     // State to manage logs accordion open/close
     const [isLoading, setIsLoading] = useState(true);              //this state stores whether to display spinner or not
-    
+
     //this function is called when the modal is closed
     const handleClose = () => {
         if (socketRef.current) {
@@ -27,7 +27,7 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
     //this function is called when the modal is opened
     const handleShow = () => {
         setLogsMessage([]);
-        setResponseMessage([]);
+        setverdictAndDecision([]);
         setIsOpen(true);
         setShow(true);
         setIsLoading(true);
@@ -64,7 +64,7 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
                             if (response.type === "logs")
                                 setLogsMessage((prev) => [...prev, response]);
                             else
-                                setResponseMessage((prev) => [...prev, response]);
+                            setverdictAndDecision((prev) => [...prev, response]);
                         }
                         if (response.success === false) {
                             socket.close();
@@ -104,7 +104,7 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
                     )}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <StepsList results={ResponseMessage} />
+                    <GroupedResults results={verdictAndDecision} />
                     <LogsAccordion results={logsMessage} isOpen={isOpen} setIsOpen={setIsOpen} />
                 </Modal.Body>
                 <Modal.Footer>
