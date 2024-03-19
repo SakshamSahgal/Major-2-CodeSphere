@@ -140,7 +140,7 @@ async function RunOutputComparison(ws, req) {
                 });
             }
             else {
-                //It return undefined if there is an error (and closes connection), else it returns true
+                //It return undefined if there is an error, else it returns an object
                 const response = await EvaluateQuestion(ws, req.ThisQuestion, data.CodeToRun);
                 console.log(response)
                 if (response === undefined) return;

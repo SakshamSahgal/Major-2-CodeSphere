@@ -239,7 +239,10 @@ async function EvaluateQuestion(ws, Question, CodeToRun) {
             ScoreObtained: ScoreObtained,
             Question: Question.QuestionName
         }));
-        return true;
+        return {
+            TotalScore: TotalScore,
+            ScoreObtained: ScoreObtained
+        };
     } else {
         ws.send(JSON.stringify({
             success: true,
@@ -250,7 +253,10 @@ async function EvaluateQuestion(ws, Question, CodeToRun) {
             type: `Decision`,
             Question: Question.QuestionName
         }));
-        return true;
+        return {
+            TotalScore: TotalScore,
+            ScoreObtained: ScoreObtained
+        };
     }
 }
 

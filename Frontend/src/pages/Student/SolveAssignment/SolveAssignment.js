@@ -22,12 +22,13 @@ function SolveAssignment() {
     const { _id } = useParams();
     const [AssignmentDetails, setAssignmentDetails] = useState(null);
     const [UserCodes, setUserCodes] = useState([]);
-    const [QuestionNames, setQuestionNames] = useState([]);
-    console.log(UserCodes);
-    //setSolutionCodes should be an array of object with each object having the following structure
+    
+    
+    //UserCodes should be an array of object with each object having the following structure
+   
     // {
     //     QuestionName: String,
-    //     SolutionCode: String,
+    //     UserCode: String,
     //       QuestionId: String
     // }
 
@@ -39,12 +40,7 @@ function SolveAssignment() {
                 if (response.data.success) {
                     toast.success(response.data.message);
                     setAssignmentDetails(response.data.Assignment);
-                    //filter and set the question names from response.data.Assignment.Questions
-                    const questionNames = response.data.Assignment.Questions.map((question) => {
-                        return question.QuestionName;
-                    });
-                    setQuestionNames(questionNames);
-                    //set the solutionCodes array with default solution code for each question and question name and id
+
                     const defaultSolutionCodes = response.data.Assignment.Questions.map((question) => {
                         return {
                             QuestionName: question.QuestionName,
@@ -70,7 +66,7 @@ function SolveAssignment() {
 
     return (
         <>
-            <SubmitAssignmentNavbar _id={_id} UserCodes={UserCodes} QuestionNames={QuestionNames} />
+            <SubmitAssignmentNavbar _id={_id} UserCodes={UserCodes} />
             <div className="container">
                 <div className="row">
                     <div className="col">

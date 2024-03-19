@@ -115,7 +115,6 @@ function getThisPendingAssignment(req, res) {
 
     readDB("Assignments", req.decoded.Institution, Querry, assignmentSchema)
         .then(async (data) => {
-            console.log(data);
             if (data.length > 0) {
                 let thisProfessor = await GetProfessor(data[0].PostedBy, req.decoded.Institution);
                 data[0].PostedBy = thisProfessor;
@@ -240,7 +239,7 @@ async function ValidateQuestionsInAssignment(ws, req, next) {
             try {
                 let thisQuestion = await readDB("QuestionBank", req.decoded.Institution, { _id: req.Assignment.Questions[i] });
                 if (thisQuestion.length === 0) {
-                    Questions.push({});
+                    Questions.push({}); //can be a problem if the Question is not present.
                 } else {
                     Questions.push(thisQuestion[0]);
                 }
@@ -260,7 +259,6 @@ async function CheckIfAllowedToSubmit(ws, req, next) {
         message: `Checking if allowed to submit assignment`,
         type: `logs`
     }));
-    console.log(req.Assignment)
     if (req.Assignment.SubmittedBy.includes(req.decoded._id)) {
         ws.send(JSON.stringify({
             success: false,
@@ -302,35 +300,52 @@ async function EvaluateAssignment(ws, req) {
     ws.on("message", async (msg) => {
         try {
             let data = JSON.parse(msg);
-            //data.solutionCodes is an array of code written by the student for each question
-            if ((data.solutionCodes.length === req.Assignment.Questions.length) && (req.Assignment.Questions.length === data.QuestionNames.length)) {
+            // console.log(data);
+            //data.UserCodes is an array of objects, each object contains - 
+            // {
+            //     QuestionName: String,
+            //       UserCode: String,
+            //       QuestionId: String
+            // }
+
+            // console.log(req.Assignment)
+
+            if (data.UserCodes.length === req.Assignment.Questions.length) { //check if the number of questions in the assignment and the number of submitted codes are same
+
                 let results = [];
+
                 //iterate through each question and evaluate the student's code for each question
                 for (let i = 0; i < req.Assignment.Questions.length; i++) {
-                    let result = await EvaluateQuestion(ws, req.Assignment.Questions[i], data.solutionCodes[i]);
-                    if (result === undefined) {
+
+                    let UserCodeObjForThisQuestion = data.UserCodes.find((element) => element.QuestionId === req.Assignment.Questions[i]._id.toString());
+                    if (UserCodeObjForThisQuestion != undefined) {
+                        //It return undefined if there is an error, else it returns an object
+                        let result = await EvaluateQuestion(ws, req.Assignment.Questions[i], UserCodeObjForThisQuestion.UserCode);
+
                         results.push({
-                            SubmittedCode: data.solutionCodes[i],
+                            SubmittedCode: UserCodeObjForThisQuestion.UserCode,
                             QuestionId: req.Assignment.Questions[i]._id,
-                            ScoreObtained: 0,
-                            TotalScore: (req.Assignment.Questions[i].TestCases.length) + (req.Assignment.Questions[i].RandomTestChecked ? 1 : 0),
-                        })
+                            ScoreObtained: result ? result.ScoreObtained : 0,
+                            TotalScore: result ? result.TotalScore : (req.Assignment.Questions[i].TestCases.length + (req.Assignment.Questions[i].RandomTestChecked ? 1 : 0)),
+                        });
+
+                        ws.send(JSON.stringify({
+                            success: true,
+                            message: `Question ${req.Assignment.Questions[i].QuestionName} evaluated`,
+                            type: `logs`,
+                            results: results
+                        }));
+                    } else {
+                        ws.send(JSON.stringify({
+                            success: false,
+                            message: `Question ${req.Assignment.Questions[i].QuestionName} is not present in the submitted codes`,
+                            type: `logs`
+                        }), () => {
+                            ws.close(1008);  //1008 is the status code for Policy Violation
+                        });
                     }
-                    else {
-                        results.push({
-                            SubmittedCode: data.solutionCodes[i],
-                            QuestionId: req.Assignment.Questions[i]._id,
-                            ScoreObtained: result.ScoreObtained,
-                            TotalScore: result.TotalScore,
-                        })
-                    }
-                    ws.send(JSON.stringify({
-                        success: true,
-                        message: `Question ${i + 1} evaluated`,
-                        type: `logs`,
-                        results: results
-                    }));
                 }
+
                 ws.send(JSON.stringify({
                     success: true,
                     message: `Assignment Evaluated`,
@@ -343,17 +358,18 @@ async function EvaluateAssignment(ws, req) {
             else {
                 ws.send(JSON.stringify({
                     success: false,
-                    message: `Question count mismatch, expected ${req.Assignment.Questions.length}, got ${data.solutionCodes.length}`,
+                    message: `Question count mismatch, expected ${req.Assignment.Questions.length}, got ${data.UserCodes.length}`,
                     type: `logs`
                 }), () => {
                     ws.close(1008);  //1008 is the status code for Policy Violation
                 });
+                return;
             }
         } catch (err) {
             console.log(err);
             ws.send(JSON.stringify({
                 success: false,
-                message: `Failed to parse message, err : ${err.message}`,
+                message: `Internal Server Error : ${err.message}`,
                 type: `logs`
             }), () => {
                 ws.close(1008);  //1008 is the status code for Policy Violation

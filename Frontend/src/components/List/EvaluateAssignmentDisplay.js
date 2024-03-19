@@ -25,7 +25,7 @@ function GroupedResults({ results }) {
             </div>
         ));
     };
-    console.log(groupedResults);
+
     // Rendering the sub-results (testcases)
     const renderSubResults = (subResults) => {
         return subResults.map((result, index) => (
