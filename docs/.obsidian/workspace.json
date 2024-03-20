@@ -69,8 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "56da9a7234bb00bf",
@@ -149,9 +148,13 @@
   },
   "active": "cd01d27dd688d6e1",
   "lastOpenFiles": [
+    "Envs/Backend.env.md",
+    "HowToRun.md",
+    "Envs/Frontend.env.md",
+    "Envs",
     "APIs.md",
     "index.md",
-    "HowToRun.md",
+    "().md",
     "APIs/getProfile.md",
     "Middlewares/isStudent.md",
     "Middlewares/isProfessor.md",
