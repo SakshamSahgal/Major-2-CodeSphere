@@ -4,6 +4,7 @@ FROM node:20
 # Install gcc to compile C++ code
 RUN apt-get update
 RUN apt-get install -y gcc g++
+RUN apt-get install dos2unix
 
 # Set the working directory in the container
 WORKDIR /app
@@ -16,6 +17,8 @@ RUN npm install
 
 # Copy the rest of the Backend folder content (except dockerignore contents) to the working directory
 COPY Backend .
+
+RUN dos2unix src/Code/script.sh
 
 RUN chmod +x src/Code/script.sh
 
