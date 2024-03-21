@@ -5,10 +5,11 @@
 1. create a `.env` in /Backend
 2. save the `.env` with the [required parameters](./Envs/Backend.env)
 3. Make sure that there is a `public/TemperoryCodeBase` folder in `Backend`, if not make it.
-4. go to the `root` directory.
-5. run `docker build -t testimage .` to build the docker image.
-6. run `docker run -p 8080:8080 testimage` to run the image.
-7. You can then access the web-app from `http://localhost:8080/`
+4. Make sure that there is a `public/RunLogs` folder in `Backend`, if not make it.
+5. go to the `root` directory.
+6. run `docker build -t testimage .` to build the docker image.
+7. run `docker run -p 8080:8080 testimage` to run the image.
+8. You can then access the web-app from `http://localhost:8080/`
 
 # To run Node Backend
 
