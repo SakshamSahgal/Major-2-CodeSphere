@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import QuestionListSkeleton from '../../../components/Skeletons/QuestionsListSkeleton';
 import PreviewQuestionModal from '../../../components/Modal/PreviewQuestionModal';
+import fetchAPI from '../../../Scripts/Axios';
 
 //This is used on Questions page to display the list of Questions
 function QuestionsList({ apiRoute }) {
@@ -17,7 +17,7 @@ function QuestionsList({ apiRoute }) {
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
-                const response = await axios(apiRoute, { withCredentials: true });
+                const response = await fetchAPI(apiRoute);
                 if (response.data.success) {
                     console.log(response.data.Questions);
                     setQuestions(response.data.Questions);
