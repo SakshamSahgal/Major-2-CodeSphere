@@ -9,7 +9,7 @@ const assignmentSchema = new mongoose.Schema({
     },
     Batches: [{ type: String, required: true }],
     PostedBy: { type: mongoose.Schema.Types.ObjectId, required: true },
-    AssignmentName: { type: String, required: true, unique: true },
+    AssignmentName: { type: String, required: true },
     SubmittedBy: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
     Questions: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
     PostedOn: { type: Date, required: true },
@@ -112,7 +112,7 @@ const SubmitAssignmentsSchema = new mongoose.Schema({
     Submission: [{
         SubmittedCode: { type: String, required: true },
         QuestionId: { type: mongoose.Schema.Types.ObjectId, required: true },
-        ScoreObtained: { type: Number, default: 0 }, // Default score set to 0
+        ScoreObtained: { type: Number, required: true }, // Default score set to 0
         TotalScore: { type: Number, required: true },
     }],
     SubmittedOn: { type: Date, required: true },

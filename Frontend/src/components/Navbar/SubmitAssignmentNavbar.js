@@ -7,7 +7,7 @@ import ProfileModal from '../Modal/profileModal';
 import { toast } from 'react-toastify';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 import SubmitAssignmentModal from '../Modal/SubmitAssignmentModal';
-import fetchAPI from '../../Scripts/Axios';
+import  fetchAPI  from '../../Scripts/Axios';
 
 function SubmitAssignmentNavbar({ _id, UserCodes }) {
     const [showModal, setShowModal] = useState(false);
@@ -41,7 +41,7 @@ function SubmitAssignmentNavbar({ _id, UserCodes }) {
                             <FontAwesomeIcon icon={faCode} style={{ color: 'white' }} />
                         </Navbar.Brand>
                     }
-                    <SubmitAssignmentModal _id={_id} UserCodes={UserCodes}/>
+                    <SubmitAssignmentModal _id={_id} UserCodes={UserCodes} />
                     <FontAwesomeIcon icon={faUser} onClick={handlesShowProfileModal} style={{ cursor: 'pointer', color: 'white', border: '1px solid white', padding: '5px', borderRadius: '50%' }} />
                 </Container>
             </Navbar>

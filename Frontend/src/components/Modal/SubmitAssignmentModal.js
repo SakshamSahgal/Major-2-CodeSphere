@@ -20,7 +20,7 @@ function SubmitAssignmentModal({ _id, UserCodes }) {
     const [verdictAndDecision, setverdictAndDecision] = useState([]);    //this state stores the verdict and decision of the questions of the assignment
     // console.log(verdict);
     const handleShowModal = () => {                                 //this function is called when the modal is opened
-        handleSubmitAssignment();
+        handleEvaluateAssignment();
         setShowModal(true);
         setIsOpen(true);
         setIsLoading(true);
@@ -38,7 +38,7 @@ function SubmitAssignmentModal({ _id, UserCodes }) {
     }
     const socketRef = useRef(null);                                 //this ref is used to store the socket connection, so that it can be closed when the modal is closed
 
-    const handleSubmitAssignment = async () => {
+    const handleEvaluateAssignment = async () => {
 
         try {
             console.log(_id)
@@ -68,6 +68,10 @@ function SubmitAssignmentModal({ _id, UserCodes }) {
                         if (response.success === false) {
                             socket.close();
                         }
+                        if(response.type === "Final"){
+                            //redirect to /students/assignments
+                            window.location.href = "/students/assignments";
+                        }
                         if (response.type === "logs") {
                             setLogsMessage((prev) => [...prev, response]); //Append the logs to the logsMessage state, to be displayed
                             setCurMessage(response); //Set the current message to the message received from the server
@@ -93,6 +97,7 @@ function SubmitAssignmentModal({ _id, UserCodes }) {
             toast.error(error.message);
         }
     }
+
 
     return (
         <>

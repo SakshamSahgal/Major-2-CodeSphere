@@ -18,7 +18,7 @@ async function GetPublicQuestionDetails(_id, Institution) {
 
     try {
         let response = await readDB("QuestionBank", Institution, Querry, QuestionSchema, Projection);
-        console.log(response);
+        // console.log(response);
         if (response.length === 0)
             return {};
         else {

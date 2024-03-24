@@ -2,6 +2,8 @@ import React from 'react';
 import { ListGroup } from 'react-bootstrap';
 import VerdictBadge from '../CommonComponents/VerdictBadge';
 
+
+
 function GroupedResults({ results }) {
     // Grouping the results by Question
 
@@ -29,23 +31,25 @@ function GroupedResults({ results }) {
     // Rendering the sub-results (testcases)
     const renderSubResults = (subResults) => {
         return subResults.map((result, index) => (
-            (result.type === "Verdict") ? (
-                <ListGroup.Item key={index}>
-                    <span>{result.testcase}</span> &nbsp;
-                    <VerdictBadge verdict={result.verdict} />  &nbsp;
-                    <span className="badge bg-dark" style={{ fontSize: '15px' }}>Score: {result.score}</span>
-                </ListGroup.Item>
-            ) : (  //Decision 
-                <div key={index}>
-                    <hr />
-                    <ListGroup.Item >
-                        {result.message} {" "}
-                        <VerdictBadge verdict={result.verdict} /> &nbsp;
-                        <span className="badge  bg-primary" style={{ fontSize: '15px' }}>{" ["}{result.ScoreObtained}{"/"}{result.TotalScore}{"] "}</span>
+            <div key={index}>
+                {(result.type === "Verdict") ? (
+                    <ListGroup.Item>
+                        <span>{result.testcase}</span> &nbsp;
+                        <VerdictBadge verdict={result.verdict} />  &nbsp;
+                        <span className="badge bg-dark" style={{ fontSize: '15px' }}>Score: {result.score}</span>
                     </ListGroup.Item>
-                    <hr />
-                </div>
-            )
+                ) : (  //Decision 
+                    <>
+                        <hr />
+                        <ListGroup.Item>
+                            {result.message} {" "}
+                            <VerdictBadge verdict={result.verdict} /> &nbsp;
+                            <span className="badge bg-primary" style={{ fontSize: '15px' }}>{" ["}{result.ScoreObtained}{"/"}{result.TotalScore}{"] "}</span>
+                        </ListGroup.Item>
+                        <hr />
+                    </>
+                )}
+            </div>
         ));
     };
 

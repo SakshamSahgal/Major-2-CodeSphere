@@ -1,5 +1,5 @@
-const { readDB } = require("../db/mongoOperations");
-const { assignmentSchema } = require("../db/schema");
+const { readDB, writeDB, updateDB } = require("../db/mongoOperations");
+const { assignmentSchema, SubmitAssignmentsSchema } = require("../db/schema");
 const { GetProfessor } = require('../other/Common');
 const { GetPublicQuestionDetails } = require("./Question");
 const { EvaluateQuestion } = require("../Code/codeEvaluation");
@@ -252,6 +252,63 @@ async function ValidateQuestionsInAssignment(ws, req, next) {
         next();
     }
 }
+
+async function SubmitAssignment(ws, req, results) {
+    try {
+
+        //insert StudentID into SubmittedBy array in the Assignment
+
+        let findQuerry = {
+            _id: req.Assignment._id
+        }
+        let updateQuerry = {
+            $push: { SubmittedBy: req.decoded._id }
+        }
+
+        await updateDB("Assignments", req.decoded.Institution, findQuerry, updateQuerry, assignmentSchema);
+
+        let Submission = {
+            AssignmentId: req.Assignment._id,
+            StudentId: req.decoded._id,
+            Submission: results,
+            SubmittedOn: new Date()
+        }
+        console.log(Submission);
+
+        try {
+            
+            await writeDB("AssignmentSubmissions", req.decoded.Institution, Submission, SubmitAssignmentsSchema);
+
+            ws.send(JSON.stringify({
+                success: true,
+                message: `Assignment Submitted Successfully`,
+                type: `Final`
+            }), () => {
+                ws.close(1000);  //1000 is the status code for Normal Closure
+            });
+        } catch (err) {
+            console.log(err);
+            ws.send(JSON.stringify({
+                success: false,
+                message: `Failed to Submit Assignment, err : ${err.message}`,
+                type: `logs`
+            }), () => {
+                ws.close(1008);  //1008 is the status code for Policy Violation
+            });
+        }
+
+    } catch (err) {
+        console.log(err);
+        ws.send(JSON.stringify({
+            success: false,
+            message: `Internal Server Error : ${err.message}`,
+            type: `logs`
+        }), () => {
+            ws.close(1008);  //1008 is the status code for Policy Violation
+        });
+    }
+}
+
 //This function is used to check if the student is allowed to submit the assignment
 async function CheckIfAllowedToSubmit(ws, req, next) {
     ws.send(JSON.stringify({
@@ -300,15 +357,12 @@ async function EvaluateAssignment(ws, req) {
     ws.on("message", async (msg) => {
         try {
             let data = JSON.parse(msg);
-            // console.log(data);
             //data.UserCodes is an array of objects, each object contains - 
             // {
             //     QuestionName: String,
             //       UserCode: String,
             //       QuestionId: String
             // }
-
-            // console.log(req.Assignment)
 
             if (data.UserCodes.length === req.Assignment.Questions.length) { //check if the number of questions in the assignment and the number of submitted codes are same
 
@@ -317,9 +371,16 @@ async function EvaluateAssignment(ws, req) {
                 //iterate through each question and evaluate the student's code for each question
                 for (let i = 0; i < req.Assignment.Questions.length; i++) {
 
+                    //find the UserCode object for this question by matching the QuestionId
                     let UserCodeObjForThisQuestion = data.UserCodes.find((element) => element.QuestionId === req.Assignment.Questions[i]._id.toString());
                     if (UserCodeObjForThisQuestion != undefined) {
-                        //It return undefined if there is an error, else it returns an object
+
+                        //It return undefined if there is an error, else it returns an object containing - 
+                        // {
+                        //     TotalScore: TotalScore,
+                        //     ScoreObtained: ScoreObtained
+                        // }
+
                         let result = await EvaluateQuestion(ws, req.Assignment.Questions[i], UserCodeObjForThisQuestion.UserCode);
 
                         results.push({
@@ -351,8 +412,12 @@ async function EvaluateAssignment(ws, req) {
                     message: `Assignment Evaluated`,
                     type: `logs`,
                     results: results
-                }), () => {
-                    ws.close(1000);  //1000 is the status code for Normal Closure
+                }), async () => {
+                    if (ws.readyState === 1) {
+                        await SubmitAssignment(ws, req, results);
+                    } else {
+                        console.log("ws Closed");
+                    }
                 });
             }
             else {

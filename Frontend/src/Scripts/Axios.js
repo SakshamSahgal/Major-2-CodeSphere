@@ -11,8 +11,6 @@ async function fetchAPI(apiRoute) {
         if (error.response.data.success === false && invalidMessages.includes(error.response.data.message)) {
             toast.error("Please login to continue");
             localStorage.clear();
-            //redirect to home page
-            //redirect after 1 second
             setTimeout(() => {
                 window.location.href = "/";
             }, 1000);
@@ -22,4 +20,4 @@ async function fetchAPI(apiRoute) {
     }
 }
 
-export default fetchAPI;
+export default fetchAPI ;
