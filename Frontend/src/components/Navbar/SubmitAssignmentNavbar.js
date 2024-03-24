@@ -4,10 +4,10 @@ import Container from 'react-bootstrap/Container';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import ProfileModal from '../Modal/profileModal';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 import SubmitAssignmentModal from '../Modal/SubmitAssignmentModal';
+import fetchAPI from '../../Scripts/Axios';
 
 function SubmitAssignmentNavbar({ _id, UserCodes }) {
     const [showModal, setShowModal] = useState(false);
@@ -17,7 +17,7 @@ function SubmitAssignmentNavbar({ _id, UserCodes }) {
 
     const handlesShowProfileModal = async () => {
         try {
-            const response = await axios.get('/getProfile', { withCredentials: true });
+            const response = await fetchAPI('/getProfile');
             console.log(response.data);
             if (response.data.success === false) {
                 toast.error(response.data.message);

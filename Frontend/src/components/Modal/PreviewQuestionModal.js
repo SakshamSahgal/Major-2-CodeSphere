@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 import { useState } from 'react';
 import { Form, Nav, Tab } from "react-bootstrap";
 import QuestionDetailsPreview from '../CommonComponents/QuestionDetailsPreview';
 import { getTimeElapsed, convertIsoToNormalTime } from '../../Scripts/TimeFunctions';
 import { Row, Col } from 'react-bootstrap';
 import HiddenQuestionDetailsPreview from '../CommonComponents/HiddenQuestionDetailsPreview';
+import fetchAPI  from '../../Scripts/Axios';
 
 //This is a modal that will be used to preview the question when the user clicks on any Question in the QuestionsList
 function PreviewQuestionModal({ show, onClose, _id }) {
@@ -17,7 +17,7 @@ function PreviewQuestionModal({ show, onClose, _id }) {
     useEffect(() => {
         const fetchQuestionDetails = async () => {
             try {
-                const response = await axios.get(`/professors/getQuestionDetails/${_id}`, { withCredentials: true });
+                const response = await fetchAPI(`/professors/getQuestionDetails/${_id}`);
                 console.log(response.data);
                 if (response.data.success) {
                     toast.success(response.data.message);
@@ -61,7 +61,7 @@ function PreviewQuestionModal({ show, onClose, _id }) {
                                     <QuestionDetailsPreview QuestionName={Question.QuestionName} ProblemStatement={Question.ProblemStatement} Constraints={Question.Constraints} InputFormat={Question.InputFormat} OutputFormat={Question.OutputFormat} SampleTestCases={Question.TestCases.filter(TestCase => TestCase.sampleTestCase)} TimeLimitPerTestCase={1} MemoryLimitPerTestCase={30} />
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="Evaluation">
-                                    <HiddenQuestionDetailsPreview HiddenTestCases={Question.TestCases.filter(TestCase => !TestCase.sampleTestCase)} SolutionCode={Question.SolutionCode} RandomTestChecked={Question.RandomTestChecked} RandomTestCode={Question.RandomTestCode}/>
+                                    <HiddenQuestionDetailsPreview HiddenTestCases={Question.TestCases.filter(TestCase => !TestCase.sampleTestCase)} SolutionCode={Question.SolutionCode} RandomTestChecked={Question.RandomTestChecked} RandomTestCode={Question.RandomTestCode} />
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="Origin">
                                     <div className="container text-center">

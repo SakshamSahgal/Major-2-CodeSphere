@@ -5,7 +5,7 @@ import { convertIsoToNormalTime, getTimeElapsed } from '../../../Scripts/TimeFun
 import AssignmentListSkeleton from '../../../components/Skeletons/AssignmentListSkeleton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-
+import  fetchAPI from '../../../Scripts/Axios';
 //this returns a list of assignments created by this professor
 function CreatedAssignments() {
     const [MyCreatedAssignments, setMyCreatedAssignments] = useState(null);
@@ -14,7 +14,7 @@ function CreatedAssignments() {
         // Fetch created assignments from the database
         const fetchCreatedAssignments = async () => {
             try {
-                const response = await axios.get("/professors/myAssignments", { withCredentials: true });
+                const response = await fetchAPI("/professors/myAssignments");
                 console.log(response.data);
                 if (response.data.success) {
                     toast.success(response.data.message);

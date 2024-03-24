@@ -5,7 +5,7 @@ import PlainNavbar from '../../components/Navbar/PlainNavbar';
 import RightsReservedFooter from '../../components/Footer/RightsReservedFooter';
 import LoginForm from './LoginForm';
 import LoadingSpinner from '../../components/Spinners/Spinners';
-
+import  fetchAPI  from '../../Scripts/Axios';
 //LoginType = 'Students' or 'Professors'
 function LoginPage({ LoginType }) {
 
@@ -50,14 +50,14 @@ function LoginPage({ LoginType }) {
     useEffect(() => {
         const fetchInstitutions = async () => {
             try {
-                const response = await axios.get('/registeredColleges');
+                const response = await fetchAPI('/registeredColleges');
                 setInstitutions(response.data.result);
             } catch (error) {
-                // if the status if 401 then redirect to home
-                if (error.response && error.response.status === 401) {
-                    localStorage.clear(); //clear the local storage
-                    window.location = "/"; //redirect to home
-                }
+                // // if the status if 401 then redirect to home
+                // if (error.response && error.response.status === 401) {
+                //     localStorage.clear(); //clear the local storage
+                //     window.location = "/"; //redirect to home
+                // }
                 toast.error(`Error fetching Institution. Please try again later. err : ${error}`);
             }
         };

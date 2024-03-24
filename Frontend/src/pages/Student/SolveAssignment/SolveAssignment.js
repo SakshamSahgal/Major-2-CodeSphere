@@ -1,8 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
-
+import fetchAPI from '../../../Scripts/Axios';
 import LoadingSpinner from '../../../components/Spinners/Spinners';
 import SolveQuestion from './SolveQuestion';
 import SubmitAssignmentNavbar from '../../../components/Navbar/SubmitAssignmentNavbar';
@@ -22,10 +21,10 @@ function SolveAssignment() {
     const { _id } = useParams();
     const [AssignmentDetails, setAssignmentDetails] = useState(null);
     const [UserCodes, setUserCodes] = useState([]);
-    
-    
+
+
     //UserCodes should be an array of object with each object having the following structure
-   
+
     // {
     //     QuestionName: String,
     //     UserCode: String,
@@ -36,7 +35,7 @@ function SolveAssignment() {
         const FetchAssignment = async () => {
             try {
                 console.log("fetching assignment Details")
-                const response = await axios.get(`/students/getPendingAssignment/${_id}`, { withCredentials: true })
+                const response = await fetchAPI(`/students/getPendingAssignment/${_id}`);
                 if (response.data.success) {
                     toast.success(response.data.message);
                     setAssignmentDetails(response.data.Assignment);

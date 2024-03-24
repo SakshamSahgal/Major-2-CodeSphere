@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { getTimeElapsed, convertIsoToNormalTime } from "../../../Scripts/TimeFunctions";
 import AssignmentListSkeleton from "../../../components/Skeletons/AssignmentListSkeleton";
-
+import  fetchAPI  from '../../../Scripts/Axios';
 //List Type can be 'Pending', 'Missed' or 'Submitted'
 function AssignmentList({ listType }) {
     const [assignments, setAssignments] = useState(null);
@@ -11,7 +11,7 @@ function AssignmentList({ listType }) {
     useEffect(() => {
         const fetchAssignments = async () => {
             try {
-                const response = await axios.get(`/students/assignments/${listType.toLowerCase()}`, { withCredentials: true });
+                const response = await fetchAPI(`/students/assignments/${listType.toLowerCase()}`);
                 console.log(response.data);
                 if (response.data.success) {
                     // toast.success(response.data.message);
@@ -29,7 +29,7 @@ function AssignmentList({ listType }) {
     // Return the skeleton while data is being fetched
     if (assignments === null) {
         return (
-            <AssignmentListSkeleton count={1}/>
+            <AssignmentListSkeleton count={1} />
         );
     }
 

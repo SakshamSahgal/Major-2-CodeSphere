@@ -6,9 +6,9 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import ProfileModal from '../Modal/profileModal';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
+import  fetchAPI from '../../Scripts/Axios';
 
 function NavbarWithProfileAndSidebar({ TabNames = [], TabLinks = [], ActiveTabIndex = 0 }) {
     const [showModal, setShowModal] = useState(false);
@@ -19,7 +19,7 @@ function NavbarWithProfileAndSidebar({ TabNames = [], TabLinks = [], ActiveTabIn
 
     const handlesShowProfileModal = async () => {
         try {
-            const response = await axios.get('/getProfile', { withCredentials: true });
+            const response = await fetchAPI('/getProfile');
             console.log(response.data);
             if (response.data.success === false) {
                 toast.error(response.data.message);
