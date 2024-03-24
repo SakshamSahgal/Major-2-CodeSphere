@@ -253,6 +253,47 @@ async function ValidateQuestionsInAssignment(ws, req, next) {
     }
 }
 
+//This function is used to check if the student is allowed to submit the assignment
+async function CheckIfAllowedToSubmit(ws, req, next) {
+    ws.send(JSON.stringify({
+        success: true,
+        message: `Checking if allowed to submit assignment`,
+        type: `logs`
+    }));
+    if (req.Assignment.SubmittedBy.includes(req.decoded._id)) {
+        ws.send(JSON.stringify({
+            success: false,
+            message: `You have already submitted this assignment`,
+            type: `logs`
+        }), () => {
+            ws.close(1008);  //1008 is the status code for Policy Violation
+        });
+        return;
+    }
+    if (req.Assignment.DueTimestamp < new Date()) {
+        ws.send(JSON.stringify({
+            success: false,
+            message: `Assignment is already over`,
+            type: `logs`
+        }), () => {
+            ws.close(1008);  //1008 is the status code for Policy Violation
+        });
+        return;
+    }
+    if (!(req.Assignment.Batches.includes(req.decoded.DB.Batch) && req.Assignment.Year == req.decoded.DB.Year)) {
+        ws.send(JSON.stringify({
+            success: false,
+            message: `This Asignment is not assigned to you.`,
+            type: `logs`
+        }), () => {
+            ws.close(1008);  //1008 is the status code for Policy Violation
+        });
+        return;
+    }
+    next();
+}
+
+
 async function SubmitAssignment(ws, req, results) {
     try {
 
@@ -307,46 +348,6 @@ async function SubmitAssignment(ws, req, results) {
             ws.close(1008);  //1008 is the status code for Policy Violation
         });
     }
-}
-
-//This function is used to check if the student is allowed to submit the assignment
-async function CheckIfAllowedToSubmit(ws, req, next) {
-    ws.send(JSON.stringify({
-        success: true,
-        message: `Checking if allowed to submit assignment`,
-        type: `logs`
-    }));
-    if (req.Assignment.SubmittedBy.includes(req.decoded._id)) {
-        ws.send(JSON.stringify({
-            success: false,
-            message: `You have already submitted this assignment`,
-            type: `logs`
-        }), () => {
-            ws.close(1008);  //1008 is the status code for Policy Violation
-        });
-        return;
-    }
-    if (req.Assignment.DueTimestamp < new Date()) {
-        ws.send(JSON.stringify({
-            success: false,
-            message: `Assignment is already over`,
-            type: `logs`
-        }), () => {
-            ws.close(1008);  //1008 is the status code for Policy Violation
-        });
-        return;
-    }
-    if (!(req.Assignment.Batches.includes(req.decoded.DB.Batch) && req.Assignment.Year == req.decoded.DB.Year)) {
-        ws.send(JSON.stringify({
-            success: false,
-            message: `This Asignment is not assigned to you.`,
-            type: `logs`
-        }), () => {
-            ws.close(1008);  //1008 is the status code for Policy Violation
-        });
-        return;
-    }
-    next();
 }
 
 

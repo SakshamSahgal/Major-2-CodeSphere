@@ -14,6 +14,9 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const NavTabs = ["Assignments", "AddQuestion", "Questions"];
+const NavLinks = ["/professors/assignments", "/professors/addQuestion", "/professors/questions"];
+
 function App() {
   return (
     <>
@@ -23,13 +26,12 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/professorlogin" element={<LoginPage LoginType={"Professors"} />} />
           <Route path="/studentlogin" element={<LoginPage LoginType={"Students"} />} />
-          <Route path="/professors/assignments" element={<ProfessorAssignments />} />
-          <Route path="/professors/addQuestion" element={<ProfessorAddQuestion activeTab={"Description"} />} />
-          <Route path="/professors/questions" element={<ProfessorQuestions />} />
+          <Route path="/professors/assignments" element={<ProfessorAssignments NavTabs={NavTabs} NavLinks={NavLinks} />} />
+          <Route path="/professors/addQuestion" element={<ProfessorAddQuestion activeTab={"Description"} NavTabs={NavTabs} NavLinks={NavLinks} />} />
+          <Route path="/professors/questions" element={<ProfessorQuestions NavTabs={NavTabs} NavLinks={NavLinks} />} />
           <Route path="/students/assignments" element={<StudentAssignments />} /> {/*This Route is called when a student opens Assignments Page from sidebar */}
-          <Route path="/students/evaluations" element={<Evaluations />} /> {/*This Route is called when a student opens Evaluation Page from sidebar */}
           <Route path="/students/solveAssignment/:_id" element={<SolveAssignment />} /> {/*This Route is called when a student clicks solve button on any pending assignment */}
-          <Route path="/registercollewge" element={<RegisterCollege />} />
+          <Route path="/registercollege" element={<RegisterCollege />} />
         </Routes>
       </BrowserRouter>
     </>

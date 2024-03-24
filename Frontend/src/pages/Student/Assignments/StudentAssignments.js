@@ -6,7 +6,7 @@ import StudentAssignmentNavtabs from "./StudentAssignmentNavtabs";
 function StudentAssignments() {
   return (
     <div>
-      <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations"]} TabLinks={["/students/assignments", "/students/evaluations"]} ActiveTabIndex={0}/>
+      <NavbarWithProfileAndSidebar TabNames={["Assignments"]} TabLinks={["/students/assignments"]} ActiveTabIndex={0}/>
       <div className="container">
         <div className="row my-3">
           <h1 style={{ color: 'white', textAlign: 'center' }}>Assignments</h1>

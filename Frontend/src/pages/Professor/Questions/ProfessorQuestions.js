@@ -3,11 +3,11 @@ import { Tab, Nav } from "react-bootstrap";
 import { ListGroup } from "react-bootstrap";
 import QuestionsList from "./QuestionsList";
 
-function ProfessorQuestions() {
+function ProfessorQuestions({ NavTabs, NavLinks }) {
 
     return (
         <>
-            <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations", "AddQuestion", "Questions"]} TabLinks={["/professors/assignments", "/professors/evaluations", "/professors/addQuestion", "/professors/questions"]} ActiveTabIndex={3} />
+            <NavbarWithProfileAndSidebar TabNames={NavTabs} TabLinks={NavLinks} ActiveTabIndex={2} />
             <div className="container my-3">
                 <div className="row">
                     <div className="col">

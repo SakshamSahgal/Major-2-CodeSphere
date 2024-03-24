@@ -35,7 +35,7 @@ int main() {
     return 0;
 }`;
 
-function ProfessorAddQuestion({ activeTab }) {
+function ProfessorAddQuestion({ activeTab, NavTabs, NavLinks }) {
 
   const [formData, setFormData] = useState({
     QuestionName: '',
@@ -69,7 +69,7 @@ function ProfessorAddQuestion({ activeTab }) {
 
   return (
     <>
-      <NavbarWithProfileAndSidebar TabNames={["Assignments", "Evaluations", "AddQuestion", "Questions"]} TabLinks={["/professors/assignments", "/professors/evaluations", "/professors/addQuestion", "/professors/questions"]} ActiveTabIndex={2} />
+      <NavbarWithProfileAndSidebar TabNames={NavTabs} TabLinks={NavLinks} ActiveTabIndex={1} />
       <div className="container my-3">
         <div className="row">
           <div className="col text-center my-3">
