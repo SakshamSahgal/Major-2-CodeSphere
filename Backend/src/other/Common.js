@@ -49,4 +49,34 @@ async function GetStudent(id, college) {
     }
 }
 
-module.exports = { GetProfessor, GetStudent }
+async function getQuestionName(id, college) {
+    //read the question from the database
+    // return the question name from the database
+    if (!id || !college) {
+        return {}
+    }
+    try {
+
+        let projection = {
+            QuestionName: 1
+        }
+        let query = {
+            _id: id
+        }
+
+        const thisQuestion = await readDB("QuestionBank", college, query, professorsSchema, projection)
+
+        if (thisQuestion.length > 0) {
+            //return the question object from the database
+            return { QuestionName: thisQuestion[0].QuestionName }
+        }
+        else
+            return {}
+    }
+    catch (error) {
+        console.log(error)
+        return {}
+    }
+}
+
+module.exports = { GetProfessor, GetStudent, getQuestionName }

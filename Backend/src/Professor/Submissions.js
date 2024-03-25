@@ -1,6 +1,6 @@
 const { readDB, checkIfExists } = require("../db/mongoOperations");
 const { SubmitAssignmentsSchema, assignmentSchema } = require("../db/schema");
-const { GetStudent } = require('../other/Common')
+const { GetStudent, getQuestionName } = require('../other/Common')
 
 async function CheckAssignment(req, res, next) {
     const assignmentId = req.params._id;
@@ -60,17 +60,17 @@ async function getSubmissions(req, res) {
 
 async function analyzeSubmission(req, res) {
     const SubmissionId = req.params._id;
-    
+
     try {
         let findQuery = { _id: SubmissionId };
-        
+
         let Projection = {
             __v: 0,
         }
 
         let submission = await readDB("AssignmentSubmissions", req.decoded.Institution, findQuery, SubmitAssignmentsSchema, Projection);
-        
-        if(submission.length == 0){
+
+        if (submission.length == 0) {
             res.status(404).json({
                 success: false,
                 message: "Submission not found"
@@ -78,17 +78,29 @@ async function analyzeSubmission(req, res) {
             return;
         }
 
-        //iterate over the submissions and fetch student details from student
+        let thisSubmission = submission[0];
 
-        for (let i = 0; i < submission.length; i++) {
-            let thisStudent = await GetStudent(submission[i].StudentId, req.decoded.Institution)
-            submission[i].Student = thisStudent
+        //fetch student details from student
+
+        let thisStudent = await GetStudent(thisSubmission.StudentId, req.decoded.Institution)
+        thisSubmission.Student = thisStudent
+
+        let Submissions = JSON.parse(JSON.stringify(thisSubmission.Submission)); //creating a deep copy of the submissions array so that i can add the Question name to it
+        //iterate over all the questions and find there name
+
+        for (let i = 0; i < thisSubmission.Submission.length; i++) {
+            //fetching the question name using QuestionId from QuestionBank
+            let thisQuestion = await getQuestionName(thisSubmission.Submission[i].QuestionId, req.decoded.Institution);
+            Submissions[i].Question = thisQuestion;
         }
+
+        thisSubmission.Submission = Submissions;
+
 
         res.status(200).json({
             success: true,
             message: "Submissions fetched successfully",
-            submission : submission[0]
+            submission: thisSubmission
         });
 
     } catch (err) {

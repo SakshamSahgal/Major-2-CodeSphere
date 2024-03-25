@@ -6,6 +6,10 @@ import fetchAPI from '../../../Scripts/Axios';
 import { toast } from 'react-toastify';
 import DisplaySubmission from '../../../components/Tabs/DisplaySubmission';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { Card } from "react-bootstrap";
+
 function EvaluateSubmission() {
 
     const { _id } = useParams();
@@ -37,7 +41,17 @@ function EvaluateSubmission() {
             <NavbarWithProfileAndSidebar />
             <div className="container my-3" style={{ color: "white" }}>
                 <div className="row">
-                    <div className="col-md-12">
+                    <div className="col-md-12 text-center">
+                        <hr />
+                        <div className="container">
+                            <div className="row">
+                                <div className="col d-flex align-items-center">
+                                    <FontAwesomeIcon icon={faUserCircle} className="mr-2 px-3" />
+                                    <p className="m-0">{submissionDetails?.Student.Name}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
                         <h1>Submission</h1>
                     </div>
                 </div>
