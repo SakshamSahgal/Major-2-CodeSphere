@@ -30,7 +30,11 @@ async function getSubmissions(req, res) {
     const assignmentId = req.params._id;
     try {
         let findQuery = { AssignmentId: assignmentId };
-        let submissions = await readDB("AssignmentSubmissions", req.decoded.Institution, findQuery, SubmitAssignmentsSchema);
+        let Projection = {
+            Submission: 0,
+            __v: 0,
+        }
+        let submissions = await readDB("AssignmentSubmissions", req.decoded.Institution, findQuery, SubmitAssignmentsSchema, Projection);
 
         //iterate over the submissions and fetch student details from student
 
@@ -38,8 +42,6 @@ async function getSubmissions(req, res) {
             let thisStudent = await GetStudent(submissions[i].StudentId, req.decoded.Institution)
             submissions[i].Student = thisStudent
         }
-
-        //calculate the total marks of the assignment and add it to the response
 
         res.status(200).json({
             success: true,
@@ -56,4 +58,46 @@ async function getSubmissions(req, res) {
     }
 }
 
-module.exports = { CheckAssignment, getSubmissions };
+async function analyzeSubmission(req, res) {
+    const SubmissionId = req.params._id;
+    
+    try {
+        let findQuery = { _id: SubmissionId };
+        
+        let Projection = {
+            __v: 0,
+        }
+
+        let submission = await readDB("AssignmentSubmissions", req.decoded.Institution, findQuery, SubmitAssignmentsSchema, Projection);
+        
+        if(submission.length == 0){
+            res.status(404).json({
+                success: false,
+                message: "Submission not found"
+            });
+            return;
+        }
+
+        //iterate over the submissions and fetch student details from student
+
+        for (let i = 0; i < submission.length; i++) {
+            let thisStudent = await GetStudent(submission[i].StudentId, req.decoded.Institution)
+            submission[i].Student = thisStudent
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Submissions fetched successfully",
+            submission : submission[0]
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            message: `Internal Server Error, err: ${err}`
+        });
+    }
+}
+
+module.exports = { CheckAssignment, getSubmissions, analyzeSubmission };

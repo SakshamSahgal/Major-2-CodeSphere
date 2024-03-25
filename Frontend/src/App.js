@@ -9,7 +9,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import Submissions from './pages/Professor/Submissions/Submissions';
 import LoginPage from './pages/LoginPage/LoginPage';
-
+import EvaluateSubmission from './pages/Professor/Submissions/EvaluateSubmission';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -31,6 +31,7 @@ function App() {
           <Route path="/students/assignments" element={<StudentAssignments />} /> {/*This Route is called when a student opens Assignments Page from sidebar */}
           <Route path="/students/solveAssignment/:_id" element={<SolveAssignment />} /> {/*This Route is called when a student clicks solve button on any pending assignment */}
           <Route path="/submissions/:AssignmentName/:_id" element={<Submissions />} />
+          <Route path="/EvaluateSubmission/:_id" element={<EvaluateSubmission />} />
           <Route path="/registercollege" element={<RegisterCollege />} />
         </Routes>
       </BrowserRouter>
