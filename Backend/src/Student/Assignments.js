@@ -308,16 +308,27 @@ async function SubmitAssignment(ws, req, results) {
 
         await updateDB("Assignments", req.decoded.Institution, findQuerry, updateQuerry, assignmentSchema);
 
+        //calculate the total score obtained by the student in this assignment by iterating through the results array and adding the ScoreObtained of each question
+
+        let TotalScore = 0;
+        let ScoreObtained = 0;
+
+        results.forEach((element) => {
+            TotalScore += element.TotalScore;
+            ScoreObtained += element.ScoreObtained;
+        });
+
         let Submission = {
             AssignmentId: req.Assignment._id,
             StudentId: req.decoded._id,
             Submission: results,
-            SubmittedOn: new Date()
+            SubmittedOn: new Date(),
+            ScoreObtained: ScoreObtained,
+            TotalScore: TotalScore
         }
-        console.log(Submission);
 
         try {
-            
+
             await writeDB("AssignmentSubmissions", req.decoded.Institution, Submission, SubmitAssignmentsSchema);
 
             ws.send(JSON.stringify({

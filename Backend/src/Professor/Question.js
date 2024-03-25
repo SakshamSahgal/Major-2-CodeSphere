@@ -108,7 +108,7 @@ function ValidateRandomTestCaseCode(ws, req) {
 
             if (data.type === "RunRandomTestCaseCode") {
 
-                console.log(data)
+                // console.log(data)
 
                 ws.send(JSON.stringify({ success: true, message: "Running the code...", verdict: "Processing.." }));
 

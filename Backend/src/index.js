@@ -12,6 +12,7 @@ const { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getO
 const { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, FetchQuestionDetailsRoute } = require("./Professor/Question.js");
 const { ValidateInputs, CheckQuestionInAssignment, findQuestion, ValidateTestCases, RunOutputComparison } = require("./Student/Submission.js");
 const { ValidateAssignmentId, FindAssignment, ValidateQuestionsInAssignment, CheckIfAllowedToSubmit, EvaluateAssignment } = require("./Student/Assignments.js");
+const { getSubmissions } = require("./Professor/Submissions.js");
 const path = require("path");
 
 const PORT = process.env.PORT || 8080;
@@ -45,11 +46,11 @@ app.get("/professors/getQuestionDetails/:_id", ValidateToken, isProfessor, Fetch
 app.post("/professors/createAssignment", ValidateToken, isProfessor, createAssignmentRoute);                //Creates an assignment
 app.delete("/professors/deleteAssignment/:_id", ValidateToken, isProfessor, deleteAssignmentRoute);         //Deletes an assignment, called when the professor clicks on the bin button of an assignment
 app.post("/professors/createQuestion", ValidateToken, isProfessor, createQuestionRoute);                    //Creates a Question
+app.get("/professors/viewSubmissions/:_id", ValidateToken, isProfessor, getSubmissions);                    //Fetches the submissions of an assignment with the given id(assignment Id), called when the professor clicks on the submissions button of an assignment
 
 
 app.ws('/validateSolutionCode', ValidateWsToken, isProfessorWs, ValidateSolutionCode);             //called when the professor clicks on the validate button of solution code while creating a question
 app.ws("/RunRandomTestCaseCode", ValidateWsToken, isProfessorWs, ValidateRandomTestCaseCode);      //called when the professor clicks on the run button of random test case code while creating a question
-
 
 
 //this route is used to serve the react app
