@@ -21,7 +21,6 @@ function ProfessorAssignments({ NavTabs, NavLinks }) {
                     </div>
                 </div>
             </div>
-            <RightsReservedFooter />
         </div>
     )
 }

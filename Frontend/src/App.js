@@ -30,7 +30,7 @@ function App() {
           <Route path="/professors/questions" element={<ProfessorQuestions NavTabs={NavTabs} NavLinks={NavLinks} />} />
           <Route path="/students/assignments" element={<StudentAssignments />} /> {/*This Route is called when a student opens Assignments Page from sidebar */}
           <Route path="/students/solveAssignment/:_id" element={<SolveAssignment />} /> {/*This Route is called when a student clicks solve button on any pending assignment */}
-          <Route path="/submissions/:_id" element={<Submissions />} />
+          <Route path="/submissions/:AssignmentName/:_id" element={<Submissions />} />
           <Route path="/registercollege" element={<RegisterCollege />} />
         </Routes>
       </BrowserRouter>

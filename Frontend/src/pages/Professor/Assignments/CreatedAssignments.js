@@ -97,7 +97,7 @@ function CreatedAssignments() {
                     </div>
                     <div className="card-footer d-flex justify-content-between">
                         <button className="btn btn-primary btn-sm d-block d-sm-inline-block"> Questions ({assignment.Questions.length}) </button>
-                        <a className="btn btn-primary btn-sm d-block d-sm-inline-block" href={"/submissions/" + assignment._id}> Submissions ({assignment.SubmittedBy.length}) </a>
+                        <a className="btn btn-primary btn-sm d-block d-sm-inline-block" href={"/submissions/" + assignment.AssignmentName + "/" + assignment._id}> Submissions ({assignment.SubmittedBy.length}) </a>
                     </div>
                 </div>
 

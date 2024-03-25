@@ -36,6 +36,19 @@ async function writeDB(databaseName, collectionName, data, schema) {
     }
 }
 
+async function checkIfExists(databaseName, collectionName, query, schema) {
+    try {
+        const thisModel = connections[databaseName].model(collectionName, schema, collectionName);
+        const exists = await thisModel.exists(query);
+        return exists; 
+        //returning the result of the exists function
+        //if the document exists, it will return true, else false
+    } catch (error) {
+        console.error(`Error checking if document exists: ${databaseName}.${collectionName}`, error);
+        throw error; // Re-throw the error for handling in the calling function
+    }
+}
+
 //we dont need validation while Read because it can have projection and we can use it to get only the required fields
 
 async function readDB(databaseName, collectionName, query, schema, projection = {}) {
@@ -103,4 +116,4 @@ async function deleteIfExistsDB(databaseName, collectionName, query, schema) {
 
 
 
-module.exports = { connectDB, writeDB, readDB, updateDB, deleteDB, deleteIfExistsDB };
+module.exports = { connectDB, writeDB, readDB, updateDB, deleteDB, deleteIfExistsDB, checkIfExists };
