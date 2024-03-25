@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import fetchAPI from '../../../Scripts/Axios';
 import { toast } from 'react-toastify';
+import DisplaySubmission from '../../../components/Tabs/DisplaySubmission';
 
 function EvaluateSubmission() {
 
@@ -27,13 +28,25 @@ function EvaluateSubmission() {
         };
 
         fetchSubmissionDetails();
-    } , [_id]);
+    }, [_id]);
 
     console.log(submissionDetails);
 
     return (
         <>
             <NavbarWithProfileAndSidebar />
+            <div className="container my-3" style={{ color: "white" }}>
+                <div className="row">
+                    <div className="col-md-12">
+                        <h1>Submission</h1>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <DisplaySubmission submissions={submissionDetails?.Submission} />
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

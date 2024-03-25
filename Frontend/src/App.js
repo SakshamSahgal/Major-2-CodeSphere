@@ -31,7 +31,7 @@ function App() {
           <Route path="/students/assignments" element={<StudentAssignments />} /> {/*This Route is called when a student opens Assignments Page from sidebar */}
           <Route path="/students/solveAssignment/:_id" element={<SolveAssignment />} /> {/*This Route is called when a student clicks solve button on any pending assignment */}
           <Route path="/submissions/:AssignmentName/:_id" element={<Submissions />} />
-          <Route path="/EvaluateSubmission/:_id" element={<EvaluateSubmission />} />
+          <Route path="/analyzeSubmission/:_id" element={<EvaluateSubmission />} />
           <Route path="/registercollege" element={<RegisterCollege />} />
         </Routes>
       </BrowserRouter>

@@ -15,7 +15,7 @@ function SubmissionsList({ submissions }) {
                         key={index}
                         className="d-flex justify-content-between align-items-center mb-2 rounded"
                         onClick={() => {
-                            window.location.href = `/EvaluateSubmission/${submission._id}`;
+                            window.location.href = `/analyzeSubmission/${submission._id}`;
                         }}
                     >
                         <a className='small'>{submission.Student.Name}</a>
