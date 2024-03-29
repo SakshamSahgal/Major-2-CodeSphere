@@ -73,7 +73,7 @@ function AssignmentList({ listType }) {
                                 <div className="card-footer d-flex justify-content-between">
                                     {/* <button className="btn btn-primary btn-sm d-block d-sm-inline-block"> Questions ({assignment.Questions.length}) </button> */}
                                     <Dropdown>
-                                        <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                                        <Dropdown.Toggle variant="primary" id="dropdown-basic" size="sm">
                                             Questions ({assignment.Questions.length})
                                         </Dropdown.Toggle>
 

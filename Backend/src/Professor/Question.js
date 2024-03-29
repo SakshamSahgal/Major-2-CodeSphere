@@ -249,7 +249,7 @@ async function FetchFullQuestionDetailsRoute(req, res) {
 
             res.status(200).send({
                 success: true,
-                message: "Question Details Fetched Successfully",
+                message: "Full Question Details Fetched Successfully",
                 Question: data[0]
             });
         }

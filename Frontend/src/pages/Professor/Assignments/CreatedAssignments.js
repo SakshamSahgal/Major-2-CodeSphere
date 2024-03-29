@@ -5,7 +5,9 @@ import { convertIsoToNormalTime, getTimeElapsed } from '../../../Scripts/TimeFun
 import AssignmentListSkeleton from '../../../components/Skeletons/AssignmentListSkeleton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import  fetchAPI from '../../../Scripts/Axios';
+import fetchAPI from '../../../Scripts/Axios';
+import { Dropdown } from 'react-bootstrap';
+
 //this returns a list of assignments created by this professor
 function CreatedAssignments() {
     const [MyCreatedAssignments, setMyCreatedAssignments] = useState(null);
@@ -96,7 +98,25 @@ function CreatedAssignments() {
                         </div>
                     </div>
                     <div className="card-footer d-flex justify-content-between">
-                        <button className="btn btn-primary btn-sm d-block d-sm-inline-block"> Questions ({assignment.Questions.length}) </button>
+                        {/* <button className="btn btn-primary btn-sm d-block d-sm-inline-block"> Questions ({assignment.Questions.length}) </button> */}
+                        <Dropdown>
+                            <Dropdown.Toggle variant="primary" id="dropdown-basic" size="sm">
+                                Questions ({assignment.Questions.length})
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                {/* Here you can map over your assignment questions and render them as dropdown items */}
+                                {assignment.Questions.map((questionid, index) => (
+                                    <Dropdown.Item
+                                        key={index}
+                                        onClick={() => window.location.href = `/Question/Full/${questionid}`}
+                                    >
+                                        Question {index + 1}
+                                    </Dropdown.Item>
+                                ))}
+                            </Dropdown.Menu>
+                        </Dropdown>
+
                         <a className="btn btn-primary btn-sm d-block d-sm-inline-block" href={"/submissions/" + assignment.AssignmentName + "/" + assignment._id}> Submissions ({assignment.SubmittedBy.length}) </a>
                     </div>
                 </div>

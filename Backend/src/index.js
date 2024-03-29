@@ -13,6 +13,7 @@ const { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, F
 const { ValidateInputs, CheckQuestionInAssignment, findQuestion, ValidateTestCases, RunOutputComparison } = require("./Student/Submission.js");
 const { ValidateAssignmentId, FindAssignment, ValidateQuestionsInAssignment, CheckIfAllowedToSubmit, EvaluateAssignment } = require("./Student/Assignments.js");
 const { CheckAssignment, getSubmissions, analyzeSubmission } = require("./Professor/Submissions.js");
+const { FetchPublicQuestionDetails } = require("./Student/Question.js");
 const path = require("path");
 
 const PORT = process.env.PORT || 8080;
@@ -53,6 +54,7 @@ app.ws('/validateSolutionCode', ValidateWsToken, isProfessorWs, ValidateSolution
 app.ws("/RunRandomTestCaseCode", ValidateWsToken, isProfessorWs, ValidateRandomTestCaseCode);      //called when the professor clicks on the run button of random test case code while creating a question
 
 app.get("/GetFullQuestion/:_id", ValidateToken, isProfessor, FetchFullQuestionDetailsRoute);        //called when the professor clicks on the question.
+app.get("/getPublicQuestion/:_id", ValidateToken, isStudent, FetchPublicQuestionDetails);        //called when the student clicks on the question.
 //this route is used to serve the react app
 //it should be the last route because it is a catch all route, so if no other route is matched then this route is used
 //this is done so that the react app can handle the routing, and the server doesn't interfere with it
