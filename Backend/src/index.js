@@ -9,7 +9,7 @@ const { ValidateToken, isStudent, isProfessor, ValidateWsToken, isProfessorWs, i
 const { registerCollegeRoute, registeredCollegeRoute } = require("./other/Colleges");
 const { getStudentPendingAssignmentsRoute, getStudentSubmittedAssignmentsRoute, getStudentMissedAssignmentsRoute, getThisPendingAssignment } = require("./Student/Assignments");
 const { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getOtherQuestionsRoute, createAssignmentRoute, deleteAssignmentRoute } = require("./Professor/Assignments.js");
-const { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, FetchQuestionDetailsRoute } = require("./Professor/Question.js");
+const { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, FetchFullQuestionDetailsRoute } = require("./Professor/Question.js");
 const { ValidateInputs, CheckQuestionInAssignment, findQuestion, ValidateTestCases, RunOutputComparison } = require("./Student/Submission.js");
 const { ValidateAssignmentId, FindAssignment, ValidateQuestionsInAssignment, CheckIfAllowedToSubmit, EvaluateAssignment } = require("./Student/Assignments.js");
 const { CheckAssignment, getSubmissions, analyzeSubmission } = require("./Professor/Submissions.js");
@@ -42,7 +42,7 @@ app.get("/getBatches", ValidateToken, isProfessor, getBatchesRoute);            
 app.get("/professors/myAssignments", ValidateToken, isProfessor, getProfessorAssignmentsRoute);             //called when the professor clicks on the assignments tab, returns the list of assignments created by the professor
 app.get("/professors/getMyQuestions", ValidateToken, isProfessor, getMyQuestionsRoute);                     //called when the create assignment modal/ Questions Tab is opened, returns the list of questions created by the professor to be used in the assignment
 app.get("/professors/getOtherQuestions", ValidateToken, isProfessor, getOtherQuestionsRoute);               //called when the create assignment modal/ Questions Tab is opened, returns the list of questions created by other professors to be used in the assignment  
-app.get("/professors/getQuestionDetails/:_id", ValidateToken, isProfessor, FetchQuestionDetailsRoute)       //Fetches the details of a question with the given id (returns all details), used when the professor clicks on a question
+app.get("/professors/getQuestionDetails/:_id", ValidateToken, isProfessor, FetchFullQuestionDetailsRoute)       //Fetches the details of a question with the given id (returns all details), used when the professor clicks on a question
 app.post("/professors/createAssignment", ValidateToken, isProfessor, createAssignmentRoute);                //Creates an assignment
 app.delete("/professors/deleteAssignment/:_id", ValidateToken, isProfessor, deleteAssignmentRoute);         //Deletes an assignment, called when the professor clicks on the bin button of an assignment
 app.post("/professors/createQuestion", ValidateToken, isProfessor, createQuestionRoute);                    //Creates a Question
@@ -52,7 +52,7 @@ app.get("/professors/analyzeSubmission/:_id", ValidateToken, isProfessor, analyz
 app.ws('/validateSolutionCode', ValidateWsToken, isProfessorWs, ValidateSolutionCode);             //called when the professor clicks on the validate button of solution code while creating a question
 app.ws("/RunRandomTestCaseCode", ValidateWsToken, isProfessorWs, ValidateRandomTestCaseCode);      //called when the professor clicks on the run button of random test case code while creating a question
 
-
+app.get("/GetFullQuestion/:_id", ValidateToken, isProfessor, FetchFullQuestionDetailsRoute);        //called when the professor clicks on the question.
 //this route is used to serve the react app
 //it should be the last route because it is a catch all route, so if no other route is matched then this route is used
 //this is done so that the react app can handle the routing, and the server doesn't interfere with it

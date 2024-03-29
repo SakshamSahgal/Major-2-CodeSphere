@@ -5,7 +5,7 @@ import InfoModal from "../Modal/InfoModal";
 
 function QuestionDetailsPreview({ QuestionName, ProblemStatement, Constraints, InputFormat, OutputFormat, SampleTestCases, TimeLimitPerTestCase, MemoryLimitPerTestCase, FormMetaData }) {
     return (
-        <Card style={{ border: "none" }}>
+        <Card style={{ border: "none" }} className="my-3">
             <Card.Body>
                 {<div>
                     <Card.Title style={{ textAlign: "center", fontSize: "25px" }}>

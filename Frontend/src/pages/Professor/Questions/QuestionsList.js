@@ -4,14 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 import QuestionListSkeleton from '../../../components/Skeletons/QuestionsListSkeleton';
-import PreviewQuestionModal from '../../../components/Modal/PreviewQuestionModal';
 import fetchAPI from '../../../Scripts/Axios';
+
 
 //This is used on Questions page to display the list of Questions
 function QuestionsList({ apiRoute }) {
     const [Questions, setQuestions] = useState(null);               // This state will store the Questions array fetched from the server
-    const [selectedQuestion, setSelectedQuestion] = useState(null); // This state will store the selected question
-    const [modalShow, setModalShow] = useState(false);            // This state will control the visibility of the modal
 
     //this will fetch the Questions from the server as soon as the component is mounted
     useEffect(() => {
@@ -33,14 +31,6 @@ function QuestionsList({ apiRoute }) {
         fetchQuestions();
     }, []);
 
-    const openModal = (question) => {
-        setSelectedQuestion(question);
-        setModalShow(true);
-    };
-
-    const closeModal = () => {
-        setModalShow(false);
-    };
 
 
     return (
@@ -54,14 +44,13 @@ function QuestionsList({ apiRoute }) {
                     <ListGroup>
                         <hr />
                         {Questions.map((question, index) => (
-                            <ListGroup.Item action key={index} className="d-flex justify-content-between align-items-center mb-2 rounded" onClick={() => openModal(question)}>
+                            <ListGroup.Item action key={index} className="d-flex justify-content-between align-items-center mb-2 rounded" onClick={() => window.location.href = `/Question/Full/${question._id}`}>
                                 {question.QuestionName}
                                 <FontAwesomeIcon icon={faEye} className='mx-1' />
                             </ListGroup.Item>
                         ))}
                         <hr />
                     </ListGroup>
-                    <PreviewQuestionModal show={modalShow} onClose={closeModal} _id={selectedQuestion?._id} />
                 </>
 
             )}

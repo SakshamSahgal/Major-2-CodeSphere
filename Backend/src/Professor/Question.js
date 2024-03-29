@@ -222,7 +222,7 @@ function createQuestionRoute(req, res) {
     });
 }
 
-async function FetchQuestionDetailsRoute(req, res) {
+async function FetchFullQuestionDetailsRoute(req, res) {
     try {
         console.log(req.params._id);
 
@@ -262,4 +262,4 @@ async function FetchQuestionDetailsRoute(req, res) {
     }
 }
 
-module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, FetchQuestionDetailsRoute };
+module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, FetchFullQuestionDetailsRoute };
