@@ -3,7 +3,8 @@ const { assignmentSchema, SubmitAssignmentsSchema } = require("../db/schema");
 const { GetProfessor } = require('../other/Common');
 const { GetPublicQuestionDetails } = require("./Question");
 const { EvaluateQuestion } = require("../Code/codeEvaluation");
-const e = require("express");
+
+
 // This function is used to get the Pending assignments for the student, which are not submitted yet and are due
 function getStudentPendingAssignmentsRoute(req, res) {
 

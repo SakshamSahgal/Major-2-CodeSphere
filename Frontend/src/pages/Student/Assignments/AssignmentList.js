@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { getTimeElapsed, convertIsoToNormalTime } from "../../../Scripts/TimeFunctions";
 import AssignmentListSkeleton from "../../../components/Skeletons/AssignmentListSkeleton";
-import  fetchAPI  from '../../../Scripts/Axios';
+import fetchAPI from '../../../Scripts/Axios';
+import { Dropdown } from "react-bootstrap";
 //List Type can be 'Pending', 'Missed' or 'Submitted'
 function AssignmentList({ listType }) {
     const [assignments, setAssignments] = useState(null);
@@ -71,7 +71,24 @@ function AssignmentList({ listType }) {
                                     </div>
                                 </div>
                                 <div className="card-footer d-flex justify-content-between">
-                                    <button className="btn btn-primary btn-sm d-block d-sm-inline-block"> Questions ({assignment.Questions.length}) </button>
+                                    {/* <button className="btn btn-primary btn-sm d-block d-sm-inline-block"> Questions ({assignment.Questions.length}) </button> */}
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                                            Questions ({assignment.Questions.length})
+                                        </Dropdown.Toggle>
+
+                                        <Dropdown.Menu>
+                                            {/* Here you can map over your assignment questions and render them as dropdown items */}
+                                            {assignment.Questions.map((questionid, index) => (
+                                                <Dropdown.Item
+                                                    key={index}
+                                                    onClick={() => window.location.href = `/Question/Public/${questionid}`}
+                                                >
+                                                    Question {index + 1}
+                                                </Dropdown.Item>
+                                            ))}
+                                        </Dropdown.Menu>
+                                    </Dropdown>
                                     <button className="btn btn-primary btn-sm d-block d-sm-inline-block"> Submissions ({assignment.SubmittedBy.length}) </button>
                                     {/* show a solve button if the listType is Pending */}
                                     {listType === "Pending" && (

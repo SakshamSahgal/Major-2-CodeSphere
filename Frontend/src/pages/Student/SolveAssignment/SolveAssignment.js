@@ -28,7 +28,7 @@ function SolveAssignment() {
     // {
     //     QuestionName: String,
     //     UserCode: String,
-    //       QuestionId: String
+    //     QuestionId: String
     // }
 
     useEffect(() => {
@@ -36,6 +36,7 @@ function SolveAssignment() {
             try {
                 console.log("fetching assignment Details")
                 const response = await fetchAPI(`/students/getPendingAssignment/${_id}`);
+                console.log(response.data);
                 if (response.data.success) {
                     toast.success(response.data.message);
                     setAssignmentDetails(response.data.Assignment);
