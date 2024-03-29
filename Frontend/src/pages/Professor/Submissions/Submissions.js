@@ -7,6 +7,7 @@ import SubmissionsList from '../../../components/List/SubmissionsList';
 
 
 function Submissions() {
+    const { LoginType } = useParams();
     const [submissions, setSubmissions] = useState(null);
     const { _id } = useParams();
     const { AssignmentName } = useParams();
@@ -43,7 +44,7 @@ function Submissions() {
                     <div className='row'>
                         <div className='col'>
                             <hr />
-                            <SubmissionsList submissions={submissions} />
+                            <SubmissionsList submissions={submissions} LoginType={LoginType} />
                             <hr />
                         </div>
                     </div>

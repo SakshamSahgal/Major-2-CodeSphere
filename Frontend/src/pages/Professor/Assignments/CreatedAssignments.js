@@ -117,7 +117,7 @@ function CreatedAssignments() {
                             </Dropdown.Menu>
                         </Dropdown>
 
-                        <a className="btn btn-primary btn-sm d-block d-sm-inline-block" href={"/submissions/" + assignment.AssignmentName + "/" + assignment._id}> Submissions ({assignment.SubmittedBy.length}) </a>
+                        <a className="btn btn-primary btn-sm d-block d-sm-inline-block" href={"/professors/submissions/" + assignment.AssignmentName + "/" + assignment._id}> Submissions ({assignment.SubmittedBy.length}) </a>
                     </div>
                 </div>
 

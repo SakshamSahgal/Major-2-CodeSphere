@@ -89,7 +89,9 @@ function AssignmentList({ listType }) {
                                             ))}
                                         </Dropdown.Menu>
                                     </Dropdown>
-                                    <button className="btn btn-primary btn-sm d-block d-sm-inline-block"> Submissions ({assignment.SubmittedBy.length}) </button>
+                                    <button className="btn btn-primary btn-sm d-block d-sm-inline-block" onClick={() => {
+                                        window.location.href = `/students/submissions/${assignment.AssignmentName}/${assignment._id}`
+                                    }}> Submissions ({assignment.SubmittedBy.length}) </button>
                                     {/* show a solve button if the listType is Pending */}
                                     {listType === "Pending" && (
                                         <a href={`/students/solveAssignment/${assignment._id}`} className="btn btn-success btn-sm d-block d-sm-inline-block">Solve</a>
