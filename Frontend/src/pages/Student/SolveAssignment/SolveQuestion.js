@@ -7,6 +7,7 @@ import CodeEditor from '../../../components/CodeEditor/CodeEditor';
 import { useState } from "react";
 import QuestionDetailsAccordion from "../../../components/Accordion/QuestionDetailsAccordion";
 import DryRunModal from "../../../components/Modal/DryRunModal";
+import CodeScore from "../../../components/CommonComponents/CodeScore";
 //Questions Array is an array of objects.
 
 
@@ -88,6 +89,7 @@ function SolveQuestion({ Questions, AssignmentId, UserCodes, setUserCodes }) {
                 </div>
             </div>
             <div className="row my-3">
+                <CodeScore Code={UserCodes[currentQuestionIndex].UserCode} />
                 <CodeEditor defaultCode={UserCodes[currentQuestionIndex].UserCode} onUpdateCode={handleUpdateCode} />
             </div>
             <div className="row my-3">
