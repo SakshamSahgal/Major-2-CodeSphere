@@ -1,7 +1,7 @@
 const path = require('path');
 const { RunCpp, DeleteAfterExecution } = require("../Code/Run")
 const fs = require('fs');
-const { writeDB, readDB } = require('../db/mongoOperations');
+const { writeDB, readDB, checkIfExists, deleteDB } = require('../db/mongoOperations');
 const { QuestionSchema } = require('../db/schema');
 const { GetProfessor } = require('../other/Common');
 
@@ -113,7 +113,7 @@ function ValidateRandomTestCaseCode(ws, req) {
                 ws.send(JSON.stringify({ success: true, message: "Running the code...", verdict: "Processing.." }));
 
                 let response = await RunCpp(data.RandomTestCaseCode, "", 5)
-                
+
                 //if the code is not executed successfully, send the error message as response and close the connection
                 if (!response.success) {
                     ws.send(JSON.stringify(response), () => {
@@ -128,7 +128,7 @@ function ValidateRandomTestCaseCode(ws, req) {
                         //get the filename from the response.outputFilePath
                         let fileName = path.basename(response.outputFilePath);
                         let copyFilePath = path.join(__dirname, "..", "..", "public", "TemperoryCodeBase", fileName);
-                        
+
                         // Create read stream from response.outputFilePath
                         const readStream = fs.createReadStream(response.outputFilePath);
 
@@ -262,4 +262,83 @@ async function FetchFullQuestionDetailsRoute(req, res) {
     }
 }
 
-module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, FetchFullQuestionDetailsRoute };
+async function CheckIfQuestionExists(req, res, next) {
+
+    let Query = {
+        _id: req.params._id // This is the Question ID
+    };
+
+    try {
+        let exists = await checkIfExists("QuestionBank", req.decoded.Institution, Query, QuestionSchema);
+        if (exists) {
+            next();
+        } else {
+            res.status(404).send({
+                success: false,
+                message: "Question not found"
+            });
+        }
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: `Failed to Check if Question Exists, error: ${error.message}`
+        });
+    }
+}
+
+async function CheckIfAddedInAnyAssignment(req, res, next) {
+    // Check if the question is added in any assignment
+    //check if id exists in Questions array of any assignment in the Assignments collection
+    let Query = {
+        Questions: {
+            $in: [req.params._id]
+        }
+    };
+
+    //only return the _id and AssignmentName
+    let Projection = {
+        _id: 1,
+        AssignmentName: 1
+    };
+
+    try {
+        let response = readDB("Assignments", req.decoded.Institution, Query, AssignmentSchema, Projection);
+        if (response.length > 0) {
+            res.status(400).send({
+                success: false,
+                message: `Question is added in the following assignments, please remove it from the assignments first`,
+                assignments: response
+            });
+        } else {
+            next();
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: `Failed to Check if Question is already added in any Assignment, error: ${error.message}`
+        });
+    }
+}
+
+async function deleteQuestionRoute(req, res) {
+
+    let Query = {
+        _id: req.params._id // This is the Question ID
+    };
+
+    try {
+        let response = deleteDB("QuestionBank", req.decoded.Institution, Query, QuestionSchema);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: `Failed to Delete Question with id ${req.params._id}, error: ${error.message}`
+        });
+    }
+}
+
+module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, FetchFullQuestionDetailsRoute, CheckIfQuestionExists, CheckIfAddedInAnyAssignment, deleteQuestionRoute };
