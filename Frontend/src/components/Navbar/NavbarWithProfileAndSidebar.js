@@ -1,3 +1,4 @@
+import { fetchAPI } from '../../Scripts/Axios';
 import React, { useState } from 'react';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
@@ -8,7 +9,6 @@ import ProfileModal from '../Modal/profileModal';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { toast } from 'react-toastify';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
-import  fetchAPI from '../../Scripts/Axios';
 
 function NavbarWithProfileAndSidebar({ TabNames = [], TabLinks = [], ActiveTabIndex = 0 }) {
     const [showModal, setShowModal] = useState(false);

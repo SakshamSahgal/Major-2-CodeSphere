@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import fetchAPI from '../../Scripts/Axios';
+import { fetchAPI } from '../../Scripts/Axios';
 import { Tab, Nav, Form } from "react-bootstrap";
 import QuestionDetailsPreview from '../../components/CommonComponents/QuestionDetailsPreview';
 import HiddenQuestionDetailsPreview from '../../components/CommonComponents/HiddenQuestionDetailsPreview';

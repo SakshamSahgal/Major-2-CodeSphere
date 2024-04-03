@@ -7,7 +7,7 @@ import ProfileModal from '../Modal/profileModal';
 import { toast } from 'react-toastify';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 import SubmitAssignmentModal from '../Modal/SubmitAssignmentModal';
-import  fetchAPI  from '../../Scripts/Axios';
+import { fetchAPI }  from '../../Scripts/Axios';
 
 function SubmitAssignmentNavbar({ _id, UserCodes }) {
     

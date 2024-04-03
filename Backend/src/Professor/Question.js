@@ -2,7 +2,7 @@ const path = require('path');
 const { RunCpp, DeleteAfterExecution } = require("../Code/Run")
 const fs = require('fs');
 const { writeDB, readDB, checkIfExists, deleteDB } = require('../db/mongoOperations');
-const { QuestionSchema } = require('../db/schema');
+const { QuestionSchema, assignmentSchema } = require('../db/schema');
 const { GetProfessor } = require('../other/Common');
 
 function ValidateSolutionCode(ws, req) {
@@ -271,6 +271,7 @@ async function CheckIfQuestionExists(req, res, next) {
     try {
         let exists = await checkIfExists("QuestionBank", req.decoded.Institution, Query, QuestionSchema);
         if (exists) {
+            console.log("Question Exists");
             next();
         } else {
             res.status(404).send({
@@ -304,7 +305,8 @@ async function CheckIfAddedInAnyAssignment(req, res, next) {
     };
 
     try {
-        let response = readDB("Assignments", req.decoded.Institution, Query, AssignmentSchema, Projection);
+        let response = await readDB("Assignments", req.decoded.Institution, Query, assignmentSchema, Projection);
+        console.log(response);
         if (response.length > 0) {
             res.status(400).send({
                 success: false,
@@ -312,6 +314,7 @@ async function CheckIfAddedInAnyAssignment(req, res, next) {
                 assignments: response
             });
         } else {
+            console.log("Question is not added in any assignment");
             next();
         }
     } catch (error) {
@@ -330,7 +333,12 @@ async function deleteQuestionRoute(req, res) {
     };
 
     try {
-        let response = deleteDB("QuestionBank", req.decoded.Institution, Query, QuestionSchema);
+        let response = await deleteDB("QuestionBank", req.decoded.Institution, Query, QuestionSchema);
+        console.log(response);
+        res.status(200).send({
+            success: true,
+            message: "Question Deleted Successfully"
+        });
     }
     catch (error) {
         console.log(error);

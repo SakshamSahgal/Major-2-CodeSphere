@@ -5,7 +5,7 @@ import { convertIsoToNormalTime, getTimeElapsed } from '../../../Scripts/TimeFun
 import AssignmentListSkeleton from '../../../components/Skeletons/AssignmentListSkeleton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import fetchAPI from '../../../Scripts/Axios';
+import { fetchAPI } from '../../../Scripts/Axios';
 import { Dropdown } from 'react-bootstrap';
 
 //this returns a list of assignments created by this professor

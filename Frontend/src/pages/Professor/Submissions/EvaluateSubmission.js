@@ -2,7 +2,7 @@
 import NavbarWithProfileAndSidebar from "../../../components/Navbar/NavbarWithProfileAndSidebar";
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import fetchAPI from '../../../Scripts/Axios';
+import { fetchAPI } from '../../../Scripts/Axios';
 import { toast } from 'react-toastify';
 import DisplaySubmission from '../../../components/Tabs/DisplaySubmission';
 

@@ -5,7 +5,7 @@ import PlainNavbar from '../../components/Navbar/PlainNavbar';
 import RightsReservedFooter from '../../components/Footer/RightsReservedFooter';
 import LoginForm from './LoginForm';
 import LoadingSpinner from '../../components/Spinners/Spinners';
-import  fetchAPI  from '../../Scripts/Axios';
+import  { fetchAPI }  from '../../Scripts/Axios';
 //LoginType = 'Students' or 'Professors'
 function LoginPage({ LoginType }) {
 

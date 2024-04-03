@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import fetchAPI from '../../../Scripts/Axios';
+import { fetchAPI } from '../../../Scripts/Axios';
 import LoadingSpinner from '../../../components/Spinners/Spinners';
 import SolveQuestion from './SolveQuestion';
 import SubmitAssignmentNavbar from '../../../components/Navbar/SubmitAssignmentNavbar';

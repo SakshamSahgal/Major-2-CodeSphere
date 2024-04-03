@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import fetchAPI from '../../../Scripts/Axios'; // Assuming fetchAPI is a utility function to handle API requests
+import { fetchAPI } from '../../../Scripts/Axios'; // Assuming fetchAPI is a utility function to handle API requests
 import { toast } from 'react-toastify';
 import NavbarWithProfileAndSidebar from '../../../components/Navbar/NavbarWithProfileAndSidebar';
 import SubmissionsList from '../../../components/List/SubmissionsList';

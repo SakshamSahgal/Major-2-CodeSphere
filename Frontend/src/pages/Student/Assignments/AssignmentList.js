@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { getTimeElapsed, convertIsoToNormalTime } from "../../../Scripts/TimeFunctions";
 import AssignmentListSkeleton from "../../../components/Skeletons/AssignmentListSkeleton";
-import fetchAPI from '../../../Scripts/Axios';
+import { fetchAPI } from '../../../Scripts/Axios';
 import { Dropdown } from "react-bootstrap";
 //List Type can be 'Pending', 'Missed' or 'Submitted'
 function AssignmentList({ listType }) {
