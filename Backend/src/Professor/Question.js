@@ -274,7 +274,7 @@ async function CheckIfQuestionExists(req, res, next) {
             console.log("Question Exists");
             next();
         } else {
-            res.status(404).send({
+            res.send({
                 success: false,
                 message: "Question not found"
             });
@@ -308,7 +308,7 @@ async function CheckIfAddedInAnyAssignment(req, res, next) {
         let response = await readDB("Assignments", req.decoded.Institution, Query, assignmentSchema, Projection);
         console.log(response);
         if (response.length > 0) {
-            res.status(400).send({
+            res.send({
                 success: false,
                 message: `Question is added in the following assignments, please remove it from the assignments first`,
                 assignments: response
@@ -335,7 +335,7 @@ async function deleteQuestionRoute(req, res) {
     try {
         let response = await deleteDB("QuestionBank", req.decoded.Institution, Query, QuestionSchema);
         console.log(response);
-        res.status(200).send({
+        res.send({
             success: true,
             message: "Question Deleted Successfully"
         });

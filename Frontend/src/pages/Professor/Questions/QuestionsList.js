@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 import QuestionListSkeleton from '../../../components/Skeletons/QuestionsListSkeleton';
 import { fetchAPI } from '../../../Scripts/Axios';
-import DeleteConfirmationModal from '../../../components/Modal/DeleteConfirmationModal';
+import DeleteQuestionConfirmationModal from '../../../components/Modal/DeleteQuestionConfirmationModal';
 import { deleteAPI } from '../../../Scripts/Axios';
 //This is used on Questions page to display the list of Questions
 function QuestionsList({ apiRoute }) {
-    const [Questions, setQuestions] = useState(null);               // This state will store the Questions array fetched from the server
-    const [showConfirmationModal, setShowConfirmationModal] = useState(false); // This state will be used to show/hide the confirmation modal
-    const [DeleteId, setDeleteId] = useState(null); // This state will store the id of the Question to be deleted
+    const [Questions, setQuestions] = useState(null);                                                                               // This state will store the Questions array fetched from the server
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);                                                      // This state will be used to show/hide the confirmation modal
+    const [nameOfQuestionSelectedToDelete, setNameOfQuestionSelectedToDelete] = useState(null);                                     // This state will store the id of the Question to be deleted
+    const [includedInAssignmentsArray, setIncludedInAssignmentsArray] = useState([]);                                               // This state will store the array of assignments in which the selected to delete Question is included
+    const [DeleteId, setDeleteId] = useState(null);                                                                                 // This state will store the id of the Question to be deleted
+
     //this will fetch the Questions from the server as soon as the component is mounted
     useEffect(() => {
         const fetchQuestions = async () => {
@@ -33,9 +36,17 @@ function QuestionsList({ apiRoute }) {
     }, []);
 
     //This function will be called when the delete button is pressed
-    const DeleteButtonPressed = async (deleteId) => {
-        setDeleteId(deleteId); // Set the id of the Question to be deleted
+    const DeleteButtonPressed = async (curQuestionName, deleteId) => {
+        setNameOfQuestionSelectedToDelete(curQuestionName); // Set the current Question Name to the state
+        setDeleteId(deleteId);
         setShowConfirmationModal(true); // Show the confirmation modal
+    }
+
+    const CloseConfirmationModal = () => {
+        setShowConfirmationModal(false);
+        setDeleteId(null);
+        setIncludedInAssignmentsArray([]);
+        setNameOfQuestionSelectedToDelete(null);
     }
 
     const handleDelete = async () => {
@@ -51,7 +62,12 @@ function QuestionsList({ apiRoute }) {
                 }, 1000);
             }
             else {
-                toast.error(response.data.message);
+                if (response.data.assignments) {
+                    setIncludedInAssignmentsArray(response.data.assignments);
+                    toast.info(response.data.message);
+                }
+                else
+                    toast.error(response.data.message);
             }
         }
         catch (err) {
@@ -83,7 +99,7 @@ function QuestionsList({ apiRoute }) {
                                         </ListGroup.Item>
                                     </div>
                                     <div className="col-auto p-0 my-1 d-flex justify-content-center align-items-center">
-                                        <ListGroup.Item action className="d-flex justify-content-between align-items-center mb-2 rounded h-fit" onClick={() => DeleteButtonPressed(question._id)}>
+                                        <ListGroup.Item action className="d-flex justify-content-between align-items-center mb-2 rounded h-fit" onClick={() => DeleteButtonPressed(question.QuestionName, question._id)}>
                                             <div className="d-flex justify-content-end align-items-center" style={{ height: "25px" }}>
                                                 <FontAwesomeIcon icon={faTrash} className='mx-1' />
                                             </div>
@@ -96,9 +112,8 @@ function QuestionsList({ apiRoute }) {
                         </div>
                         <hr />
                     </ListGroup>
-                    <DeleteConfirmationModal show={showConfirmationModal} handleClose={() => setShowConfirmationModal(false)} handleDelete={handleDelete} Label={DeleteId} />
+                    <DeleteQuestionConfirmationModal show={showConfirmationModal} handleClose={CloseConfirmationModal} handleDelete={handleDelete} Label={nameOfQuestionSelectedToDelete} includedInAssignmentsArray={includedInAssignmentsArray} />
                 </>
-
             )}
         </>
     )
