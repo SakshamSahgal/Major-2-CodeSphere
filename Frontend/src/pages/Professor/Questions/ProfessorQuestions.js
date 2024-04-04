@@ -22,12 +22,12 @@ function ProfessorQuestions({ NavTabs, NavLinks }) {
                             </Nav>
                             <Tab.Content>
                                 <Tab.Pane eventKey="MyQuestions">
-                                    <QuestionsList apiRoute="/professors/getMyQuestions" />
+                                    <QuestionsList apiRoute="/professors/getMyQuestions" type={"MyQuestions"} />
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="OtherQuestions">
                                     <hr />
                                     <ListGroup>
-                                        <QuestionsList apiRoute="/professors/getOtherQuestions" />
+                                        <QuestionsList apiRoute="/professors/getOtherQuestions" type={"OtherQuestions"} />
                                     </ListGroup>
                                     <hr />
                                 </Tab.Pane>

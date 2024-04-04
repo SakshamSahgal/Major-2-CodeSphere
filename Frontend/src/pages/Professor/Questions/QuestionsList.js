@@ -8,7 +8,8 @@ import { fetchAPI } from '../../../Scripts/Axios';
 import DeleteQuestionConfirmationModal from '../../../components/Modal/DeleteQuestionConfirmationModal';
 import { deleteAPI } from '../../../Scripts/Axios';
 //This is used on Questions page to display the list of Questions
-function QuestionsList({ apiRoute }) {
+function QuestionsList({ apiRoute, type }) {
+
     const [Questions, setQuestions] = useState(null);                                                                               // This state will store the Questions array fetched from the server
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);                                                      // This state will be used to show/hide the confirmation modal
     const [nameOfQuestionSelectedToDelete, setNameOfQuestionSelectedToDelete] = useState(null);                                     // This state will store the id of the Question to be deleted
@@ -88,7 +89,7 @@ function QuestionsList({ apiRoute }) {
                         <hr />
                         <div className='container'>
 
-                            {Questions.map((question, index) => (
+                            {(type === "MyQuestions") ? (Questions.map((question, index) => (
 
                                 <div className="row" key={index}>
                                     <div className="col py-0 my-1">
@@ -107,8 +108,19 @@ function QuestionsList({ apiRoute }) {
                                     </div>
 
                                 </div>
-                            ))}
+                            ))) : (Questions.map((question, index) => (
 
+                                <div className="row" key={index}>
+                                    <div className="col py-0 my-1">
+                                        <ListGroup.Item action className="d-flex justify-content-between align-items-center mb-2 rounded h-fit" onClick={() => window.location.href = `/Question/Full/${question._id}`}>
+                                            <div className="d-flex justify-content-end align-items-center" style={{ height: "25px" }}>
+                                                {question.QuestionName}
+                                            </div>
+                                        </ListGroup.Item>
+                                    </div>
+                                </div>
+                            )))
+                            }
                         </div>
                         <hr />
                     </ListGroup>
