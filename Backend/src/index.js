@@ -15,7 +15,6 @@ const { ValidateAssignmentId, FindAssignment, ValidateQuestionsInAssignment, Che
 const { CheckAssignment, getSubmissions, analyzeSubmission } = require("./Professor/Submissions.js");
 const { FetchPublicQuestionDetails } = require("./Student/Question.js");
 const path = require("path");
-
 const PORT = process.env.PORT || 8080;
 
 

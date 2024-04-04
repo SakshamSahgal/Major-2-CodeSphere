@@ -18,6 +18,9 @@ RUN npm install
 # Copy the rest of the Backend folder content (except dockerignore contents) to the working directory
 COPY Backend .
 
+# Make public/TemporaryCodeBase folder if it doesn't already exist
+RUN mkdir -p public/TemporaryCodeBase
+
 # To avoid carriage return issues between Windows and Linux
 RUN dos2unix src/Code/script.sh
 

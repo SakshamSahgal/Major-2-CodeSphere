@@ -1,48 +1,32 @@
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
 const { execFile } = require('child_process');
 
-function DeleteAfterExecution(JobId, ...filePaths) {
+function DeleteAfterExecution(...filePaths) {
     filePaths.forEach(filePath => {
         fs.unlink(filePath, (err) => {
             if (err) {
                 if (err.code === 'ENOENT') {
                     console.log(`File ${filePath} does not exist`);
-                    WriteLogsToFile(`File ${filePath} does not exist`, JobId);
                 } else {
                     console.log(`Error occurred while deleting the ${filePath} file, err : ${err}`);
-                    WriteLogsToFile(`Error occurred while deleting the ${filePath} file, err : ${err}`, JobId);
                 }
             } else {
                 console.log(`Successfully deleted the ${filePath} file`);
-                WriteLogsToFile(`Successfully deleted the ${filePath} file`, JobId);
             }
         });
     });
 }
 
-async function WriteLogsToFile(logs, JobId) {
-    logs += "\n";
-    let logFilePath = path.join(__dirname, "..", "..", "public", "RunLogs", `${JobId}Logs.txt`)
-    //append the logs to the logs file
-    fs.appendFile(logFilePath, logs, (err) => {
-        if (err) {
-            console.log(`error while appending logs to the logs file, err : ${err}`);
-        }
-    });
-}
 
-async function writeCppToFile(code, scriptPath, JobId) {
+async function writeCppToFile(code, scriptPath) {
     return new Promise((resolve, reject) => {
         fs.writeFile(scriptPath, code, (err) => {
             if (err) {
                 console.log(`Error occurred while writing the ${filename} file, err : ${err}`);
-                WriteLogsToFile(`Error occurred while writing the ${filename} file, err : ${err}`, JobId);
                 reject(err);
             } else {
                 console.log(`Successfully written the ${scriptPath} file`);
-                WriteLogsToFile(`Successfully written the ${scriptPath} file`, JobId);
                 resolve();
             }
         });
@@ -61,7 +45,6 @@ async function RunCpp(code, input, TimeLimit = 5) {
     return new Promise(async (resolve, reject) => {
 
         let scriptName = Date.now();
-        let JobId = scriptName;
         let scriptPath = path.join(__dirname, `${scriptName}.cpp`)
         let executablePath = path.join(__dirname, `${scriptName}.out`)
         let outputFilePath = path.join(__dirname, `${scriptName}.txt`)
@@ -69,7 +52,7 @@ async function RunCpp(code, input, TimeLimit = 5) {
 
         //write the code to a .cpp file asychronously
         try {
-            await writeCppToFile(code, scriptPath, JobId);
+            await writeCppToFile(code, scriptPath);
             try {
                 scriptArguments = [scriptPath, executablePath, outputFilePath, TimeLimit, process.env.MemoryLimitForOutputFileInBytes, input];
                 const child = execFile('/bin/bash', [path.join(__dirname, "script.sh"), ...scriptArguments], (error, stdout, stderr) => {
@@ -97,14 +80,14 @@ async function RunCpp(code, input, TimeLimit = 5) {
                                 verdict: "Compilation Error"
                             });
                         }
-                        else{
+                        else {
                             resolve({
                                 success: false,
                                 message: `Error occured while running the script ${executablePath}`,
                                 verdict: "Runtime Error"
                             });
                         }
-                        DeleteAfterExecution(JobId, scriptPath, executablePath);
+                        DeleteAfterExecution(scriptPath, executablePath);
                     }
                     else {
                         resolve({
@@ -112,7 +95,7 @@ async function RunCpp(code, input, TimeLimit = 5) {
                             outputFilePath: outputFilePath,
                             verdict: "Run Successful"
                         });
-                        DeleteAfterExecution(JobId, scriptPath, executablePath);
+                        DeleteAfterExecution(scriptPath, executablePath);
                     }
                 });
             }
@@ -122,7 +105,7 @@ async function RunCpp(code, input, TimeLimit = 5) {
                     message: `Error occurred, err : ${err}`,
                     verdict: "Compilation Error"
                 });
-                DeleteAfterExecution(JobId, scriptPath, executablePath);
+                DeleteAfterExecution(scriptPath, executablePath);
                 return;
             }
         } catch (err) {
@@ -131,7 +114,7 @@ async function RunCpp(code, input, TimeLimit = 5) {
                 message: `Error occurred while writing the ${scriptPath} file`,
                 verdict: "Compilation Error"
             });
-            DeleteAfterExecution(JobId, executablePath, scriptPath);
+            DeleteAfterExecution(executablePath, scriptPath);
             return;
         }
     });

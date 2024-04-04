@@ -127,7 +127,7 @@ function ValidateRandomTestCaseCode(ws, req) {
 
                         //get the filename from the response.outputFilePath
                         let fileName = path.basename(response.outputFilePath);
-                        let copyFilePath = path.join(__dirname, "..", "..", "public", "TemperoryCodeBase", fileName);
+                        let copyFilePath = path.join(__dirname, "..", "..", "public", "TemporaryCodeBase", fileName);
 
                         // Create read stream from response.outputFilePath
                         const readStream = fs.createReadStream(response.outputFilePath);
@@ -140,7 +140,7 @@ function ValidateRandomTestCaseCode(ws, req) {
 
                         // Listen for events on the write stream
                         writeStream.on('finish', () => {
-                            let outputLink = process.env.BackendHost + "/TemperoryCodeBase/" + fileName;
+                            let outputLink = process.env.BackendHost + "/TemporaryCodeBase/" + fileName;
                             ws.send(JSON.stringify({
                                 success: true,
                                 message: "Output Link will expire in 5 minutes",
@@ -150,7 +150,7 @@ function ValidateRandomTestCaseCode(ws, req) {
                                 DeleteAfterExecution(response.outputFilePath);
                                 //delete the Temp public file after 5 minutes
                                 setTimeout(() => {
-                                    console.log(`Deleting Temperory public File ${copyFilePath} after Timeout of 5 minutes`)
+                                    console.log(`Deleting Temporary public File ${copyFilePath} after Timeout of 5 minutes`)
                                     DeleteAfterExecution(copyFilePath);
                                 }, 300000);
                             });
