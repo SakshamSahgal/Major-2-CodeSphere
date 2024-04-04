@@ -299,9 +299,8 @@ async function CheckIfAddedInAnyAssignment(req, res, next) {
         }
     };
 
-    //only return the _id and AssignmentName
+    //only return AssignmentName
     let Projection = {
-        _id: 1,
         AssignmentName: 1
     };
 

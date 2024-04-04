@@ -36,13 +36,13 @@ function QuestionsList({ apiRoute, type }) {
         fetchQuestions();
     }, []);
 
-    //This function will be called when the delete button is pressed
+    //This function will be called when the delete button is pressed next to any Question
     const DeleteButtonPressed = async (curQuestionName, deleteId) => {
         setNameOfQuestionSelectedToDelete(curQuestionName); // Set the current Question Name to the state
         setDeleteId(deleteId);
         setShowConfirmationModal(true); // Show the confirmation modal
     }
-
+    //This function will be called when the close button is pressed on the confirmation modal, it resets the states
     const CloseConfirmationModal = () => {
         setShowConfirmationModal(false);
         setDeleteId(null);
@@ -50,29 +50,26 @@ function QuestionsList({ apiRoute, type }) {
         setNameOfQuestionSelectedToDelete(null);
     }
 
+    //This function will be called when the delete button is pressed on the confirmation modal
     const handleDelete = async () => {
-        console.log("called");
         try {
             const response = await deleteAPI(`/professors/deleteQuestion/${DeleteId}`);
             console.log(response.data);
-            if (response.data.success) {
-                toast.success(response.data.message);
-                //refrest the page after deleting the Question in 1 second
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+            const { success, assignments, message } = response.data;
+            if (success) {
+                toast.success(message);
+                setTimeout(() => window.location.reload(), 1000);
             }
             else {
-                if (response.data.assignments) {
-                    setIncludedInAssignmentsArray(response.data.assignments);
-                    toast.info(response.data.message);
+                if (assignments) {
+                    setIncludedInAssignmentsArray(assignments);
+                    toast.info(message);
+                } else {
+                    toast.error(message);
                 }
-                else
-                    toast.error(response.data.message);
             }
         }
         catch (err) {
-            console.log(err);
             toast.error(`error while deleting Question, error ${err.message}`);
         }
     }
