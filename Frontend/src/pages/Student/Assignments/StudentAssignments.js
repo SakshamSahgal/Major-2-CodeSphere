@@ -1,5 +1,4 @@
 import NavbarWithProfileAndSidebar from "../../../components/Navbar/NavbarWithProfileAndSidebar";
-import RightsReservedFooter from "../../../components/Footer/RightsReservedFooter";
 import StudentAssignmentNavtabs from "./StudentAssignmentNavtabs";
 
 
@@ -15,7 +14,6 @@ function StudentAssignments() {
           <StudentAssignmentNavtabs activeTab="pending" />
         </div>
       </div>
-      <RightsReservedFooter />
     </div>
   );
 }

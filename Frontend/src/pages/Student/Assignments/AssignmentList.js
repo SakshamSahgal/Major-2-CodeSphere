@@ -4,9 +4,33 @@ import { getTimeElapsed, convertIsoToNormalTime } from "../../../Scripts/TimeFun
 import AssignmentListSkeleton from "../../../components/Skeletons/AssignmentListSkeleton";
 import { fetchAPI } from '../../../Scripts/Axios';
 import { Dropdown } from "react-bootstrap";
+import UnsubmitAssignmentConfirmationModal from "../../../components/Modal/UnsubmitAssignmentConfirmationModal"
+
 //List Type can be 'Pending', 'Missed' or 'Submitted'
 function AssignmentList({ listType }) {
     const [assignments, setAssignments] = useState(null);
+    //in case of listType Submitted
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
+
+    const handleShowConfirmationModal = (assignmentId) => {
+        setSelectedAssignmentId(assignmentId);
+        setShowConfirmationModal(true);
+    }
+
+    const handleCloseConfirmationModal = () => {
+        setShowConfirmationModal(false);
+        setSelectedAssignmentId(null);
+    }
+
+    const handleUnsubmit = async () => {
+        try {
+            console.log("unsibmitting assignment with id : ", selectedAssignmentId);
+
+        } catch (error) {
+            toast.error(`Error unsubmitting Assignment. Please try again later. err : ${error}`);
+        }
+    }
 
     useEffect(() => {
         const fetchAssignments = async () => {
@@ -43,8 +67,11 @@ function AssignmentList({ listType }) {
                         <div className="col">
                             <div className="card">
                                 <div className="card-header d-flex align-items-center">
-                                    <small className="text-muted">Posted By: {assignment.PostedBy.Name}</small>
+                                    <small className="text-muted">{assignment.PostedBy.Name}</small>
                                     <h5 className="text-center mb-0 flex-grow-1">{assignment.AssignmentName}</h5>
+                                    {listType === "Submitted" && (
+                                        <button className="btn btn-danger btn-sm d-block d-sm-inline-block" onClick={() => handleShowConfirmationModal(assignment._id)}>Unsubmit</button>
+                                    )}
                                 </div>
                                 <div className="card-body">
                                     <div>
@@ -102,6 +129,7 @@ function AssignmentList({ listType }) {
                     </div>
                 ))
             )}
+            <UnsubmitAssignmentConfirmationModal show={showConfirmationModal} handleClose={handleCloseConfirmationModal} Label={"This Assignment"} handleUnsubmit={handleUnsubmit} />
         </div>
     );
 }
