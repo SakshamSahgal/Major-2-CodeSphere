@@ -1,5 +1,5 @@
-const { readDB, writeDB, deleteIfExistsDB } = require("../db/mongoOperations");
-const { assignmentSchema, registeredCollegesSchema, QuestionSchema } = require("../db/schema");
+const { readDB, writeDB, deleteIfExistsDB, deleteAllMatching } = require("../db/mongoOperations");
+const { assignmentSchema, registeredCollegesSchema, QuestionSchema, SubmitAssignmentsSchema } = require("../db/schema");
 
 function getProfessorAssignmentsRoute(req, res) {
     Querry = {
@@ -144,6 +144,7 @@ function createAssignmentRoute(req, res) {
 
 }
 
+
 async function deleteAssignmentRoute(req, res) {
     console.log(`Received request to delete assignment with id: ${req.params._id}`);
 
@@ -164,6 +165,14 @@ async function deleteAssignmentRoute(req, res) {
         }
 
         console.log("Assignment deleted successfully");
+
+        //delete all Submissions of this assignment from AssignmentSubmissions Database
+        const deleteSubmissionsQuery = {
+            AssignmentId: req.params._id
+        }
+
+        const DeleteSubmissions = await deleteAllMatching("AssignmentSubmissions", req.decoded.Institution, deleteSubmissionsQuery, SubmitAssignmentsSchema);
+        
         res.status(200).json({
             success: true,
             message: "Assignment deleted successfully",

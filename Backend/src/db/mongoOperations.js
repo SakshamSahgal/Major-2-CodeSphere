@@ -40,7 +40,7 @@ async function checkIfExists(databaseName, collectionName, query, schema) {
     try {
         const thisModel = connections[databaseName].model(collectionName, schema, collectionName);
         const exists = await thisModel.exists(query);
-        return exists; 
+        return exists;
         //returning the result of the exists function
         //if the document exists, it will return true, else false
     } catch (error) {
@@ -94,6 +94,18 @@ async function deleteDB(databaseName, collectionName, query, schema) {
     }
 }
 
+async function deleteAllMatching(databaseName, collectionName, query, schema) {
+    try {
+        const thisModel = connections[databaseName].model(collectionName, schema, collectionName);
+        const data = await thisModel.deleteMany(query);
+        console.log(`${data.deletedCount} document(s) deleted from ${collectionName} collection in ${databaseName} database`);
+        return data;
+    } catch (error) {
+        console.error(`Error deleting from the database: ${databaseName} collection : ${collectionName}, error : `, error);
+        throw error; // Rethrow the error to handle it where deleteDB is called
+    }
+}
+
 async function deleteIfExistsDB(databaseName, collectionName, query, schema) {
     try {
         console.log(`Attempting to delete document from ${collectionName} collection in ${databaseName} database with query:`, query);
@@ -116,4 +128,4 @@ async function deleteIfExistsDB(databaseName, collectionName, query, schema) {
 
 
 
-module.exports = { connectDB, writeDB, readDB, updateDB, deleteDB, deleteIfExistsDB, checkIfExists };
+module.exports = { connectDB, writeDB, readDB, updateDB, deleteDB, deleteIfExistsDB, checkIfExists, deleteAllMatching };
