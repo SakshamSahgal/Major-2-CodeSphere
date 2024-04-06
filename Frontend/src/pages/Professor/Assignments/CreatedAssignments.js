@@ -7,10 +7,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { fetchAPI } from '../../../Scripts/Axios';
 import { Dropdown } from 'react-bootstrap';
-
+import DeleteAssignmentConfirmationModal from '../../../components/Modal/DeleteAssignmentConfirmationModal';
 //this returns a list of assignments created by this professor
 function CreatedAssignments() {
     const [MyCreatedAssignments, setMyCreatedAssignments] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [assignmentIdToDelete, setAssignmentIdToDelete] = useState(null);
 
     useEffect(() => {
         // Fetch created assignments from the database
@@ -31,10 +33,10 @@ function CreatedAssignments() {
         fetchCreatedAssignments();
     }, []);
 
-    const handleDeleteAssignment = async (assignmentId) => {
-        toast.info(`Deleting assignment with id: ${assignmentId}`);
+    const handleDeleteAssignment = async () => {
+        toast.info(`Deleting assignment with id: ${assignmentIdToDelete}`);
         try {
-            const response = await axios.delete(`/professors/deleteAssignment/${assignmentId}`, { withCredentials: true });
+            const response = await axios.delete(`/professors/deleteAssignment/${assignmentIdToDelete}`, { withCredentials: true });
             console.log(response.data);
             if (response.data.success) {
                 toast.success(response.data.message);
@@ -50,6 +52,16 @@ function CreatedAssignments() {
         }
     };
 
+    const handleCloseModal = () => {
+        setShowDeleteModal(false); //close the modal
+        setAssignmentIdToDelete(null); //reset the assignmentIdToDelete
+    }
+
+    const handleShowModal = (id) => {
+        setShowDeleteModal(true);
+        setAssignmentIdToDelete(id);
+    }
+
     if (MyCreatedAssignments === null) {
         return (
             <AssignmentListSkeleton count={1} />
@@ -64,7 +76,7 @@ function CreatedAssignments() {
                 <div key={index} className="card my-3">
                     <div className="card-header d-flex align-items-center justify-content-between">
                         <h5 className="text-center mb-0 flex-grow-1" style={{ fontSize: '16px' }}>{assignment.AssignmentName}</h5> {/* Adjust font size */}
-                        <button className="btn btn-danger btn-sm" onClick={() => handleDeleteAssignment(assignment._id)}>
+                        <button className="btn btn-danger btn-sm" onClick={() => handleShowModal(assignment._id)}>
                             <FontAwesomeIcon icon={faTrash} /> {/* Show trash icon on smaller screens */}
                         </button>
                     </div>
@@ -123,6 +135,7 @@ function CreatedAssignments() {
 
             ))
             )}
+            <DeleteAssignmentConfirmationModal show={showDeleteModal} handleClose={handleCloseModal} Label={"This Assignment"} handleDelete={handleDeleteAssignment} />
         </>
     );
 }
