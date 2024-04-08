@@ -100,7 +100,6 @@ function SolveQuestion({ Questions, AssignmentId, UserCodes, setUserCodes }) {
                 <div className="col">
                     <AIAssistanceModal />
                 </div>
-
             </div>
         </>
     );

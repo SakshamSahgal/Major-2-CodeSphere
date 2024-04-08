@@ -14,7 +14,8 @@ const { ValidateInputs, CheckQuestionInAssignment, findQuestion, ValidateTestCas
 const { ValidateAssignmentId, FindAssignment, ValidateQuestionsInAssignment, CheckIfAllowedToSubmit, EvaluateAssignment } = require("./Student/Assignments.js");
 const { CheckAssignment, getSubmissions, analyzeSubmission } = require("./Professor/Submissions.js");
 const { FetchPublicQuestionDetails } = require("./Student/Question.js");
-const { getGPTResponse } = require("./AI/GPTResponse");
+const { getImprovementAIAssistance, getAltApproachesAIAssistance, getErrorAIAssistance } = require("./AI/GPTResponse");
+
 const path = require("path");
 const PORT = process.env.PORT || 8080;
 
@@ -57,8 +58,11 @@ app.ws("/RunRandomTestCaseCode", ValidateWsToken, isProfessorWs, ValidateRandomT
 app.get("/GetFullQuestion/:_id", ValidateToken, isProfessor, FetchFullQuestionDetailsRoute);        //called when the professor clicks on the question.
 app.get("/getPublicQuestion/:_id", ValidateToken, isStudent, FetchPublicQuestionDetails);           //called when the student clicks on the question.
 
-app.get("/GetCodeSuggestions",ValidateToken, getGPTResponse);
+// app.get("/GetCodeSuggestions", ValidateToken, getGPTResponse);
 
+app.get("/GetImprovementAIAssistance", ValidateToken, getImprovementAIAssistance);                  //called when student clicks on the get improvement tab of AI assistance
+app.get("/GetAltApproachesAIAssistance", ValidateToken, getAltApproachesAIAssistance);              //called when the student clicks on the get alternative approaches tab of AI assistance
+app.get("/GetErrorAIAssistance", ValidateToken, getErrorAIAssistance);                              //called when the student clicks on the get error tab of AI assistance
 
 //this route is used to serve the react app
 //it should be the last route because it is a catch all route, so if no other route is matched then this route is used
