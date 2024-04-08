@@ -64,7 +64,7 @@ function AIAssistanceModal() {
                             loop={0}
                             cursor
                             cursorStyle='|'
-                            typeSpeed={30}
+                            typeSpeed={50}
                             delaySpeed={1000}
                         />
                     </Button>
@@ -72,13 +72,13 @@ function AIAssistanceModal() {
                     <Modal show={show} onHide={handleClose} centered>
                         <Modal.Header closeButton>
                             <Modal.Title> <Typewriter
-                            words={['AI Help']}
-                            loop={0}
-                            cursor
-                            cursorStyle='|'
-                            typeSpeed={30}
-                            delaySpeed={1000}
-                        /> </Modal.Title>
+                                words={['AI Help']}
+                                loop={0}
+                                cursor
+                                cursorStyle='|'
+                                typeSpeed={50}
+                                delaySpeed={1000}
+                            /> </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <AIAssistanceTabs activeTab={"Improvement"} tabs={tabs} AIResponses={AIResponses} />

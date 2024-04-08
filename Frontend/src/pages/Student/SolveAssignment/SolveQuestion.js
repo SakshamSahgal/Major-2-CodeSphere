@@ -86,7 +86,7 @@ function SolveQuestion({ Questions, AssignmentId, UserCodes, setUserCodes }) {
 
             <div className="row">
                 <div className="col">
-                    <QuestionDetailsPreview QuestionName={currentQuestion?.QuestionName} ProblemStatement={currentQuestion?.ProblemStatement} Constraints={currentQuestion?.Constraints} InputFormat={currentQuestion?.InputFormat} OutputFormat={currentQuestion?.OutputFormat} SampleTestCases={currentQuestion?.TestCases} TimeLimitPerTestCase={1} MemoryLimitPerTestCase={30} />
+                    <QuestionDetailsPreview QuestionName={currentQuestion?.QuestionName} ProblemStatement={currentQuestion?.ProblemStatement} Constraints={currentQuestion?.Constraints} InputFormat={currentQuestion?.InputFormat} OutputFormat={currentQuestion?.OutputFormat} SampleTestCases={currentQuestion?.TestCases} TimeLimitPerTestCase={5} MemoryLimitPerTestCase={30} />
                 </div>
             </div>
             <div className="row my-3">

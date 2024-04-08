@@ -78,7 +78,7 @@ function PreviewTab({ formData, FormMetaData }) {
             <div className="container">
                 <div className="row my-3">
                     <div className="col">
-                        <QuestionDetailsPreview QuestionName={formData.QuestionName} ProblemStatement={formData.ProblemStatement} Constraints={formData.Constraints} InputFormat={formData.InputFormat} OutputFormat={formData.OutputFormat} SampleTestCases={formData.TestCases.filter(testCase => testCase.sampleTestCase)} TimeLimitPerTestCase={1} MemoryLimitPerTestCase={30} FormMetaData={FormMetaData} />
+                        <QuestionDetailsPreview QuestionName={formData.QuestionName} ProblemStatement={formData.ProblemStatement} Constraints={formData.Constraints} InputFormat={formData.InputFormat} OutputFormat={formData.OutputFormat} SampleTestCases={formData.TestCases.filter(testCase => testCase.sampleTestCase)} TimeLimitPerTestCase={5} MemoryLimitPerTestCase={30} FormMetaData={FormMetaData} />
                         <HiddenQuestionDetailsPreview HiddenTestCases={formData.TestCases.filter(testCase => !testCase.sampleTestCase)} SolutionCode={formData.SolutionCode} RandomTestChecked={formData.RandomTestChecked} RandomTestCode={formData.RandomTestCode} FormMetaData={FormMetaData}/>
                     </div>
                 </div>
