@@ -3,9 +3,11 @@ import { Button, Modal, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrochip } from '@fortawesome/free-solid-svg-icons';
 import AIAssistanceTabs from '../Tabs/AIAssistanceTabs';
-import { useEffect } from 'react';
 import { fetchAPI } from '../../Scripts/Axios';
 import { toast } from 'react-toastify';
+import { Typewriter } from 'react-simple-typewriter';
+
+
 function AIAssistanceModal() {
 
     const [show, setShow] = useState(false);
@@ -36,8 +38,8 @@ function AIAssistanceModal() {
 
     const fetchAIResponse = async (tab) => {
         try {
-            console.log(`fetching AI response for ${tab} tab`);
-            console.log(`/Get${tab}AIAssistance`)
+            // console.log(`fetching AI response for ${tab} tab`);
+            // console.log(`/Get${tab}AIAssistance`)
             const response = await fetchAPI(`/Get${tab}AIAssistance`);
             if (response.data.success) {
                 setAIResponses(prevState => ({
@@ -57,12 +59,26 @@ function AIAssistanceModal() {
             {
                 <>
                     <Button variant="primary" onClick={handleShow} className='w-100'>
-                        <FontAwesomeIcon icon={faMicrochip} style={{ cursor: 'pointer', color: 'white' }} /> AI Help
+                        <FontAwesomeIcon icon={faMicrochip} style={{ cursor: 'pointer', color: 'white' }} /><Typewriter
+                            words={['AI Help']}
+                            loop={0}
+                            cursor
+                            cursorStyle='|'
+                            typeSpeed={30}
+                            delaySpeed={1000}
+                        />
                     </Button>
 
                     <Modal show={show} onHide={handleClose} centered>
                         <Modal.Header closeButton>
-                            <Modal.Title> AI Help </Modal.Title>
+                            <Modal.Title> <Typewriter
+                            words={['AI Help']}
+                            loop={0}
+                            cursor
+                            cursorStyle='|'
+                            typeSpeed={30}
+                            delaySpeed={1000}
+                        /> </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <AIAssistanceTabs activeTab={"Improvement"} tabs={tabs} AIResponses={AIResponses} />

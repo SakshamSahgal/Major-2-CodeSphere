@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { Tab, Nav, Spinner } from 'react-bootstrap';
-import { fetchAPI } from "../../Scripts/Axios"
-import { toast } from 'react-toastify';
-import { Typewriter } from 'react-simple-typewriter'
+import { Typewriter } from 'react-simple-typewriter';
 
 function AIAssistanceTabs({ activeTab = "Improvement", tabs = [], AIResponses = {} }) {
     console.log("AIResponses", AIResponses);
