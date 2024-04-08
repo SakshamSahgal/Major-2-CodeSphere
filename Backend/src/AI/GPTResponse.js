@@ -1,3 +1,4 @@
+const { set } = require('mongoose');
 const OpenAI = require('openai');
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -48,29 +49,37 @@ async function getGPTResponse(req, res) {
 
 async function getImprovementAIAssistance(req, res) {
     console.log(`recieved GPT Assistance Request. CODE : ${req.body.code} PROBLEM : ${req.body.problem}`)
-    res.send({
-        success: true,
-        message: "Successfully generated AI response for the improvement tab.",
-        response: "this is the response from the getImprovementAIAssistance"
-    });
+    setTimeout(() => {
+        res.send({
+            success: true,
+            message: "Successfully generated AI response for the improvement tab.",
+            response: "this is the response from the getImprovementAIAssistance"
+        });
+    }, 3000);
 }
 
 async function getAltApproachesAIAssistance(req, res) {
     console.log(`recieved GPT Assistance Request. CODE : ${req.body.code} PROBLEM : ${req.body.problem}`)
-    res.send({
-        success: true,
-        message: "Successfully generated AI response for the alternative approaches tab.",
-        response: "this is the response from the getAltApproachesAIAssistance"
-    });
+    setTimeout(() => {
+        res.send({
+            success: true,
+            message: "Successfully generated AI response for the alternative approaches tab.",
+            response: "this is the response from the getAltApproachesAIAssistance"
+        });
+    }, 3000);
 }
 
 async function getErrorAIAssistance(req, res) {
     console.log(`recieved GPT Assistance Request. CODE : ${req.body.code} PROBLEM : ${req.body.problem}`)
-    res.send({
-        success: true,
-        message: "Successfully generated AI response for the error tab.",
-        response: "this is the response from the getErrorAIAssistance"
-    });
+    //send response after 3 seconds
+    setTimeout(() => {
+        res.send({
+            success: true,
+            message: "Successfully generated AI response for the error tab.",
+            response: "this is the response from the getErrorAIAssistance"
+        });
+    }, 3000);
+
 }
 
 
