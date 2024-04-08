@@ -3,12 +3,12 @@ import { Button, Modal, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrochip } from '@fortawesome/free-solid-svg-icons';
 import AIAssistanceTabs from '../Tabs/AIAssistanceTabs';
-import { fetchAPI } from '../../Scripts/Axios';
+import { putAPI } from '../../Scripts/Axios';
 import { toast } from 'react-toastify';
 import { Typewriter } from 'react-simple-typewriter';
 
 
-function AIAssistanceModal() {
+function AIAssistanceModal({ CodeToRun = "", ProblemStatement = "" }) {
 
     const [show, setShow] = useState(false);
 
@@ -40,7 +40,7 @@ function AIAssistanceModal() {
         try {
             // console.log(`fetching AI response for ${tab} tab`);
             // console.log(`/Get${tab}AIAssistance`)
-            const response = await fetchAPI(`/Get${tab}AIAssistance`);
+            const response = await putAPI(`/Get${tab}AIAssistance`, {code: CodeToRun, problem: ProblemStatement});
             if (response.data.success) {
                 setAIResponses(prevState => ({
                     ...prevState,
