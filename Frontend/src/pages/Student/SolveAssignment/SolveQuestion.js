@@ -8,6 +8,7 @@ import { useState } from "react";
 import QuestionDetailsAccordion from "../../../components/Accordion/QuestionDetailsAccordion";
 import DryRunModal from "../../../components/Modal/DryRunModal";
 import CodeScore from "../../../components/CommonComponents/CodeScore";
+import AIAssistanceModal from "../../../components/Modal/AIAssistanceModal"
 //Questions Array is an array of objects.
 
 
@@ -95,6 +96,9 @@ function SolveQuestion({ Questions, AssignmentId, UserCodes, setUserCodes }) {
             <div className="row my-3">
                 <div className="col">
                     <DryRunModal CodeToRun={UserCodes[currentQuestionIndex].UserCode} AssignmentId={AssignmentId} QuestionId={currentQuestion?._id} />
+                </div>
+                <div className="col">
+                    <AIAssistanceModal />
                 </div>
 
             </div>

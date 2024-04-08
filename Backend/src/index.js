@@ -14,6 +14,7 @@ const { ValidateInputs, CheckQuestionInAssignment, findQuestion, ValidateTestCas
 const { ValidateAssignmentId, FindAssignment, ValidateQuestionsInAssignment, CheckIfAllowedToSubmit, EvaluateAssignment } = require("./Student/Assignments.js");
 const { CheckAssignment, getSubmissions, analyzeSubmission } = require("./Professor/Submissions.js");
 const { FetchPublicQuestionDetails } = require("./Student/Question.js");
+const { getGPTResponse } = require("./AI/GPTResponse");
 const path = require("path");
 const PORT = process.env.PORT || 8080;
 
@@ -56,7 +57,7 @@ app.ws("/RunRandomTestCaseCode", ValidateWsToken, isProfessorWs, ValidateRandomT
 app.get("/GetFullQuestion/:_id", ValidateToken, isProfessor, FetchFullQuestionDetailsRoute);        //called when the professor clicks on the question.
 app.get("/getPublicQuestion/:_id", ValidateToken, isStudent, FetchPublicQuestionDetails);           //called when the student clicks on the question.
 
-
+app.get("/GetCodeSuggestions",ValidateToken, getGPTResponse);
 
 
 //this route is used to serve the react app

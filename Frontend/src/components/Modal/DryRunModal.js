@@ -33,6 +33,7 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
         setIsLoading(true);
         HandleDryRun();
     }
+
     //this function is called to handle the dry run ws connection
     const HandleDryRun = () => {
         //Send the current solution code to the server for dry run

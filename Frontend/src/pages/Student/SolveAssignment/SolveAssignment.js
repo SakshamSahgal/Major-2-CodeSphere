@@ -19,7 +19,7 @@ int main() {
 function SolveAssignment() {
 
     const { _id } = useParams();
-    const [AssignmentDetails, setAssignmentDetails] = useState(null);
+    const [AssignmentDetails, setAssignmentDetails] = useState(null); //AssignmentDetails also contains the public details of each question
     const [UserCodes, setUserCodes] = useState([]);
 
 
