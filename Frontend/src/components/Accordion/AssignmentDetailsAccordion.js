@@ -2,7 +2,7 @@ import React from 'react';
 import { Accordion } from 'react-bootstrap';
 import { convertIsoToNormalTime, getTimeElapsed } from '../../Scripts/TimeFunctions';
 
-function AssignmentDetailsAccordion({ PostedBy = "", PostedOn, DueTimestamp, Batches = [], Year, NumberOfQuestions }) {
+function AssignmentDetailsAccordion({ PostedBy = "", PostedOn, DueTimestamp, Batches = [], Year, NumberOfQuestions, AIAssistance = false }) {
     return (
 
         <Accordion flush>
@@ -43,6 +43,12 @@ function AssignmentDetailsAccordion({ PostedBy = "", PostedOn, DueTimestamp, Bat
                     <p className='card-text'>
                         <strong>Questions :</strong>{" "}
                         <span className="badge bg-success mx-1">{NumberOfQuestions}</span>
+                    </p>
+                    <p className='card-text'>
+                        <strong>AI Assistance :</strong>{" "}
+                        <span className={`badge mx-1 ${AIAssistance ? 'bg-success' : 'bg-danger'}`}>
+                            {AIAssistance ? "Enabled" : "Disabled"}
+                        </span>
                     </p>
                 </Accordion.Body>
             </Accordion.Item>
