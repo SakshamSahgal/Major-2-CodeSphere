@@ -348,4 +348,9 @@ async function deleteQuestionRoute(req, res) {
     }
 }
 
-module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, FetchFullQuestionDetailsRoute, checkIfQuestionExists, CheckIfAddedInAnyAssignment, deleteQuestionRoute };
+function updateQuestionRoute(req, res) {
+    console.log(req.body);
+    res.send("Update Question Route");
+}
+
+module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute,updateQuestionRoute, FetchFullQuestionDetailsRoute, checkIfQuestionExists, CheckIfAddedInAnyAssignment, deleteQuestionRoute };

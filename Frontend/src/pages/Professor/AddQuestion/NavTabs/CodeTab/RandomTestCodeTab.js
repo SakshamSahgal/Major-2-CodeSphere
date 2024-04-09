@@ -5,7 +5,7 @@ import RunRandomTestCaseCodeModal from "../../NavTabs/CodeTab/RunRandomTestCaseC
 
 
 
-function RandomTestCaseCodeTab({ formData, DefaultRandomTestCode, handleInputChange }) {
+function RandomTestCaseCodeTab({ formData, handleInputChange }) {
 
     const handleToggleChange = (e) => {
         handleInputChange('RandomTestChecked', e.target.checked);
@@ -27,7 +27,7 @@ function RandomTestCaseCodeTab({ formData, DefaultRandomTestCode, handleInputCha
             <Form.Group controlId="RandomTestCode">
                 <CodeEditor
                     height={"500px"}
-                    defaultCode={DefaultRandomTestCode}
+                    defaultCode={formData.RandomTestCode}
                     onUpdateCode={(codeWritten) => handleInputChange('RandomTestCode', codeWritten)}
                     isEditable={formData.RandomTestChecked}
                 />

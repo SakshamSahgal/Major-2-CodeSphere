@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import TestCase from "../TestCase"
 
-function TestcasesTab({ handleInputChange }) {
-    const [testcases, setTestcases] = useState([{ sampleTestCase: false, input: "" }]);
+function TestcasesTab({ TestCases, handleInputChange }) {
 
-    //this will be called whenever the testcases array changes
+    const [testcases, setTestcases] = useState(TestCases);
+
     useEffect(() => {
-        handleInputChange('TestCases', testcases);
-    }, [testcases]);
+        setTestcases(TestCases); // Update the testcases when the TestCases prop changes from the parent, from empty array to the actual testcases
+    }, [TestCases]);
 
     //function that adds a new testcase
     const addTestcase = () => {
-        const newTestcases = [...testcases, { sampleTestCase: false, input: "" }];
+        const newTestcases = [...testcases, { input: "", sampleTestCase: false }];
         setTestcases(newTestcases);
+        handleInputChange("TestCases", newTestcases);
     };
 
     //function that removes the last testcase
@@ -20,6 +21,7 @@ function TestcasesTab({ handleInputChange }) {
         if (testcases.length === 1) return; // Ensure at least one testcase remains
         const newTestcases = testcases.slice(0, -1); // Remove the last testcase
         setTestcases(newTestcases);
+        handleInputChange("TestCases", newTestcases);
     };
 
     //function that toggles the value of sampleTestCase
@@ -27,6 +29,7 @@ function TestcasesTab({ handleInputChange }) {
         const updatedTestcases = [...testcases];
         updatedTestcases[index].sampleTestCase = !updatedTestcases[index].sampleTestCase;
         setTestcases(updatedTestcases);
+        handleInputChange("TestCases", updatedTestcases);
     };
 
     //function that updates the value of the testcase
@@ -34,6 +37,7 @@ function TestcasesTab({ handleInputChange }) {
         const updatedTestcases = [...testcases];
         updatedTestcases[index].input = input;
         setTestcases(updatedTestcases);
+        handleInputChange("TestCases", updatedTestcases);
     }
 
     return (

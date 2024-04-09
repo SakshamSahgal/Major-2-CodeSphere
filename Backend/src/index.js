@@ -49,6 +49,7 @@ app.post("/professors/createAssignment", ValidateToken, isProfessor, createAssig
 app.delete("/professors/deleteAssignment/:_id", ValidateToken, isProfessor, deleteAssignmentRoute);                                                    //Deletes an assignment, called when the professor clicks on the bin button of an assignment
 app.delete("/professors/deleteQuestion/:_id", ValidateToken, isProfessor, checkIfQuestionExists, CheckIfAddedInAnyAssignment, deleteQuestionRoute);                //Deletes a question, called when the professor clicks on the bin button of a question
 app.post("/professors/createQuestion", ValidateToken, isProfessor, createQuestionRoute);                        //Creates a Question
+app.update("/professors/updateQuestion", ValidateToken, isProfessor, UpdateQuestionRoute);                        //Updates a Question
 app.get("/professors/viewSubmissions/:_id", ValidateToken, CheckAssignment, getSubmissions);                    //Fetches the submissions of an assignment with the given id(assignment Id), called when the professor/student clicks on the submissions button of an assignment
 app.get("/professors/analyzeSubmission/:_id", ValidateToken, isProfessor, analyzeSubmission);                   //Fetches the submissions of an assignment with the given id(assignment Id), called when the professor clicks on the submissions button of an assignment
 

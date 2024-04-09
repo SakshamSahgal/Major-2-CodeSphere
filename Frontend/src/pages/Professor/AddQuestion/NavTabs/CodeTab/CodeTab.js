@@ -3,7 +3,7 @@ import { Nav, Tab } from 'react-bootstrap';
 import SolutionCodeTab from './SolutionCodeTab';
 import RandomTestCodeTab from './RandomTestCodeTab';
 
-function CodeTab({ formData, DefaultSolutionCode, DefaultRandomTestCode, handleInputChange }) {
+function CodeTab({ formData, handleInputChange }) {
 
 
     return (
@@ -18,10 +18,10 @@ function CodeTab({ formData, DefaultSolutionCode, DefaultRandomTestCode, handleI
             </Nav>
             <Tab.Content>
                 <Tab.Pane eventKey="SolutionCode">
-                    <SolutionCodeTab formData={formData} DefaultSolutionCode={DefaultSolutionCode} handleInputChange={handleInputChange} />
+                    <SolutionCodeTab formData={formData} handleInputChange={handleInputChange} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="RandomTestCode">
-                    <RandomTestCodeTab formData={formData} DefaultRandomTestCode={DefaultRandomTestCode} handleInputChange={handleInputChange} />
+                    <RandomTestCodeTab formData={formData} handleInputChange={handleInputChange} />
                 </Tab.Pane>
             </Tab.Content>
         </Tab.Container>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavbarWithProfileAndSidebar from "../../../components/Navbar/NavbarWithProfileAndSidebar";
 // import RightsReservedFooter from "../../../components/Footer/RightsReservedFooter";
 import { Form, Nav, Tab } from "react-bootstrap";
@@ -6,6 +6,9 @@ import DescriptionTab from "./NavTabs/DescriptionTab";
 import CodeTab from "./NavTabs/CodeTab/CodeTab";
 import TestcasesTab from "./NavTabs/TestcasesTab";
 import PreviewTab from "./NavTabs/PreviewTab";
+import { fetchData } from "../../../Scripts/Axios";
+import { useParams } from "react-router-dom";
+import LoadingSpinner from "../../../components/Spinners/Spinners";
 
 let DefaultSolutionCode =
 
@@ -35,7 +38,10 @@ int main() {
     return 0;
 }`;
 
-function ProfessorAddQuestion({ activeTab, NavTabs, NavLinks }) {
+function ProfessorAddQuestion({ activeTab, NavTabs=[], NavLinks=[], editQuestion = false }) {
+
+  const { _id } = useParams();
+  const [Loading, setLoading] = useState(editQuestion); //used to show loading spinner while fetching data if editQuestion is true
 
   const [formData, setFormData] = useState({
     QuestionName: '',
@@ -65,11 +71,23 @@ function ProfessorAddQuestion({ activeTab, NavTabs, NavLinks }) {
     });
   };
 
+  useEffect(() => {
+    if (editQuestion) {
+      // Fetch the question details from the database and set the formData
+      fetchData(`/GetFullQuestion/${_id}`, setFormData, "Question", "Error while fetching question details");
+      setLoading(false);
+    }
+  }, [editQuestion, _id]);
+
   console.log(formData);
+
+  if (Loading) {
+    return (<LoadingSpinner />);
+  }
 
   return (
     <>
-      <NavbarWithProfileAndSidebar TabNames={NavTabs} TabLinks={NavLinks} ActiveTabIndex={1} />
+      {!editQuestion && <NavbarWithProfileAndSidebar TabNames={NavTabs} TabLinks={NavLinks} ActiveTabIndex={1} />}
       <div className="container my-3">
         <div className="row">
           <div className="col text-center my-3">
@@ -95,16 +113,19 @@ function ProfessorAddQuestion({ activeTab, NavTabs, NavLinks }) {
             <Form>
               <Tab.Content>
                 <Tab.Pane eventKey="Description" style={{ color: "white" }}>
-                  <DescriptionTab handleInputChange={handleInputChange} />
+                  <DescriptionTab handleInputChange={handleInputChange} formData={formData} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="Code">
-                  <CodeTab formData={formData} DefaultSolutionCode={DefaultSolutionCode} DefaultRandomTestCode={DefaultRandomTestCode} handleInputChange={handleInputChange} />
+                  <CodeTab formData={formData} handleInputChange={handleInputChange} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="TestCases">
-                  <TestcasesTab handleInputChange={handleInputChange} />
+                  <TestcasesTab TestCases={formData.TestCases.map(testCase => {
+                    const { _id, ...testCaseWithoutId } = testCase;
+                    return testCaseWithoutId;
+                  })} handleInputChange={handleInputChange} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="Preview">
-                  <PreviewTab formData={formData} FormMetaData={FormMetaData} />
+                  <PreviewTab formData={formData} FormMetaData={FormMetaData} editQuestion={editQuestion} />
                 </Tab.Pane>
               </Tab.Content>
             </Form>
