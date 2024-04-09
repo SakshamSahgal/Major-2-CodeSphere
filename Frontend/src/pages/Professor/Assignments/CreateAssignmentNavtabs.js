@@ -4,8 +4,8 @@ import { useState } from "react";
 import OverviewTab from "./Tabs/OverviewTab";
 import TargetStudentsTab from "./Tabs/TargetStudentsTab";
 import QuestionsTab from "./Tabs/QuestionsTab";
-import axios from "axios";
 import { toast } from "react-toastify";
+import { postData } from "../../../Scripts/Axios";
 
 // Main component
 function CreateAssignmentNavtabs({ activeTab, Batches, MyQuestions, OtherQuestions }) {
@@ -15,26 +15,16 @@ function CreateAssignmentNavtabs({ activeTab, Batches, MyQuestions, OtherQuestio
         Year: "",
         Batches: [],
         Questions: [],
+        AIAssistance: false
     });
-
+    console.log(formData);
     const handleSubmit = async () => {
         console.log(formData);
-        try {
-            const response = await axios.post("/professors/createAssignment", formData, { withCredentials: true });
-            console.log(response.data);
-            if (response.data.success) {
-                toast.success(response.data.message);
-                // reload after 1 sec
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-            }
-            else
-                toast.error(response.data.message);
-        }
-        catch (err) {
-            toast.error(`error while creating assignment, error: ${err.response.data.message}`);
-        }
+        await postData("/professors/createAssignment", formData, "Error while creating assignment", () => {
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        })
     };
 
     return (

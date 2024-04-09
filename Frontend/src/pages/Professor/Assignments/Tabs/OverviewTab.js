@@ -1,6 +1,4 @@
 import { Form, Row, Col, Tab } from 'react-bootstrap';
-
-
 function OverviewTab({ formData, setFormData }) {
 
     return (
@@ -17,6 +15,16 @@ function OverviewTab({ formData, setFormData }) {
                 <Form.Label column sm={4}>Due Date and Time:</Form.Label>
                 <Col sm={8}>
                     <Form.Control type="datetime-local" onChange={(e) => setFormData({ ...formData, DueTimestamp: e.target.value })} />
+                </Col>
+            </Form.Group>
+            <hr />
+            <Form.Group as={Row} controlId="AllowAIAssistance" className="mb-3 justify-content-center">
+                <Col xs="auto">
+                    <Form.Check
+                        type="switch"
+                        label="Allow AI Assistance"
+                        onChange={(e) => setFormData({ ...formData, AIAssistance: e.target.checked })}
+                    />
                 </Col>
             </Form.Group>
             <hr />

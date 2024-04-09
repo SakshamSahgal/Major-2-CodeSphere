@@ -8,6 +8,8 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { fetchAPI } from '../../../Scripts/Axios';
 import { Dropdown } from 'react-bootstrap';
 import DeleteAssignmentConfirmationModal from '../../../components/Modal/DeleteAssignmentConfirmationModal';
+import { fetchData, DeleteData } from '../../../Scripts/Axios';
+
 //this returns a list of assignments created by this professor
 function CreatedAssignments() {
     const [MyCreatedAssignments, setMyCreatedAssignments] = useState(null);
@@ -16,40 +18,16 @@ function CreatedAssignments() {
 
     useEffect(() => {
         // Fetch created assignments from the database
-        const fetchCreatedAssignments = async () => {
-            try {
-                const response = await fetchAPI("/professors/myAssignments");
-                console.log(response.data);
-                if (response.data.success) {
-                    toast.success(response.data.message);
-                    setMyCreatedAssignments(response.data.Assignments);
-                } else {
-                    toast.error(response.data.message);
-                }
-            } catch (error) {
-                toast.error(`An error occurred while fetching my created assignments, err: ${error}`);
-            }
-        };
-        fetchCreatedAssignments();
+        fetchData("/professors/myAssignments", setMyCreatedAssignments, "Assignments", "An error occurred while fetching my created assignments");
     }, []);
 
     const handleDeleteAssignment = async () => {
         toast.info(`Deleting assignment with id: ${assignmentIdToDelete}`);
-        try {
-            const response = await axios.delete(`/professors/deleteAssignment/${assignmentIdToDelete}`, { withCredentials: true });
-            console.log(response.data);
-            if (response.data.success) {
-                toast.success(response.data.message);
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-            }
-            else
-                toast.error(response.data.message);
-        }
-        catch (err) {
-            toast.error(`An error occurred while deleting the assignment, err: ${err}`);
-        }
+        DeleteData(`/professors/deleteAssignment/${assignmentIdToDelete}`, "An error occurred while deleting the assignment", () => {
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        });
     };
 
     const handleCloseModal = () => {

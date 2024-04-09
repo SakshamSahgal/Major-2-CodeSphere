@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import CreateAssignmentNavtabs from "./CreateAssignmentNavtabs";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { fetchData } from "../../../Scripts/Axios";
 
 function CreateAssignmentModal() {
     const [showModal, setShowModal] = useState(false);
@@ -11,63 +10,9 @@ function CreateAssignmentModal() {
     const [OtherQuestions, setOtherQuestions] = useState([]);
 
     useEffect(() => {
-
-        const fetchBatches = async () => {
-            try {
-                const response = await axios(`/getBatches`, { withCredentials: true });
-
-                if (response.data.success)
-                    setBatches(response.data.Batches);
-                else {
-                    toast.error(response.data.message);
-                }
-            }
-            catch (err) {
-                // if the status if 401 then redirect to home
-                if(err.response && err.response.status === 401)
-                {
-                    localStorage.clear(); //clear the local storage
-                    window.location = "/"; //redirect to home
-                }
-                toast.error(`error while fetching Batches, error ${err.message}`);
-            }
-        };
-
-        const fetchMyQuestions = async () => {
-            try {
-                const response = await axios(`/professors/getMyQuestions`, { withCredentials: true });
-                if (response.data.success) {
-                    console.log(response.data.Questions);
-                    setMyQuestions(response.data.Questions);
-                }
-                else {
-                    toast.error(response.data.message);
-                }
-            }
-            catch (err) {
-                toast.error(`error while fetching MyQuestions, error ${err.message}`);
-            }
-        }
-
-        const fetchOtherQuestions = async () => {
-            try {
-                const response = await axios(`/professors/getOtherQuestions`, { withCredentials: true });
-                if (response.data.success) {
-                    console.log(response.data.Questions);
-                    setOtherQuestions(response.data.Questions);
-                }
-                else {
-                    toast.error(response.data.message);
-                }
-            }
-            catch (err) {
-                toast.error(`error while fetching OtherQuestions, error ${err.message}`);
-            }
-        }
-
-        fetchBatches();
-        fetchMyQuestions();
-        fetchOtherQuestions();
+        fetchData("/getBatches", setBatches, "Batches", "Error while fetching Batches");
+        fetchData("/professors/getMyQuestions", setMyQuestions, "Questions", "Error while fetching MyQuestions");
+        fetchData("/professors/getOtherQuestions", setOtherQuestions, "Questions", "Error while fetching OtherQuestions");
     }, []);
 
     const toggleModal = () => {

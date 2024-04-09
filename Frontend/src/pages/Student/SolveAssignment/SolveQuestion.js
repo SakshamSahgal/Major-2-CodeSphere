@@ -98,7 +98,7 @@ function SolveQuestion({ Questions, AssignmentId, UserCodes, setUserCodes }) {
                     <DryRunModal CodeToRun={UserCodes[currentQuestionIndex].UserCode} AssignmentId={AssignmentId} QuestionId={currentQuestion?._id} />
                 </div>
                 <div className="col">
-                    <AIAssistanceModal CodeToRun={UserCodes[currentQuestionIndex].UserCode} ProblemStatement={currentQuestion?.currentQuestion}/>
+                    <AIAssistanceModal CodeToRun={UserCodes[currentQuestionIndex].UserCode} ProblemStatement={currentQuestion?.currentQuestion} />
                 </div>
             </div>
         </>

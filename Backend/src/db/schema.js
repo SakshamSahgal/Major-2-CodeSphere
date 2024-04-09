@@ -13,6 +13,7 @@ const assignmentSchema = new mongoose.Schema({
     SubmittedBy: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
     Questions: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
     PostedOn: { type: Date, required: true },
+    AIAssistance: { type: Boolean, required: true }
 });
 
 
@@ -116,8 +117,8 @@ const SubmitAssignmentsSchema = new mongoose.Schema({
         TotalScore: { type: Number, required: true },
     }],
     SubmittedOn: { type: Date, required: true },
-    ScoreObtained : { type: Number, required: true },
-    TotalScore : { type: Number, required: true },
+    ScoreObtained: { type: Number, required: true },
+    TotalScore: { type: Number, required: true },
 });
 
 const SubmitEvaluationSchema = new mongoose.Schema({
