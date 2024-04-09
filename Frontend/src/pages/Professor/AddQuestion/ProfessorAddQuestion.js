@@ -38,7 +38,7 @@ int main() {
     return 0;
 }`;
 
-function ProfessorAddQuestion({ activeTab, NavTabs=[], NavLinks=[], editQuestion = false }) {
+function ProfessorAddQuestion({ activeTab, NavTabs = [], NavLinks = [], editQuestion = false }) {
 
   const { _id } = useParams();
   const [Loading, setLoading] = useState(editQuestion); //used to show loading spinner while fetching data if editQuestion is true
@@ -125,7 +125,7 @@ function ProfessorAddQuestion({ activeTab, NavTabs=[], NavLinks=[], editQuestion
                   })} handleInputChange={handleInputChange} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="Preview">
-                  <PreviewTab formData={formData} FormMetaData={FormMetaData} editQuestion={editQuestion} />
+                  <PreviewTab formData={formData} FormMetaData={FormMetaData} editQuestion={editQuestion} _id={_id} />
                 </Tab.Pane>
               </Tab.Content>
             </Form>

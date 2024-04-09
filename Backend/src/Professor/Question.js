@@ -1,7 +1,7 @@
 const path = require('path');
 const { RunCpp, DeleteAfterExecution } = require("../Code/Run")
 const fs = require('fs');
-const { writeDB, readDB, checkIfExists, deleteDB } = require('../db/mongoOperations');
+const { writeDB, readDB, checkIfExists, deleteDB, updateDB } = require('../db/mongoOperations');
 const { QuestionSchema, assignmentSchema } = require('../db/schema');
 const { GetProfessor } = require('../other/Common');
 
@@ -348,9 +348,30 @@ async function deleteQuestionRoute(req, res) {
     }
 }
 
-function updateQuestionRoute(req, res) {
+async function updateQuestionRoute(req, res) {
     console.log(req.body);
-    res.send("Update Question Route");
+    let Query = {
+        _id: req.body._id // This is the Question ID
+    };
+    try {
+        req.body.CreatedBy = req.decoded._id;
+        req.body.CreatedOn = new Date();
+        console.log(req.body);
+        const response = await updateDB("QuestionBank", req.decoded.Institution, Query, req.body, QuestionSchema);
+        console.log(response);
+        res.send({
+            success: true,
+            message: "Question Updated Successfully"
+        });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: `Failed to Update Question with id ${req.body._id}, error: ${error.message}`
+        });
+    }
+
 }
 
-module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute,updateQuestionRoute, FetchFullQuestionDetailsRoute, checkIfQuestionExists, CheckIfAddedInAnyAssignment, deleteQuestionRoute };
+module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, updateQuestionRoute, FetchFullQuestionDetailsRoute, checkIfQuestionExists, CheckIfAddedInAnyAssignment, deleteQuestionRoute };

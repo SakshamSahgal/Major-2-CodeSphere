@@ -4,7 +4,7 @@ import QuestionDetailsPreview from "../../../../components/CommonComponents/Ques
 import HiddenQuestionDetailsPreview from "../../../../components/CommonComponents/HiddenQuestionDetailsPreview";
 
 
-function PreviewTab({ formData, FormMetaData, editQuestion = false }) {
+function PreviewTab({ formData, FormMetaData, editQuestion = false , _id}) {
 
     const HandleSubmit = async (e) => {
         e.preventDefault(); // Prevents default refresh by the browser
@@ -127,7 +127,8 @@ function PreviewTab({ formData, FormMetaData, editQuestion = false }) {
                 if (!formData.RandomTestChecked) { // if Random Test Case Generator is not checked, then RandomTestCode should be empty
                     formData.RandomTestCode = "";
                 }
-                const response = await axios.post("/professors/updateQuestion", formData, { withCredentials: true });
+                formData._id = _id;
+                const response = await axios.put("/professors/updateQuestion", formData, { withCredentials: true });
                 toast[response.data.success ? "success" : "error"](response.data.message);
                 if (response.data.success) {
                     window.location.reload();
