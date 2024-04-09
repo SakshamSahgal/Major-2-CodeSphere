@@ -31,7 +31,7 @@ import AIAssistanceModal from "../../../components/Modal/AIAssistanceModal"
 //     CreatedOn: { type: Date, required: true },
 // });
 
-function SolveQuestion({ Questions, AssignmentId, UserCodes, setUserCodes }) {
+function SolveQuestion({ Questions, AssignmentId, UserCodes, setUserCodes, AIAssistance = false }) {
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -98,7 +98,7 @@ function SolveQuestion({ Questions, AssignmentId, UserCodes, setUserCodes }) {
                     <DryRunModal CodeToRun={UserCodes[currentQuestionIndex].UserCode} AssignmentId={AssignmentId} QuestionId={currentQuestion?._id} />
                 </div>
                 <div className="col">
-                    <AIAssistanceModal CodeToRun={UserCodes[currentQuestionIndex].UserCode} ProblemStatement={currentQuestion?.currentQuestion} />
+                    <AIAssistanceModal CodeToRun={UserCodes[currentQuestionIndex].UserCode} ProblemStatement={currentQuestion?.currentQuestion} AIAssistance={AIAssistance} />
                 </div>
             </div>
         </>

@@ -1,4 +1,3 @@
-import RightsReservedFooter from '../../../components/Footer/RightsReservedFooter';
 import NavbarWithProfileAndSidebar from '../../../components/Navbar/NavbarWithProfileAndSidebar';
 import CreatedAssignments from './CreatedAssignments';
 import CreateAssignmentModal from './CreateAssignmentModal';

@@ -85,8 +85,8 @@ function CreatedAssignments() {
                             <p className='card-text'>
                                 <strong>AI Assistance :</strong>{" "}
                                 <span className={`badge mx-1 ${assignment.AIAssistance ? 'bg-success' : 'bg-danger'}`}>
-        {assignment.AIAssistance ? "Enabled" : "Disabled"}
-    </span>
+                                    {assignment.AIAssistance ? "Enabled" : "Disabled"}
+                                </span>
                             </p>
                         </div>
                     </div>
