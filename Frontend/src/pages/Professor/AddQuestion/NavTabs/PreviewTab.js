@@ -4,142 +4,96 @@ import QuestionDetailsPreview from "../../../../components/CommonComponents/Ques
 import HiddenQuestionDetailsPreview from "../../../../components/CommonComponents/HiddenQuestionDetailsPreview";
 
 
-function PreviewTab({ formData, FormMetaData, editQuestion = false , _id}) {
+function PreviewTab({ formData, FormMetaData, editQuestion = false, _id }) {
 
-    const HandleSubmit = async (e) => {
-        e.preventDefault(); // Prevents default refresh by the browser
-        console.log("Submit");
-        let fail = false;
+    const validateForm = () => {
         if (formData.QuestionName === "") {
             toast.error("Question Name is required");
-            fail = true;
+            return true;
         }
         if (formData.ProblemStatement === "") {
             toast.error("Problem Statement is required");
-            fail = true;
+            return true;
         }
         if (formData.Constraints === "") {
             toast.error("Constraints is required");
-            fail = true;
+            return true;
         }
         if (formData.InputFormat === "") {
             toast.error("Input Format is required");
-            fail = true;
+            return true;
         }
         if (formData.OutputFormat === "") {
             toast.error("Output Format is required");
-            fail = true;
+            return true;
         }
         if (formData.TestCases.length === 0) {
             toast.error("Test Cases are required");
-            fail = true;
-        }
-        else {
+            return true;
+        } else {
             if (!formData.TestCases.some(testcase => !testcase.sampleTestCase)) { // no object with sampleTestCase = false
                 toast.error("atleast one Hidden Test Case is required");
-                fail = true;
+                return true;
             }
             if (!formData.TestCases.some(testcase => testcase.sampleTestCase)) { //no object with sampleTestCase = true
                 toast.error("atleast one Sample Test Case is required");
-                fail = true;
+                return true;
             }
         }
         if (formData.SolutionCode === "") {
             toast.error("Solution Code is required");
-            fail = true;
+            return true;
         }
         if (formData.RandomTestChecked && formData.RandomTestCode === "") {
             toast.error("Random Test Code is required, if you have checked the Random Test Case Generator");
-            fail = true;
+            return true;
         }
+        return false;
+    }
 
-        if (!fail) { // if no error, means all fields are filled
-            console.log("All fields are filled");
-            console.log(formData);
-            try {
-                if (!formData.RandomTestChecked) { // if Random Test Case Generator is not checked, then RandomTestCode should be empty
-                    formData.RandomTestCode = "";
-                }
-                const response = await axios.post("/professors/createQuestion", formData, { withCredentials: true });
-                toast[response.data.success ? "success" : "error"](response.data.message);
-                if (response.data.success) {
-                    window.location.reload();
-                }
+    const HandleSubmit = async (e) => {
+        e.preventDefault(); // Prevents default refresh by the browser
+        console.log("Submit");
+        if (validateForm()) return; // Reuse validation logic
+        console.log("All fields are filled");
+        console.log(formData);
+        try {
+            if (!formData.RandomTestChecked) { // if Random Test Case Generator is not checked, then RandomTestCode should be empty
+                formData.RandomTestCode = "";
             }
-            catch (err) {
-                console.log(err);
-                toast.error(`Error while creating question: ${err}`);
+            const response = await axios.post("/professors/createQuestion", formData, { withCredentials: true });
+            toast[response.data.success ? "success" : "error"](response.data.message);
+            if (response.data.success) {
+                window.location.reload();
             }
+        } catch (err) {
+            console.log(err);
+            toast.error(`Error while creating question: ${err}`);
         }
     }
 
     const HandleUpdate = async (e) => {
         e.preventDefault(); // Prevents default refresh by the browser
         console.log("Update");
-        let fail = false;
-        if (formData.QuestionName === "") {
-            toast.error("Question Name is required");
-            fail = true;
-        }
-        if (formData.ProblemStatement === "") {
-            toast.error("Problem Statement is required");
-            fail = true;
-        }
-        if (formData.Constraints === "") {
-            toast.error("Constraints is required");
-            fail = true;
-        }
-        if (formData.InputFormat === "") {
-            toast.error("Input Format is required");
-            fail = true;
-        }
-        if (formData.OutputFormat === "") {
-            toast.error("Output Format is required");
-            fail = true;
-        }
-        if (formData.TestCases.length === 0) {
-            toast.error("Test Cases are required");
-            fail = true;
-        }
-        else {
-            if (!formData.TestCases.some(testcase => !testcase.sampleTestCase)) { // no object with sampleTestCase = false
-                toast.error("atleast one Hidden Test Case is required");
-                fail = true;
+        if (validateForm()) return; // Reuse validation logic
+        console.log("All fields are filled");
+        console.log(formData);
+        try {
+            if (!formData.RandomTestChecked) { // if Random Test Case Generator is not checked, then RandomTestCode should be empty
+                formData.RandomTestCode = "";
             }
-            if (!formData.TestCases.some(testcase => testcase.sampleTestCase)) { //no object with sampleTestCase = true
-                toast.error("atleast one Sample Test Case is required");
-                fail = true;
+            formData._id = _id;
+            const response = await axios.put("/professors/updateQuestion", formData, { withCredentials: true });
+            toast[response.data.success ? "success" : "error"](response.data.message);
+            if (response.data.success) {
+                window.location.reload();
             }
-        }
-        if (formData.SolutionCode === "") {
-            toast.error("Solution Code is required");
-            fail = true;
-        }
-        if (formData.RandomTestChecked && formData.RandomTestCode === "") {
-            toast.error("Random Test Code is required, if you have checked the Random Test Case Generator");
-            fail = true;
-        }
-
-        if (!fail) { // if no error, means all fields are filled
-            console.log("All fields are filled");
-            console.log(formData);
-            try {
-                if (!formData.RandomTestChecked) { // if Random Test Case Generator is not checked, then RandomTestCode should be empty
-                    formData.RandomTestCode = "";
-                }
-                formData._id = _id;
-                const response = await axios.put("/professors/updateQuestion", formData, { withCredentials: true });
-                toast[response.data.success ? "success" : "error"](response.data.message);
-                if (response.data.success) {
-                    window.location.reload();
-                }
-            }
-            catch (err) {
-                console.log(err);
-                toast.error(`Error while updating question: ${err}`);
-            }
+        } catch (err) {
+            console.log(err);
+            toast.error(`Error while updating question: ${err}`);
         }
     }
+
 
     return (
         <div>

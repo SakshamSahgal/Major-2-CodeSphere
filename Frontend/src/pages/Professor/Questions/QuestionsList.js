@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 import QuestionListSkeleton from '../../../components/Skeletons/QuestionsListSkeleton';
-import { fetchAPI } from '../../../Scripts/Axios';
 import DeleteQuestionConfirmationModal from '../../../components/Modal/DeleteQuestionConfirmationModal';
 import { deleteAPI } from '../../../Scripts/Axios';
+import { fetchData } from '../../../Scripts/Axios';
 //This is used on Questions page to display the list of Questions
 function QuestionsList({ apiRoute, type }) {
 
@@ -18,22 +18,7 @@ function QuestionsList({ apiRoute, type }) {
 
     //this will fetch the Questions from the server as soon as the component is mounted
     useEffect(() => {
-        const fetchQuestions = async () => {
-            try {
-                const response = await fetchAPI(apiRoute);
-                if (response.data.success) {
-                    console.log(response.data.Questions);
-                    setQuestions(response.data.Questions);
-                }
-                else {
-                    toast.error(response.data.message);
-                }
-            }
-            catch (err) {
-                toast.error(`error while fetching Questions, error ${err.message}`);
-            }
-        }
-        fetchQuestions();
+        fetchData(apiRoute, setQuestions, "Questions", "Error while fetching Questions")
     }, []);
 
     //This function will be called when the delete button is pressed next to any Question
@@ -93,6 +78,13 @@ function QuestionsList({ apiRoute, type }) {
                                         <ListGroup.Item action className="d-flex justify-content-between align-items-center mb-2 rounded h-fit" onClick={() => window.location.href = `/Question/Full/${question._id}`}>
                                             <div className="d-flex justify-content-end align-items-center" style={{ height: "25px" }}>
                                                 {question.QuestionName}
+                                            </div>
+                                        </ListGroup.Item>
+                                    </div>
+                                    <div className="col-auto p-0 my-1 mx-2 d-flex justify-content-center align-items-center">
+                                        <ListGroup.Item action className="d-flex justify-content-between align-items-center mb-2 rounded h-fit" onClick={() => {window.location.href = `/professors/EditQuestion/${question._id}`}}>
+                                            <div className="d-flex justify-content-end align-items-center" style={{ height: "25px" }}>
+                                                <FontAwesomeIcon icon={faEdit} className='mx-1' />
                                             </div>
                                         </ListGroup.Item>
                                     </div>
