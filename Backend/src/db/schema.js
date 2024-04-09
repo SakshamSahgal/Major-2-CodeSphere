@@ -11,10 +11,17 @@ const assignmentSchema = new mongoose.Schema({
     PostedBy: { type: mongoose.Schema.Types.ObjectId, required: true },
     AssignmentName: { type: String, required: true, unique: true },
     SubmittedBy: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
-    Questions: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
+    Questions: {
+        type: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
+        validate: [arrayLimit, '{PATH} cannot be empty']
+    },
     PostedOn: { type: Date, required: true },
     AIAssistance: { type: Boolean, required: true }
 });
+
+function arrayLimit(val) {
+    return val.length > 0;
+}
 
 
 const registeredCollegesSchema = new mongoose.Schema({

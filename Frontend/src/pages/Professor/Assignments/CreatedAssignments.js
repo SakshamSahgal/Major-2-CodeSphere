@@ -1,11 +1,9 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { convertIsoToNormalTime, getTimeElapsed } from '../../../Scripts/TimeFunctions';
 import AssignmentListSkeleton from '../../../components/Skeletons/AssignmentListSkeleton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { fetchAPI } from '../../../Scripts/Axios';
 import { Dropdown } from 'react-bootstrap';
 import DeleteAssignmentConfirmationModal from '../../../components/Modal/DeleteAssignmentConfirmationModal';
 import { fetchData, DeleteData } from '../../../Scripts/Axios';
@@ -15,9 +13,8 @@ function CreatedAssignments() {
     const [MyCreatedAssignments, setMyCreatedAssignments] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [assignmentIdToDelete, setAssignmentIdToDelete] = useState(null);
-
+    console.log(MyCreatedAssignments);
     useEffect(() => {
-        // Fetch created assignments from the database
         fetchData("/professors/myAssignments", setMyCreatedAssignments, "Assignments", "An error occurred while fetching my created assignments");
     }, []);
 
@@ -84,6 +81,12 @@ function CreatedAssignments() {
                             <p className='card-text'>
                                 <strong>Year:</strong>{" "}
                                 <span className="badge bg-success mx-1">{assignment.Year}</span>
+                            </p>
+                            <p className='card-text'>
+                                <strong>AI Assistance :</strong>{" "}
+                                <span className={`badge mx-1 ${assignment.AIAssistance ? 'bg-success' : 'bg-danger'}`}>
+        {assignment.AIAssistance ? "Enabled" : "Disabled"}
+    </span>
                             </p>
                         </div>
                     </div>
