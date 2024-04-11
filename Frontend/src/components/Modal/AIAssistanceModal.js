@@ -38,6 +38,7 @@ function AIAssistanceModal({ CodeToRun = "", ProblemStatement = "", AIAssistance
 
     const fetchAIResponse = async (tab) => {
         try {
+            // console.log(ProblemStatement)
             // console.log(`fetching AI response for ${tab} tab`);
             // console.log(`/Get${tab}AIAssistance`)
             const response = await putAPI(`/Get${tab}AIAssistance`, { code: CodeToRun, problem: ProblemStatement });
@@ -69,7 +70,7 @@ function AIAssistanceModal({ CodeToRun = "", ProblemStatement = "", AIAssistance
                 </Button>
             ) : (
                 <Button variant="secondary" disabled className='w-100'>
-                    <FontAwesomeIcon icon={faLock} style={{ cursor: 'not-allowed' }}  className='px-2'/>
+                    <FontAwesomeIcon icon={faLock} style={{ cursor: 'not-allowed' }} className='px-2' />
                     <Typewriter
                         words={['AI Help']}
                         loop={0}

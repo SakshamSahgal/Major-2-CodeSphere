@@ -289,7 +289,6 @@ async function checkIfQuestionExists(req, res, next) {
     }
 }
 
-
 async function CheckIfAddedInAnyAssignment(req, res, next) {
     // Check if the question is added in any assignment
     //check if id exists in Questions array of any assignment in the Assignments collection
@@ -348,6 +347,31 @@ async function deleteQuestionRoute(req, res) {
     }
 }
 
+async function checkIfQuestionIsCreatedByThisProfessor(req, res, next) {
+    let Query = {
+        _id: req.body._id, // This is the Question ID
+        CreatedBy: req.decoded._id
+    };
+    try {
+        let exists = await checkIfExists("QuestionBank", req.decoded.Institution, Query, QuestionSchema);
+        if (exists) {
+            next();
+        } else {
+            res.send({
+                success: false,
+                message: "Either The Question Doesn't exists, or you are not allowed to edit it."
+            });
+        }
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send({
+            success: false,
+            message: `Failed to Check if Question Exists, error: ${error.message}`
+        });
+    }
+}
+
 async function updateQuestionRoute(req, res) {
     console.log(req.body);
     let Query = {
@@ -374,4 +398,4 @@ async function updateQuestionRoute(req, res) {
 
 }
 
-module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, updateQuestionRoute, FetchFullQuestionDetailsRoute, checkIfQuestionExists, CheckIfAddedInAnyAssignment, deleteQuestionRoute };
+module.exports = { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, updateQuestionRoute, checkIfQuestionIsCreatedByThisProfessor, FetchFullQuestionDetailsRoute, checkIfQuestionExists, CheckIfAddedInAnyAssignment, deleteQuestionRoute };

@@ -1,26 +1,12 @@
-const { set } = require('mongoose');
 const OpenAI = require('openai');
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-async function getGPTResponse(req, res) {
-    console.log(`recieved GPT Assistance Request. CODE : ${req.body.code} PROBLEM : ${req.body.problem}`)
 
-    const problemStatement = req.body.problem
-    console.log(problemStatement);
-
-    // Read code from file
-    const code = req.body.code
-    console.log(code);
-    console.log(problemStatement);
-
+async function GetGPTResponse(code, problemStatement, SystemQuestion) {
     const messages = [
         {
             role: 'system',
-            content: `C++ Code Analysis. You will be given a code along with its problem statement. Use concise language that is suitable for students.
-                        Questions:
-                        1. Provide suggestions for improving the code with regard to complexity, readability. etc.
-                        2. Suggest alternative approaches for solving the problem.
-                        3. Identify any syntax errors or logical issues in the code provided, if present`,
+            content: `C++ Code Analysis. You will be given a code along with its problem statement. Use concise language that is suitable for students. ${SystemQuestion}`
         },
         {
             role: 'user',
@@ -40,50 +26,42 @@ async function getGPTResponse(req, res) {
     try {
         const response = await client.chat.completions.create(parameters);
         console.log(response);
-        res.send(response.choices[0].message.content);
+        return (response.choices[0].message.content);
     } catch (e) {
         console.log(e);
-        res.send("Error Generating AI response. Please try again later.");
+        return ("Error Generating AI response. Please try again later.");
     }
 }
 
 async function getImprovementAIAssistance(req, res) {
     console.log(`recieved GPT Assistance Request. CODE : ${req.body.code} PROBLEM : ${req.body.problem}`)
-    setTimeout(() => {
-        res.send({
-            success: true,
-            message: "Successfully generated AI response for the improvement tab.",
-            response: "this is the response from the getImprovementAIAssistance"
-        });
-    }, 3000);
+    let GPTResponse = await GetGPTResponse(req.body.code, req.body.problem, "Based on Problem Statement and code, provide suggestions for improving the code with regard to complexity, readability. etc.");
+    res.send({
+        success: true,
+        message: "Successfully generated AI response for the improvement tab.",
+        response: GPTResponse
+    });
 }
 
 async function getAltApproachesAIAssistance(req, res) {
     console.log(`recieved GPT Assistance Request. CODE : ${req.body.code} PROBLEM : ${req.body.problem}`)
-    setTimeout(() => {
-        res.send({
-            success: true,
-            message: "Successfully generated AI response for the alternative approaches tab.",
-            response: "this is the response from the getAltApproachesAIAssistance"
-        });
-    }, 3000);
+    let GPTResponse = await GetGPTResponse(req.body.code, req.body.problem, "Based on Problem Statement and code, suggest alternative approaches for solving the problem.");
+    res.send({
+        success: true,
+        message: "Successfully generated AI response for the alternative approaches tab.",
+        response: GPTResponse
+    });
 }
 
 async function getErrorAIAssistance(req, res) {
     console.log(`recieved GPT Assistance Request. CODE : ${req.body.code} PROBLEM : ${req.body.problem}`)
-    //send response after 3 seconds
-    setTimeout(() => {
-        res.send({
-            success: true,
-            message: "Successfully generated AI response for the error tab.",
-            response: "this is the response from the getErrorAIAssistance"
-        });
-    }, 3000);
-
+    let GPTResponse = await GetGPTResponse(req.body.code, req.body.problem, "Based on Problem Statement and code, identify any syntax errors or logical issues in the code provided, if present.");
+    res.send({
+        success: true,
+        message: "Successfully generated AI response for the error tab.",
+        response: GPTResponse
+    });
 }
 
 
-
-
-
-module.exports = { getGPTResponse, getImprovementAIAssistance, getAltApproachesAIAssistance, getErrorAIAssistance };
+module.exports = { getImprovementAIAssistance, getAltApproachesAIAssistance, getErrorAIAssistance };
