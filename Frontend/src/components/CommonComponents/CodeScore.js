@@ -27,9 +27,9 @@ function CodeScore({ Code }) {
     }, [Code]);
 
     return (
-        <div>
+        <div className='container'>
             {/* display a sleek palet with all values */}
-            {score && <div className="row" style={{color : "white"}}>
+            {score && <div className="row bg-dark bg-opacity-75 rounded-3" style={{ color: "white" }}>
                 <div className="col-4">
                     <div className="row">
                         <div className="col-12">
