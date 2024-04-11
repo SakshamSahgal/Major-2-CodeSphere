@@ -120,7 +120,7 @@ async function CheckSubmission(req, res, next) {
     }
     let exists1 = await checkIfExists("AssignmentSubmissions", req.decoded.Institution, query1, SubmitAssignmentsSchema);
     if (!exists1) {
-        res.status(404).json({
+        res.status(404).send({
             success: false,
             message: "Submission not found in AssignmentSubmissions database"
         });
@@ -134,7 +134,7 @@ async function CheckSubmission(req, res, next) {
 
     let exists2 = await checkIfExists("Assignments", req.decoded.Institution, query2, assignmentSchema);
     if (!exists2) {
-        res.status(404).json({
+        res.status(404).send({
             success: false,
             message: "Submission not found in Assignments database"
         });

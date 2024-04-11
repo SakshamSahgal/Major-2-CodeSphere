@@ -3,6 +3,8 @@ require("dotenv").config();
 dotenv.config();
 
 const { app } = require("./app");
+require("./Bot/pingBot")(app);
+
 const { connectDB } = require("./db/mongoOperations");
 const { loginRoute, logoutRoute, getProfileRoute } = require("./Auth/jwt");
 const { ValidateToken, isStudent, isProfessor, ValidateWsToken, isProfessorWs, isStudentWs } = require("./Middlewares/Auth");
@@ -54,16 +56,15 @@ app.put("/professors/updateQuestion", ValidateToken, isProfessor, checkIfQuestio
 app.get("/professors/viewSubmissions/:_id", ValidateToken, CheckAssignment, getSubmissions);                    //Fetches the submissions of an assignment with the given id(assignment Id), called when the professor/student clicks on the submissions button of an assignment
 app.get("/professors/analyzeSubmission/:_id", ValidateToken, isProfessor, analyzeSubmission);                   //Fetches the submissions of an assignment with the given id(assignment Id), called when the professor clicks on the submissions button of an assignment
 
-app.ws('/validateSolutionCode', ValidateWsToken, isProfessorWs, ValidateSolutionCode);             //called when the professor clicks on the validate button of solution code while creating a question
-app.ws("/RunRandomTestCaseCode", ValidateWsToken, isProfessorWs, ValidateRandomTestCaseCode);      //called when the professor clicks on the run button of random test case code while creating a question
+app.ws('/validateSolutionCode', ValidateWsToken, isProfessorWs, ValidateSolutionCode);                          //called when the professor clicks on the validate button of solution code while creating a question
+app.ws("/RunRandomTestCaseCode", ValidateWsToken, isProfessorWs, ValidateRandomTestCaseCode);                   //called when the professor clicks on the run button of random test case code while creating a question
 
-app.get("/GetFullQuestion/:_id", ValidateToken, isProfessor, FetchFullQuestionDetailsRoute);        //called when the professor clicks on the question.
-app.get("/getPublicQuestion/:_id", ValidateToken, isStudent, FetchPublicQuestionDetails);           //called when the student clicks on the question.
+app.get("/GetFullQuestion/:_id", ValidateToken, isProfessor, FetchFullQuestionDetailsRoute);                    //called when the professor clicks on the question.
+app.get("/getPublicQuestion/:_id", ValidateToken, isStudent, FetchPublicQuestionDetails);                       //called when the student clicks on the question.
 
-
-app.put("/GetImprovementAIAssistance", ValidateToken, getImprovementAIAssistance);                  //called when student clicks on the get improvement tab of AI assistance
-app.put("/GetAltApproachesAIAssistance", ValidateToken, getAltApproachesAIAssistance);              //called when the student clicks on the get alternative approaches tab of AI assistance
-app.put("/GetErrorAIAssistance", ValidateToken, getErrorAIAssistance);                              //called when the student clicks on the get error tab of AI assistance
+app.put("/GetImprovementAIAssistance", ValidateToken, getImprovementAIAssistance);                              //called when student clicks on the get improvement tab of AI assistance
+app.put("/GetAltApproachesAIAssistance", ValidateToken, getAltApproachesAIAssistance);                          //called when the student clicks on the get alternative approaches tab of AI assistance
+app.put("/GetErrorAIAssistance", ValidateToken, getErrorAIAssistance);                                          //called when the student clicks on the get error tab of AI assistance
 
 //this route is used to serve the react app
 //it should be the last route because it is a catch all route, so if no other route is matched then this route is used
