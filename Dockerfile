@@ -18,6 +18,9 @@ RUN npm install
 # Copy the rest of the Backend folder content (except dockerignore contents) to the working directory
 COPY Backend .
 
+# Copy the .env file from root to working dir
+COPY .env .
+
 # Make public/TemporaryCodeBase folder if it doesn't already exist
 RUN mkdir -p public/TemporaryCodeBase
 
