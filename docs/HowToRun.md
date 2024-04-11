@@ -2,12 +2,10 @@
 
 `NOTE` : Make sure you have`Docker` installed
 
-1. create a `.env` in /Backend
-2. save the `.env` with the [required parameters](./Envs/Backend.env)
-3. go to the `root` directory.
-4. run `docker build -t testimage .` to build the docker image.
-5. run `docker run -p 8080:8080 testimage` to run the image.
-6. You can then access the web-app from `http://localhost:8080/`
+1. Build the docker image -
+2. `docker build --build-arg PORT=8080 --build-arg CORS_ORIGIN=http://localhost:3000 --build-arg DB_USERNAME=<DB username> --build-arg DB_PASSWORD=<DB Passowrd> --build-arg BackendHost=http://localhost:8080 --build-arg FrontendHost=http://localhost:3000 --build-arg JWT_SECRET_KEY=<your secret> --build-arg OPENAI_API_KEY=<OPEN AI KEY> --build-arg PingBotDuration=300000 --build-arg MemoryLimitForOutputFileInBytes=31457280 -t testimage .`
+3. run `docker run -p 8080:8080 testimage` to run the image.
+4. You can then access the web-app from `http://localhost:8080/`
 
 # To run React Frontend
 
