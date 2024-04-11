@@ -34,6 +34,8 @@ function ValidateToken(req, res, next) {
 
 // This middleware is used to authenticate the websocket connection
 function ValidateWsToken(ws, req, next) {
+    console.log("called WS token")
+    console.log(req.cookies)
     const token = req.cookies.token;
     console.log(token)
     if (token) {
