@@ -57,7 +57,7 @@ function ValidateWsToken(ws, req, next) {
     } else {
         ws.send(JSON.stringify({
             success: false,
-            message: "Token not found"
+            message: `Token not found ${req.cookies}`
         }), () => {
             ws.close(1008);  //1008 is the status code for Policy Violation
         });
