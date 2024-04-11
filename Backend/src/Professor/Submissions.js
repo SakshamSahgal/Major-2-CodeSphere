@@ -1,4 +1,4 @@
-const { readDB, checkIfExists } = require("../db/mongoOperations");
+const { readDB, checkIfExists, deleteDB, updateDB } = require("../db/mongoOperations");
 const { SubmitAssignmentsSchema, assignmentSchema } = require("../db/schema");
 const { GetStudent, getQuestionName } = require('../other/Common')
 
@@ -112,4 +112,75 @@ async function analyzeSubmission(req, res) {
     }
 }
 
-module.exports = { CheckAssignment, getSubmissions, analyzeSubmission };
+//this middleware is used to check if the submission exists in AssignmentSubmissions Database and Assignments
+async function CheckSubmission(req, res, next) {
+    let query1 = {
+        StudentId: req.decoded._id, //StudentId 
+        AssignmentId: req.params._id, //AssignmentId
+    }
+    let exists1 = await checkIfExists("AssignmentSubmissions", req.decoded.Institution, query1, SubmitAssignmentsSchema);
+    if (!exists1) {
+        res.status(404).json({
+            success: false,
+            message: "Submission not found in AssignmentSubmissions database"
+        });
+        return;
+    }
+    //submitted by is an array of student ids who have submitted the assignment
+    let query2 = {
+        _id: req.params._id,                        //assignment id 
+        SubmittedBy: { $in: req.decoded._id }       // Student should be in the list of submitted students
+    }
+
+    let exists2 = await checkIfExists("Assignments", req.decoded.Institution, query2, assignmentSchema);
+    if (!exists2) {
+        res.status(404).json({
+            success: false,
+            message: "Submission not found in Assignments database"
+        });
+        return;
+    }
+    next();
+}
+
+async function unsubmitAssignment(req, res) {
+
+    try {
+
+        let deleteQuery1 = {
+            StudentId: req.decoded._id, //StudentId
+            AssignmentId: req.params._id, //AssignmentId
+        }
+
+        let deleteResponseFromAssignmentSubmissions = await deleteDB("AssignmentSubmissions", req.decoded.Institution, deleteQuery1);
+        console.log(deleteResponseFromAssignmentSubmissions)
+
+        // write an update query to remove req.decoded._id from SubmittedBy array in Assignments
+        let updateQuery = {
+            _id: req.params._id,                        //assignment id 
+            SubmittedBy: { $in: req.decoded._id }       // Student should be in the list of submitted students
+        }
+
+        let update = {
+            $pull: {
+                SubmittedBy: req.decoded._id
+            }
+        }
+        let updateResponseFromAssignments = await updateDB("Assignments", req.decoded.Institution, updateQuery, update);
+        console.log(updateResponseFromAssignments)
+
+        res.status(200).send({
+            success: true,
+            message: "Assignment Unsubmitted successfully"
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({
+            success: false,
+            message: `Internal Server Error, err: ${err}`
+        });
+    }
+}
+
+module.exports = { CheckAssignment, getSubmissions, analyzeSubmission, CheckSubmission, unsubmitAssignment };

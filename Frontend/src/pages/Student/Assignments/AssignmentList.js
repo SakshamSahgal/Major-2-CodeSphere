@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { getTimeElapsed, convertIsoToNormalTime } from "../../../Scripts/TimeFunctions";
 import AssignmentListSkeleton from "../../../components/Skeletons/AssignmentListSkeleton";
-import { fetchAPI } from '../../../Scripts/Axios';
+import { fetchAPI, fetchData } from '../../../Scripts/Axios';
 import { Dropdown } from "react-bootstrap";
 import UnsubmitAssignmentConfirmationModal from "../../../components/Modal/UnsubmitAssignmentConfirmationModal"
+import { putAPI } from "../../../Scripts/Axios";
 
 //List Type can be 'Pending', 'Missed' or 'Submitted'
 function AssignmentList({ listType }) {
@@ -25,29 +26,26 @@ function AssignmentList({ listType }) {
 
     const handleUnsubmit = async () => {
         try {
-            console.log("unsibmitting assignment with id : ", selectedAssignmentId);
-
+            console.log("unsubmitting assignment with id : ", selectedAssignmentId);
+            const response = await putAPI(`/students/assignment/unsubmit/${selectedAssignmentId}`);
+            console.log(response.data);
+            if (response.data.success) {
+                toast.success(response.data.message);
+                //refresh after 1 second
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            }
+            else {
+                toast.error(response.data.message);
+            }
         } catch (error) {
             toast.error(`Error unsubmitting Assignment. Please try again later. err : ${error}`);
         }
     }
 
     useEffect(() => {
-        const fetchAssignments = async () => {
-            try {
-                const response = await fetchAPI(`/students/assignments/${listType.toLowerCase()}`);
-                console.log(response.data);
-                if (response.data.success) {
-                    // toast.success(response.data.message);
-                    setAssignments(response.data.Assignments);
-                } else {
-                    toast.error(response.data.message);
-                }
-            } catch (error) {
-                toast.error(`Error fetching ${listType} Assignments. Please try again later. err : ${error}`);
-            }
-        }
-        fetchAssignments();
+        fetchData(`/students/assignments/${listType.toLowerCase()}`, setAssignments, "Assignments", `Error fetching ${listType} Assignments. Please try again later`);
     }, [listType])
 
     // Return the skeleton while data is being fetched

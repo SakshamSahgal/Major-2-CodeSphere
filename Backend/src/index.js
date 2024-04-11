@@ -12,7 +12,7 @@ const { getProfessorAssignmentsRoute, getBatchesRoute, getMyQuestionsRoute, getO
 const { ValidateSolutionCode, ValidateRandomTestCaseCode, createQuestionRoute, updateQuestionRoute, checkIfQuestionIsCreatedByThisProfessor, FetchFullQuestionDetailsRoute, checkIfQuestionExists, CheckIfAddedInAnyAssignment, deleteQuestionRoute } = require("./Professor/Question.js");
 const { ValidateInputs, CheckQuestionInAssignment, findQuestion, ValidateTestCases, RunOutputComparison } = require("./Student/Submission.js");
 const { ValidateAssignmentId, FindAssignment, ValidateQuestionsInAssignment, CheckIfAllowedToSubmit, EvaluateAssignment } = require("./Student/Assignments.js");
-const { CheckAssignment, getSubmissions, analyzeSubmission } = require("./Professor/Submissions.js");
+const { CheckAssignment, getSubmissions, analyzeSubmission, CheckSubmission, unsubmitAssignment } = require("./Professor/Submissions.js");
 const { FetchPublicQuestionDetails } = require("./Student/Question.js");
 const { getImprovementAIAssistance, getAltApproachesAIAssistance, getErrorAIAssistance } = require("./AI/GPTResponse");
 
@@ -39,6 +39,7 @@ app.get("/students/assignments/missed", ValidateToken, isStudent, getStudentMiss
 app.get("/students/getPendingAssignment/:_id", ValidateToken, isStudent, getThisPendingAssignment);         //Fetches the details of a pending assignment with the given id, called when the student clicks on solve, on a pending assignment
 app.ws(`/students/assignments/runCode/:assignmentId/:questionId`, ValidateWsToken, isStudentWs, ValidateInputs, CheckQuestionInAssignment, findQuestion, ValidateTestCases, RunOutputComparison);  //called when the student clicks on the run button of any question while solving an assignment
 app.ws("/students/assignments/evaluateAssignment/:assignmentId", ValidateWsToken, isStudentWs, ValidateAssignmentId, FindAssignment, ValidateQuestionsInAssignment, CheckIfAllowedToSubmit, EvaluateAssignment);  //called when the student clicks on the submit button of an assignment
+app.put("/students/assignment/unsubmit/:_id", ValidateToken, isStudent, CheckSubmission, unsubmitAssignment);      //called when the student clicks on the unsubmit button of an submitted assignment
 
 app.get("/getBatches", ValidateToken, isProfessor, getBatchesRoute);                                                //Sends the Batches to display in Create Assignment Modal, to be used in checkboxes for selecting batches
 app.get("/professors/myAssignments", ValidateToken, isProfessor, getProfessorAssignmentsRoute);                     //called when the professor clicks on the assignments tab, returns the list of assignments created by the professor
@@ -59,7 +60,6 @@ app.ws("/RunRandomTestCaseCode", ValidateWsToken, isProfessorWs, ValidateRandomT
 app.get("/GetFullQuestion/:_id", ValidateToken, isProfessor, FetchFullQuestionDetailsRoute);        //called when the professor clicks on the question.
 app.get("/getPublicQuestion/:_id", ValidateToken, isStudent, FetchPublicQuestionDetails);           //called when the student clicks on the question.
 
-// app.get("/GetCodeSuggestions", ValidateToken, getGPTResponse);
 
 app.put("/GetImprovementAIAssistance", ValidateToken, getImprovementAIAssistance);                  //called when student clicks on the get improvement tab of AI assistance
 app.put("/GetAltApproachesAIAssistance", ValidateToken, getAltApproachesAIAssistance);              //called when the student clicks on the get alternative approaches tab of AI assistance
