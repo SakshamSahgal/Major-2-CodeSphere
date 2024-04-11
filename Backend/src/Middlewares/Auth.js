@@ -34,8 +34,6 @@ function ValidateToken(req, res, next) {
 
 // This middleware is used to authenticate the websocket connection
 function ValidateWsToken(ws, req, next) {
-    console.log("called WS token")
-    console.log(req.cookies)
     const token = req.cookies.token;
     console.log(token)
     if (token) {
@@ -57,7 +55,7 @@ function ValidateWsToken(ws, req, next) {
     } else {
         ws.send(JSON.stringify({
             success: false,
-            message: `Token not found, ${req}`
+            message: `Token not found`
         }), () => {
             ws.close(1008);  //1008 is the status code for Policy Violation
         });
