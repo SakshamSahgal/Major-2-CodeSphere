@@ -18,8 +18,19 @@ RUN npm install
 # Copy the rest of the Backend folder content (except dockerignore contents) to the working directory
 COPY Backend .
 
-# Copy the .env file from root to working dir
-COPY .env .
+# Create a script to write build arguments to .env file
+RUN echo "\
+PORT=$PORT\n\
+CORS_ORIGIN=$CORS_ORIGIN\n\
+DB_USERNAME=$DB_USERNAME\n\
+DB_PASSWORD=$DB_PASSWORD\n\
+BackendHost=$BackendHost\n\
+FrontendHost=$FrontendHost\n\
+JWT_SECRET_KEY=$JWT_SECRET_KEY\n\
+OPENAI_API_KEY=$OPENAI_API_KEY\n\
+PingBotDuration=$PingBotDuration\n\
+MemoryLimitForOutputFileInBytes=$MemoryLimitForOutputFileInBytes\n\
+" > .env
 
 # Make public/TemporaryCodeBase folder if it doesn't already exist
 RUN mkdir -p public/TemporaryCodeBase
