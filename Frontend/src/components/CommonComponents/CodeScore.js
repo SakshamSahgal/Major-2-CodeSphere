@@ -8,12 +8,12 @@ function CodeScore({ Code }) {
     //called during component Mount and on every change in the Code
     useEffect(() => {
         const CalculateScore = () => {
-            console.log("Lines", countLines(Code));
-            console.log("Comments", countComments(Code));
-            console.log("Cyclometric Complexity :", cyclomaticComplexity(Code));
-            console.log("Indents", countIndents(Code));
-            console.log("Loops", countLoops(Code));
-            console.log("Identifiers", countIdentifiers(Code));
+            // console.log("Lines", countLines(Code));
+            // console.log("Comments", countComments(Code));
+            // console.log("Cyclometric Complexity :", cyclomaticComplexity(Code));
+            // console.log("Indents", countIndents(Code));
+            // console.log("Loops", countLoops(Code));
+            // console.log("Identifiers", countIdentifiers(Code));
             setScore({
                 lines: countLines(Code),
                 comments: countComments(Code),
