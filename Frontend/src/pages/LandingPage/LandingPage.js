@@ -2,7 +2,7 @@
 import PlainNavbar from "../../components/Navbar/PlainNavbar";
 import LandingPageCard from "../../components/Card/LandingPageCard";
 import RightsReservedFooter from "../../components/Footer/RightsReservedFooter";
-
+import { Typewriter } from 'react-simple-typewriter';
 
 function LandingPage() {
   return (
@@ -11,7 +11,14 @@ function LandingPage() {
       <div className="container px-3">
         <div className="row my-3 align-items-center">
           <div className="col-6 d-none d-md-block">
-            <h1 className="display-3 " style={{ color: '#fff' }}>Welcome to CodeSphere</h1>
+            <h1 className="display-3 " style={{ color: '#fff' }}><Typewriter
+              words={['Welcome to CodeSphere']}
+              loop={1}
+              cursor
+              cursorStyle='|'
+              typeSpeed={50}
+              delaySpeed={1000}
+            /></h1>
             <p className="lead" style={{ color: '#fff' }}>CodeSphere is a platform for students and professors to simplify the process of coding assignments.</p>
           </div>
           <div className="col-12 col-md-6">
