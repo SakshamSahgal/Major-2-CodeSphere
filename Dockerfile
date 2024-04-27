@@ -18,19 +18,30 @@ RUN npm install
 # Copy the rest of the Backend folder content (except dockerignore contents) to the working directory
 COPY Backend .
 
-# Create a script to write build arguments to .env file
-RUN echo "\
-PORT=$PORT\n\
-CORS_ORIGIN=$CORS_ORIGIN\n\
-DB_USERNAME=$DB_USERNAME\n\
-DB_PASSWORD=$DB_PASSWORD\n\
-BackendHost=$BackendHost\n\
-FrontendHost=$FrontendHost\n\
-JWT_SECRET_KEY=$JWT_SECRET_KEY\n\
-OPENAI_API_KEY=$OPENAI_API_KEY\n\
-PingBotDuration=$PingBotDuration\n\
-MemoryLimitForOutputFileInBytes=$MemoryLimitForOutputFileInBytes\n\
-" > .env
+# Define build arguments
+ARG PORT
+ARG CORS_ORIGIN
+ARG DB_USERNAME
+ARG DB_PASSWORD
+ARG BackendHost
+ARG FrontendHost
+ARG JWT_SECRET_KEY
+ARG OPENAI_API_KEY
+ARG PingBotDuration
+ARG MemoryLimitForOutputFileInBytes
+
+# Create .env file with build arguments
+RUN echo "PORT=${PORT}" >> .env \
+    && echo "CORS_ORIGIN=${CORS_ORIGIN}" >> .env \
+    && echo "DB_USERNAME=${DB_USERNAME}" >> .env \
+    && echo "DB_PASSWORD=${DB_PASSWORD}" >> .env \
+    && echo "BackendHost=${BackendHost}" >> .env \
+    && echo "FrontendHost=${FrontendHost}" >> .env \
+    && echo "JWT_SECRET_KEY=${JWT_SECRET_KEY}" >> .env \
+    && echo "OPENAI_API_KEY=${OPENAI_API_KEY}" >> .env \
+    && echo "PingBotDuration=${PingBotDuration}" >> .env \
+    && echo "MemoryLimitForOutputFileInBytes=${MemoryLimitForOutputFileInBytes}" >> .env
+
 
 # Make public/TemporaryCodeBase folder if it doesn't already exist
 RUN mkdir -p public/TemporaryCodeBase
@@ -43,6 +54,9 @@ RUN chmod +x src/Code/script.sh
 
 # Expose the port your app runs on
 EXPOSE 8080
+
+#Check if .env file is created
+RUN cat .env
 
 # Command to run your application
 CMD ["node", "src/index.js"]
