@@ -21,8 +21,8 @@ docker build
 ```
 
 
-4. You can then access the web-app from `http://localhost:8080`
-5. This will use the static build from react in the `build` folder for frontend.
+2. You can then access the web-app from `http://localhost:8080`
+3. This will use the static build from react in the `build` folder for frontend.
 
 # To run React Frontend
 
