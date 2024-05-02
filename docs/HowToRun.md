@@ -3,6 +3,7 @@
 `NOTE` : Make sure you have`Docker` installed
 
 1. To `Build` and `run` the docker image paste this in one line -
+
 ```
 docker build
  --build-arg PORT=8080
@@ -18,6 +19,7 @@ docker build
  -t testimage . ; docker run -p 8080:8080 testimage
  
 ```
+
 
 4. You can then access the web-app from `http://localhost:8080`
 5. This will use the static build from react in the `build` folder for frontend.
