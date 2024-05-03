@@ -1,6 +1,12 @@
 # CodeSphere
 
-you can find the docs here : [Docs](https://sakshamsahgal.github.io/Major-2-CodeSphere/)
+1. A code Evaluation Platform to simplify the process of coding assignments by professors and students.
+
+2. It provides professors with intuitive tools to effortlessly create and assign coding questions with detailed problem description, sample, hidden and random test cases along with due dates to students.
+
+3. It also allows the professors to enable/disable AI assistance to support students when needed.
+
+> you can find the docs here : [Docs](https://sakshamsahgal.github.io/Major-2-CodeSphere/)
 
 ## Features Preview : 
 
