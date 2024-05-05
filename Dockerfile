@@ -26,7 +26,7 @@ ARG DB_PASSWORD
 ARG BackendHost
 ARG FrontendHost
 ARG JWT_SECRET_KEY
-ARG OPENAI_API_KEY
+ARG GEMINI_API_KEY
 ARG PingBotDuration
 ARG MemoryLimitForOutputFileInBytes
 
@@ -38,7 +38,7 @@ RUN echo "PORT=${PORT}" >> .env \
     && echo "BackendHost=${BackendHost}" >> .env \
     && echo "FrontendHost=${FrontendHost}" >> .env \
     && echo "JWT_SECRET_KEY=${JWT_SECRET_KEY}" >> .env \
-    && echo "OPENAI_API_KEY=${OPENAI_API_KEY}" >> .env \
+    && echo "GEMINI_API_KEY=${GEMINI_API_KEY}" >> .env \
     && echo "PingBotDuration=${PingBotDuration}" >> .env \
     && echo "MemoryLimitForOutputFileInBytes=${MemoryLimitForOutputFileInBytes}" >> .env
 

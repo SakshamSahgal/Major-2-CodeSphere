@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Button, Modal, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrochip, faLock } from '@fortawesome/free-solid-svg-icons';
-import AIAssistanceTabs from '../Tabs/AIAssistanceTabs';
 import { putAPI } from '../../Scripts/Axios';
 import { toast } from 'react-toastify';
 import { Typewriter } from 'react-simple-typewriter';
+import ReactMarkdown from 'react-markdown';
 
 
 function AIAssistanceModal({ CodeToRun = "", ProblemStatement = "", AIAssistance = false }) {
@@ -14,39 +14,22 @@ function AIAssistanceModal({ CodeToRun = "", ProblemStatement = "", AIAssistance
 
     const handleShow = () => {
         setShow(true);
-        fetchAIResponse("Improvement");
-        fetchAIResponse("AltApproaches");
-        fetchAIResponse("Error");
+        fetchAIResponse();
     }
-    const [AIResponses, setAIResponses] = useState({
-        Improvement: null,
-        AltApproaches: null,
-        Error: null
-    });
+    const [AIResponses, setAIResponses] = useState(null);
 
     const handleClose = () => {
         setShow(false);
         // Reset the AIResponses to null
-        setAIResponses({
-            Improvement: null,
-            AltApproaches: null,
-            Error: null
-        });
+        setAIResponses(null);
     }
 
-    const tabs = ["Improvement", "AltApproaches", "Error"];
 
-    const fetchAIResponse = async (tab) => {
+    const fetchAIResponse = async () => {
         try {
-            // console.log(ProblemStatement)
-            // console.log(`fetching AI response for ${tab} tab`);
-            // console.log(`/Get${tab}AIAssistance`)
-            const response = await putAPI(`/Get${tab}AIAssistance`, { code: CodeToRun, problem: ProblemStatement });
+            const response = await putAPI(`/getAIAssistance`, { code: CodeToRun, problem: ProblemStatement });
             if (response.data.success) {
-                setAIResponses(prevState => ({
-                    ...prevState,
-                    [tab]: response.data.response
-                }));
+                setAIResponses(response.data.response);
             } else {
                 toast.error(response.data.message);
             }
@@ -96,7 +79,13 @@ function AIAssistanceModal({ CodeToRun = "", ProblemStatement = "", AIAssistance
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <AIAssistanceTabs activeTab={"Improvement"} tabs={tabs} AIResponses={AIResponses} />
+                    {AIResponses ? (
+                        <ReactMarkdown>{AIResponses}</ReactMarkdown>
+                    ) : (
+                        <div className="text-center">
+                            <Spinner animation="border" variant="primary" />
+                        </div>
+                    )}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>

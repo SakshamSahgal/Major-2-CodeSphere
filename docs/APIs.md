@@ -24,9 +24,7 @@
 | 6.           | [/students/assignments/evaluateAssignment/:assignmentId]()  | `ws`           | [ValidateWsToken](), [isStudentWs](), [ValidateAssignmentId](), [FindAssignment](), [ValidateQuestionsInAssignment](), [CheckIfAllowedToSubmit]() |
 | 7.           | [/students/assignment/unsubmit/:_id]()                      | `PUT`          | [ValidateToken](), [isStudent](),[CheckSubmission]()                                                                                              |
 | 8.           | [/getPublicQuestion/:_id]()                                 | `GET`          | [ValidateToken](Middlewares/ValidateToken.md), [isStudent](Middlewares/isStudent.md)                                                              |
-| 9.           | [/GetImprovementAIAssistance]()                             | `PUT`          | [ValidateToken](Middlewares/ValidateToken.md)                                                                                                     |
-| 10.          | [/GetAltApproachesAIAssistance]()                           | `PUT`          | [ValidateToken](Middlewares/ValidateToken.md)                                                                                                     |
-| 11.          | [/GetErrorAIAssistance]()                                   | `PUT`          | [ValidateToken](Middlewares/ValidateToken.md)                                                                                                     |
+| 9.           | [/getAIAssistance]()                                        | `PUT`          | [ValidateToken](Middlewares/ValidateToken.md)                                                                                                     |
 
 
 

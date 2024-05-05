@@ -13,7 +13,7 @@ docker build
  --build-arg BackendHost=http://localhost:8080
  --build-arg FrontendHost=http://localhost:3000
  --build-arg JWT_SECRET_KEY=<secret>
- --build-arg OPENAI_API_KEY=<OPEN-AI-KEY>
+ --build-arg GEMINI_API_KEY=<GEMINI-API-KEY>
  --build-arg PingBotDuration=300000
  --build-arg MemoryLimitForOutputFileInBytes=31457280
  -t testimage . ; docker run -p 8080:8080 testimage
