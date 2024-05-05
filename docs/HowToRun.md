@@ -16,6 +16,7 @@ docker build
  --build-arg GEMINI_API_KEY=<GEMINI-API-KEY>
  --build-arg PingBotDuration=300000
  --build-arg MemoryLimitForOutputFileInBytes=31457280
+ --build-arg Server=Local
  -t testimage . ; docker run -p 8080:8080 testimage
  
 ```
@@ -23,6 +24,8 @@ docker build
 
 2. You can then access the web-app from `http://localhost:8080`
 3. This will use the static build from react in the `build` folder for frontend.
+4. if Server=Local then Frontend will connect with local server.
+5. if Server=Remote then Frontend will connect with remote server hosted on render.
 
 # To run React Frontend
 

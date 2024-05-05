@@ -19,6 +19,6 @@ expressWs(app);
 // add static folder as public
 app.use(express.static(path.join(__dirname, "..", 'public')));
 // add static folder as build
-app.use(express.static(path.join(__dirname, "..", 'build')));
+app.use(express.static(path.join(__dirname, "..", 'builds', `${process.env.Server}`, 'build')));
 
 module.exports = { app };

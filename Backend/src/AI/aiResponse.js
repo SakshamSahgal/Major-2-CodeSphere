@@ -30,8 +30,8 @@ async function GetGiminiResponse(code, problemStatement, SystemQuestion) {
 }
 
 async function getAIAssistance(req, res) {
-    console.log(`recieved GPT Assistance Request. CODE : ${req.body.code} PROBLEM : ${req.body.problem}`)
-    let GeminiResponse = await GetGiminiResponse(req.body.code, req.body.problem, "Based on Problem Statement and code, Suggest improvements, alternative approaches and identify any errors in the code provided, if present.");
+    console.log(`recieved AI Assistance Request. CODE : ${req.body.code} PROBLEM : ${req.body.problem}`)
+    let GeminiResponse = await GetGiminiResponse(req.body.code, req.body.problem, "Based on Problem Statement and code provided, Suggest Assistance to the student.");
     res.send({
         success: true,
         message: "Successfully generated AI response for the error tab.",

@@ -29,6 +29,7 @@ ARG JWT_SECRET_KEY
 ARG GEMINI_API_KEY
 ARG PingBotDuration
 ARG MemoryLimitForOutputFileInBytes
+ARG Server
 
 # Create .env file with build arguments
 RUN echo "PORT=${PORT}" >> .env \
@@ -40,7 +41,8 @@ RUN echo "PORT=${PORT}" >> .env \
     && echo "JWT_SECRET_KEY=${JWT_SECRET_KEY}" >> .env \
     && echo "GEMINI_API_KEY=${GEMINI_API_KEY}" >> .env \
     && echo "PingBotDuration=${PingBotDuration}" >> .env \
-    && echo "MemoryLimitForOutputFileInBytes=${MemoryLimitForOutputFileInBytes}" >> .env
+    && echo "MemoryLimitForOutputFileInBytes=${MemoryLimitForOutputFileInBytes}" >> .env \
+    && echo "Server=${Server}" >> .env
 
 
 # Make public/TemporaryCodeBase folder if it doesn't already exist

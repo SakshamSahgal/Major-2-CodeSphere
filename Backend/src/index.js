@@ -68,5 +68,6 @@ app.put("/getAIAssistance", ValidateToken, getAIAssistance);                    
 //this is done so that the react app can handle the routing, and the server doesn't interfere with it
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", 'build', 'index.html'));
+  console.log(process.env.Server)
+  res.sendFile(path.join(__dirname, "..", 'builds', `${process.env.Server}`,'build', 'index.html'));
 });
