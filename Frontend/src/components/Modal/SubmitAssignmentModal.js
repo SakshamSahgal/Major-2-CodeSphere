@@ -42,7 +42,7 @@ function SubmitAssignmentModal({ _id, UserCodes }) {
 
         try {
             console.log(_id)
-            const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_WS_LOCALHOST}/students/assignments/evaluateAssignment/${_id}`); //Create a new WebSocket connection
+            const socket = new WebSocket(`${process.env.REACT_APP_SERVER_WS_URL}/students/assignments/evaluateAssignment/${_id}`); //Create a new WebSocket connection
             socketRef.current = socket;
 
             socket.onopen = () => {

@@ -38,7 +38,8 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
     const HandleDryRun = () => {
         //Send the current solution code to the server for dry run
         try {
-            const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_WS_LOCALHOST}/students/assignments/runCode/${AssignmentId}/${QuestionId}`); //Create a new WebSocket connection
+
+            const socket = new WebSocket(`${process.env.REACT_APP_SERVER_WS_URL}/students/assignments/runCode/${AssignmentId}/${QuestionId}`); //Create a new WebSocket connection
             socketRef.current = socket;
 
             socket.onopen = () => {
@@ -65,7 +66,7 @@ function DryRunModal({ CodeToRun = "", AssignmentId = "", QuestionId = "" }) {
                             if (response.type === "logs")
                                 setLogsMessage((prev) => [...prev, response]);
                             else
-                            setverdictAndDecision((prev) => [...prev, response]);
+                                setverdictAndDecision((prev) => [...prev, response]);
                         }
                         if (response.success === false) {
                             socket.close();

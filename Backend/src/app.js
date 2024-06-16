@@ -16,9 +16,9 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 expressWs(app);
-// add static folder as public
+// add static folder as public (this will be used for things like temporary codebase)
 app.use(express.static(path.join(__dirname, "..", 'public')));
-// add static folder as build
-app.use(express.static(path.join(__dirname, "..", 'builds', `${process.env.Server}`, 'build')));
+// add static folder as build (this will be used to serve the react app and it is created when the docker image is built)
+app.use(express.static(path.join(__dirname, "..", 'build')));
 
 module.exports = { app };

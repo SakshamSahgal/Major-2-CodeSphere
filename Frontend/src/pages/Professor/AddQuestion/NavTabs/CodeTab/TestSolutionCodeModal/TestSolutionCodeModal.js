@@ -30,8 +30,8 @@ function TestSolutionCodeModal({ SolutionCodeToTest }) {
         // console.log("Solution Code To Test:", SolutionCodeToTest);
 
         try {
-            const socket = new WebSocket(`${process.env.REACT_APP_BACKEND_WS_LOCALHOST}/validateSolutionCode`);
-
+            const socket = new WebSocket(`${process.env.REACT_APP_SERVER_WS_URL}/validateSolutionCode`);
+            console.log("REACT_APP_SERVER_WS_URL", process.env.REACT_APP_SERVER_WS_URL);
             socket.onopen = () => {
                 try {
                     console.log('WebSocket connection opened');
