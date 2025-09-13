@@ -14,7 +14,7 @@ async function GetGiminiResponse(code, problemStatement, SystemQuestion) {
         };
 
         const model = genAI.getGenerativeModel({ model: "gemini-pro", generationConfig });
-
+        
         const prompt = `You will be given a C++ code along with its problem statement. Use concise language that is suitable for students. ${SystemQuestion},Problem Statement: ${problemStatement}\nCode: ${code}`
 
         const result = await model.generateContent(prompt);

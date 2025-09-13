@@ -1,5 +1,5 @@
 # CodeSphere
-
+#Disable Security from Not Secure since you're on LAN
 1. A code Evaluation Platform to simplify the process of coding assignments by professors and students.
 
 2. It provides professors with intuitive tools to effortlessly create and assign coding questions with detailed problem description, sample, hidden and random test cases along with due dates to students.

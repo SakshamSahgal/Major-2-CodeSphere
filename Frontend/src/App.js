@@ -1,3 +1,4 @@
+// App.js
 import LandingPage from './pages/LandingPage/LandingPage';
 import RegisterCollege from './pages/RegisterCollege/RegisterCollege';
 import StudentAssignments from './pages/Student/Assignments/StudentAssignments';
@@ -29,13 +30,13 @@ function App() {
           <Route path="/professors/assignments" element={<ProfessorAssignments NavTabs={NavTabs} NavLinks={NavLinks} />} />
           <Route path="/professors/addQuestion" element={<ProfessorAddQuestion activeTab={"Description"} NavTabs={NavTabs} NavLinks={NavLinks} />} />
           <Route path="/professors/EditQuestion/:_id" element={<ProfessorAddQuestion activeTab={"Description"} editQuestion={true} />} />
-          <Route path="/professors/questions" element={<ProfessorQuestions NavTabs={NavTabs} NavLinks={NavLinks} />} /> {/*This Route is called when a professor clicks Questions Page from sidebar, it displays list of questions */}
-          <Route path="/students/assignments" element={<StudentAssignments />} /> {/*This Route is called when a student opens Assignments Page from sidebar */}
-          <Route path="/students/solveAssignment/:_id" element={<SolveAssignment />} /> {/*This Route is called when a student clicks solve button on any pending assignment */}
+          <Route path="/professors/questions" element={<ProfessorQuestions NavTabs={NavTabs} NavLinks={NavLinks} />} />
+          <Route path="/students/assignments" element={<StudentAssignments />} />
+          <Route path="/students/solveAssignment/:_id" element={<SolveAssignment />} />
           <Route path="/:LoginType/submissions/:AssignmentName/:_id" element={<Submissions />} />
           <Route path="/analyzeSubmission/:_id" element={<EvaluateSubmission />} />
           <Route path="/registercollege" element={<RegisterCollege />} />
-          <Route path="/Question/:type/:_id" element={<Question />} /> {/*This Route displays Full/Public question details based on student/professor  */}
+          <Route path="/Question/:type/:_id" element={<Question />} />
         </Routes>
       </BrowserRouter>
     </>

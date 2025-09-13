@@ -2,21 +2,23 @@ const { writeDB, readDB } = require("../db/mongoOperations.js");
 const { RequestedCollegesSchema, registeredCollegesSchema } = require("../db/schema.js");
 
 
-function registeredCollegeRoute(req, res) {
-    console.log(`Recieved request to get list of registered colleges`)
-    readDB("Colleges", "Registered", {}, registeredCollegesSchema, { Name: 1 }).then((result) => {
+async function registeredCollegeRoute(req, res) {
+    try {
+        const colleges = await readDB("Colleges", "Registered", {}, registeredCollegesSchema);
+        console.log("Fetched colleges:", colleges); 
         res.json({
             success: true,
             message: "College List",
-            result: result
-        })
-    }).catch((err) => {
-        console.log(err);
-        res.json({
+            result: colleges
+        });
+    } catch (err) {
+        console.error("Error fetching colleges:", err); // <-- Add this line
+        res.status(500).json({
             success: false,
-            message: "Error while reading Colleges DB / Registered Collection"
-        })
-    })
+            message: "Error fetching colleges",
+            error: err.message
+        });
+    }
 }
 
 // This is the function to register a college. 

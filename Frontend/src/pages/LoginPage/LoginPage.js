@@ -78,7 +78,12 @@ function LoginPage({ LoginType }) {
                     <div className="card align-items-center" style={{ backgroundColor: 'black', color: 'white' }}>
                         <div className="card-body">
                             <h5 className="card-title mb-4 text-center" style={{ fontFamily: 'Arial, sans-serif' }}>{LoginType} LOGIN</h5>
-                            <LoginForm handleSubmit={handleSubmit} handleInputChange={handleInputChange} Institutions={Institutions} />
+                            <LoginForm
+    handleSubmit={handleSubmit}
+    handleInputChange={handleInputChange}
+    Institutions={Institutions}
+    selectedInstitution={formData.Institution}
+/>
                         </div>
                     </div>
                 </div>

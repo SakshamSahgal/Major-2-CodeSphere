@@ -60,14 +60,17 @@ function QuestionDetailsPreview({ QuestionName, ProblemStatement, Constraints, I
                     {SampleTestCases?.length ? (
                         SampleTestCases.map((testcase, index) => (
                             testcase.sampleTestCase && (
-                                <div key={index}>
-                                    Sample Test Case {index}
+                                <div key={index} className="my-2">
+                                    <h6>Sample Test Case {index + 1}</h6>
                                     <Card>
                                         <ListGroup variant="flush" className="px-1">
                                             <ListGroup.Item>
-                                                <div>
-                                                    <pre>{testcase.input}</pre>
-                                                </div>
+                                                <strong>Input:</strong>
+                                                <pre>{testcase.input}</pre>
+                                            </ListGroup.Item>
+                                            <ListGroup.Item>
+                                                <strong>Output:</strong>
+                                                <pre>{testcase.output}</pre>
                                             </ListGroup.Item>
                                         </ListGroup>
                                     </Card>
@@ -77,6 +80,7 @@ function QuestionDetailsPreview({ QuestionName, ProblemStatement, Constraints, I
                     ) : (
                         <p>No sample test cases provided</p>
                     )}
+
                     <br />
 
                 </div>

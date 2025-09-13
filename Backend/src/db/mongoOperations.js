@@ -4,20 +4,13 @@ let connections = {};
 async function connectDB() {
     try {
         const databaseNames = ['Assignments', 'Colleges', 'Professors', 'QuestionBank', 'Students', 'Evaluations', "AssignmentSubmissions", "EvaluationSubmissions"];
+        // const databaseNames = ['Assignments', 'Colleges', 'Professors', 'QuestionBank', 'Students'];
 
         for (let i = 0; i < databaseNames.length; i++) {
-            const DBconnectionString = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.882kcr0.mongodb.net/${databaseNames[i]}?retryWrites=true&w=majority`;
-
-            const connection = await mongoose.createConnection(DBconnectionString);
-
-            connection.on('connected', () => {
-                connections[databaseNames[i]] = connection;
-                console.log(`Connected to ${databaseNames[i]} database Successfully!`);
-            });
-
-            connection.on('error', (error) => {
-                console.error(`Failed to connect to ${databaseNames[i]} database:`, error);
-            });
+            const DBconnectionString = `mongodb://localhost:27017/${databaseNames[i]}`;
+            const connection = await mongoose.createConnection(DBconnectionString, { useNewUrlParser: true, useUnifiedTopology: true });
+            connections[databaseNames[i]] = connection;
+            console.log(`Connected to ${databaseNames[i]} database Successfully!`);
         }
     } catch (error) {
         console.error('Error connecting to the databases:', error);

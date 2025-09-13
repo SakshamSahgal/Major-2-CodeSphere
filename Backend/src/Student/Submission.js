@@ -30,12 +30,6 @@ async function CheckQuestionInAssignment(ws, req, next) {
         Questions: { $in: questionId }
     }
 
-    ws.send(JSON.stringify({
-        success: true,
-        message: `Finding Question in the assignment`,
-        type: `logs`
-    }));
-
     try {
         let response = await readDB("Assignments", req.decoded.Institution, Querry, assignmentSchema);
         if (response.length == 0) {
@@ -66,11 +60,6 @@ async function CheckQuestionInAssignment(ws, req, next) {
 //this function fetches the question from the QuestionBank
 async function findQuestion(ws, req, next) {
 
-    ws.send(JSON.stringify({
-        success: true,
-        message: "Finding Question in QuestionBank",
-        type: `logs`
-    }));
 
     try {
         let response = await readDB("QuestionBank", req.decoded.Institution, { _id: req.params.questionId });
@@ -102,11 +91,6 @@ async function findQuestion(ws, req, next) {
 
 //this function checks if the question has any testcases
 async function ValidateTestCases(ws, req, next) {
-    ws.send(JSON.stringify({
-        success: true,
-        message: "Validating TestCases for the question",
-        type: `logs`
-    }));
     if (req.ThisQuestion.TestCases.length == 0) {
         ws.send(JSON.stringify({
             success: false,
